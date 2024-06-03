@@ -27,8 +27,8 @@ Please read the documentation of each subproject to get more information.
 
 In these subprojects you can find samples of custom components using the Denodo Java API:
 
-* [Custom Functions](./custom-functions/README.md)
-* [Custom Stored Procedures](./custom-stored-procedures/README.md)
+* [Custom Functions](./custom-functions/)
+* [Custom Stored Procedures](./custom-stored-procedures/)
 
 ### Denodo Scripts
 
