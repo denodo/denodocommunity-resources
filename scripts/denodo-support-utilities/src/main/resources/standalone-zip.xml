@@ -1,0 +1,37 @@
+<assembly>
+  <id>standalone</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory> 
+  <fileSets>  
+    <fileSet>
+      <directory>src/main/bin</directory>
+      <outputDirectory>denodo-support-utils/bin</outputDirectory>
+      <fileMode>0744</fileMode>
+      <directoryMode>0755</directoryMode>
+    </fileSet>
+        
+    <fileSet>
+      <directory>src/main/resources/</directory>
+      <outputDirectory>denodo-support-utils/</outputDirectory>
+      <includes>
+        <include>LICENSE.txt</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+  <files>
+    <file>
+      <source>target/${project.build.finalName}.jar</source>
+      <outputDirectory>denodo-support-utils/lib</outputDirectory>            
+    </file>
+  </files>
+  <dependencySets>         
+    <dependencySet>
+        <unpack>false</unpack>
+        <outputDirectory>denodo-support-utils/lib</outputDirectory>
+        <useProjectArtifact>false</useProjectArtifact>      
+    </dependencySet>
+  </dependencySets>
+</assembly>
+

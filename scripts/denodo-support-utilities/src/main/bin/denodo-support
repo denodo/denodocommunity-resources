@@ -1,0 +1,341 @@
+#!/bin/bash
+
+# Usage: ./denodo-support.sh {option} {param} {args}
+#
+# Dependencies: jq, curl, sed, grep, wget
+#
+# Type can be: installer, update, beta-update, hotfix, denodo-connect, license
+# If you have any errors try removing the redirects to get more information
+
+print_usage() {
+  echo "Usage: denodo-support [option] <paramS>"
+  echo "OPTIONS"
+  echo " --help           This help text"
+  echo " --version        Show version number and quit"
+  echo " --configure      Set your Denodo Repository credentials"
+  echo ""
+  echo ""
+  echo "PARAMS FOR GETTING THE INFORMATION OF THIS HOST"
+  echo " -c"
+  echo "        Prints the number of cores of the server."
+  echo " -e"
+  echo "        Prints the encoding of the server."
+  echo " -i"
+  echo "        Prints the IP addresses (IPv4 and IPv6) of the server and the "
+  echo "        Host name information."
+  echo ""
+  echo ""
+  echo "PARAMS FOR PORT TESTING"
+  echo " -p <ports> [-h <hostname>] [-w <wait timeout>]"
+  echo "        Test the <ports> of the <hostname> server."
+  echo ""
+  echo "        ports          - list of ports separated by commas"
+  echo "        hostname       - name or the IP address of the server to connect (optional, default value: localhost)"
+  echo "        wait timeout   - max timeout waiting for the connection in seconds (optional, default value: 5 secs)"
+  echo ""
+  echo ""
+  echo "PARAMS FOR LISTING AVAILABLE ITEMS"
+  echo " -t <item type> [-v <denodo version>] [-u <denodo client id>] [-s <denodo secret>]"
+  echo "        List latest items. "
+  echo ""
+  echo "        item type      - installer, update, beta-update, hotfix, "
+  echo "                         denodoconnect-enterprise, denodoconnect-open "
+  echo "                         or driver"
+  echo "        denodo version - 6.0, 7.0, 8.0 or 9 (optional, default value: 9)"
+  echo ""
+  echo ""
+  echo "PARAMS FOR DOWNLOADING AN ITEM"
+  echo " -t <item type> [-v <denodo version>] -n <item name> [-d <download folder>] [-u <denodo client id>] [-s <denodo secret>]"
+  echo "        Download the <item name> to the folder specified in <download folder>."
+  echo ""
+  echo "        item type       - installer, update, beta-update, hotfix, "
+  echo "                          denodoconnect-enterprise, denodoconnect-open "
+  echo "                          or driver."
+  echo "        denodo version  - 6.0, 7.0, 8.0 or 9 (optional, default value: 9)"
+  echo "        item name       - the name of the item selected for download"
+  echo "        download folder - download destination folder "
+  echo "                          (optional, default value: current directory)"
+  echo ""
+  echo ""
+  echo "Examples:"
+  echo "   ./denodo-support.sh -i"
+  echo "                          (prints the IPs and hostname of the server)"
+  echo ""
+  echo "   ./denodo-support.sh -t installer"
+  echo "                          (lists the installers of Denodo 9)"
+  echo ""
+  echo "   ./denodo-support.sh -t update -v 8.0"
+  echo "                          (lists the updates of Denodo 8.0)"
+  echo ""
+  echo "   ./denodo-support.sh -t installer -v 8.0 -n denodo-install-8.0-ga-linux64"
+  echo "                          (downloads the installer of Denodo 8.0 for linux 64bit)"
+  echo ""
+  echo "   ./denodo-support.sh -t update -v 7.0 -n denodo-update-v70-20201911"
+  echo "                          (downloads that update of Denodo 7.0)"
+  echo ""
+  echo "   ./denodo-support.sh -t hotfix -v 6.0 -n denodo-v60-hotfix-20181122 -d /home/"
+  echo "                          (downloads that Denodo 6.0 hotfix 20181122 into /home/ folder)"
+  echo ""
+}
+
+# Dependencies
+command -v cut  >/dev/null 2>&1 || { echo >&2 "cut is required but it's not installed.  Aborting."; exit 1; }
+command -v grep >/dev/null 2>&1 || { echo >&2 "grep is required but it's not installed.  Aborting."; exit 1; }
+command -v sed  >/dev/null 2>&1 || { echo >&2 "sed is required but it's not installed.  Aborting."; exit 1; }
+command -v jq   >/dev/null 2>&1 || { echo >&2 "jq is required but it's not installed.  Aborting."; exit 1; }
+command -v curl >/dev/null 2>&1 || { echo >&2 "curl is required but it's not installed.  Aborting."; exit 1; }
+command -v wget >/dev/null 2>&1 || { echo >&2 "wget is required but it's not installed.  Aborting."; exit 1; }
+
+if [[  -z "$1" ]]; then
+  echo "No option selected. Type --help for more information"
+  exit 0
+fi
+
+# Help
+if [[ "$1" = "--help" ]]; then
+   print_usage
+   exit 0
+fi
+
+# version
+if [[ "$1" = "--version" ]]; then
+   echo "denodo-support v1.1"
+   echo "Copyrights (c) Denodo Technologies "
+   echo "Terms of Use: https://www.denodo.com/en/terms-use"
+   exit 0
+fi
+
+# configure
+CONFIG_PATH="$HOME/.denodo"
+CONFIG_FILE="/denodo-support-config"
+PROP_CLIENT_ID="denodo_client_id"
+PROP_CLIENT_SECRET="denodo_client_secret"
+PROP_JAVA="java_home"
+DEF_CLIENT_ID=""
+DEF_CLIENT_SECRET=""
+DEF_JAVA=""
+PORT_HOST=""
+PORT_LIST=""
+PORT_TIMEOUT=""
+
+if [ -f "$CONFIG_PATH$CONFIG_FILE" ]
+then
+  DEF_CLIENT_ID=$(grep "$PROP_CLIENT_ID" < "$CONFIG_PATH"$CONFIG_FILE | cut -d'=' -f2)
+  DEF_CLIENT_SECRET=$(grep "$PROP_CLIENT_SECRET" < "$CONFIG_PATH"$CONFIG_FILE | cut -d'=' -f2)
+  DEF_JAVA=$(grep "$PROP_JAVA" < "$CONFIG_PATH"$CONFIG_FILE | cut -d'=' -f2)
+else
+  mkdir -p "$CONFIG_PATH"
+  touch "$CONFIG_PATH"$CONFIG_FILE
+  echo "Configuration not found!"
+fi
+
+if [[ "$1" = "--configure" ]]; then
+   read -r -p "Denodo Client ID [$DEF_CLIENT_ID]: " client_id
+   if [[ "$client_id" = "" ]]; then
+     client_id=$DEF_CLIENT_ID
+   fi
+   read -r -p "Denodo Client Secret [**********]: " client_secret
+   if [[ "$client_secret" = "" ]]; then
+     client_secret=$DEF_CLIENT_SECRET
+   fi
+   if [[ "$DEF_JAVA" = "" ]]; then
+     #---------------------------------------------------------------------------
+     #Environment variable JAVA_HOME must be set and exported
+     #---------------------------------------------------------------------------
+     if [ -d "$JAVA_HOME" ]; then
+       DEF_JAVA=$JAVA_HOME
+     fi
+   fi
+   read -r -p "JAVA home [$DEF_JAVA]: " client_java_home
+   if [[ "$client_java_home" = "" ]]; then
+     client_java_home=$DEF_JAVA
+   fi
+   echo "[default]" > "$CONFIG_PATH"$CONFIG_FILE
+   { echo "$PROP_CLIENT_ID=$client_id"; echo "$PROP_CLIENT_SECRET=$client_secret"; echo "$PROP_JAVA=$client_java_home"; } >> "$CONFIG_PATH"$CONFIG_FILE
+   exit 0
+fi
+
+# flags for selected options
+encoding_flag=''
+ip_flag=''
+cpu_flag=''
+item_type_flag=''
+item_name_flag=''
+test_port_flag=''
+
+while getopts 'cd:eh:ij:n:p:s:t:u:v:w:' flag; do
+  case "${flag}" in
+    c) cpu_flag='true' ;;
+    d) PATH_NM="${OPTARG}" ;;
+    e) encoding_flag='true' ;;
+    h) PORT_HOST="${OPTARG}" ;;
+    i) ip_flag='true' ;;
+    j) DEF_JAVA="${OPTARG}" ;;
+    n) item_name_flag='true'
+       ITEM_NM="${OPTARG}" ;;
+    p) test_port_flag='true'
+       PORT_LIST="${OPTARG}" ;;
+    s) DEF_CLIENT_SECRET="${OPTARG}" ;;
+    t) item_type_flag='true'
+       TYPE="${OPTARG}" ;;
+    u) DEF_CLIENT_ID="${OPTARG}" ;;
+    v) DND_VERSION="${OPTARG}" ;;
+    w) PORT_TIMEOUT="${OPTARG}" ;;
+    *) print_usage
+       exit 1 ;;
+  esac
+done
+
+if [[ "$encoding_flag" = "true" || "$ip_flag" = "true" || "$cpu_flag" = "true" || "$test_port_flag" = "true" ]]; then
+   # From here we need JAVA to continue
+   if [[ "$DEF_JAVA" = "" ]]; then
+     echo "JAVA_HOME was not provided. Aborting."
+     exit 1;
+   fi
+
+   DENODO_SUPPORT_UTILS_CLASSPATH="../lib/denodo-support-utils-1.3.jar"
+
+   JAVA_BIN=$DEF_JAVA/jre/bin/java
+   if [ ! -e "$JAVA_BIN" ]; then
+     JAVA_BIN=$DEF_JAVA/bin/java
+   fi
+   if [ ! -e "$JAVA_OPTS" ]; then
+      JAVA_OPTS="-Xmx4m"
+   fi
+
+   if [ -e "$JAVA_BIN" ]; then
+     if [[ "$encoding_flag" = "true" ]]; then
+       "$JAVA_BIN" $JAVA_OPTS -classpath "$DENODO_SUPPORT_UTILS_CLASSPATH" com.denodo.connect.support.utils.EncodingInfo
+     fi
+     if [[ "$ip_flag" = "true" ]]; then
+	     "$JAVA_BIN" $JAVA_OPTS -classpath "$DENODO_SUPPORT_UTILS_CLASSPATH" com.denodo.connect.support.utils.NetworkInfo lite
+       "$JAVA_BIN" $JAVA_OPTS -classpath "$DENODO_SUPPORT_UTILS_CLASSPATH" com.denodo.connect.support.utils.CanonicalHostNameInfo
+     fi
+     if [[ "$cpu_flag" = "true" ]]; then
+	     "$JAVA_BIN" $JAVA_OPTS -classpath "$DENODO_SUPPORT_UTILS_CLASSPATH" com.denodo.connect.support.utils.ProcessorsInfo
+     fi
+     if [[ "$test_port_flag" = "true" ]]; then
+       if [[ "$PORT_HOST" = "" ]]; then
+         PORT_HOST="localhost"
+       fi
+       if [[ "$PORT_TIMEOUT" = "" ]]; then
+         PORT_TIMEOUT="5"
+       fi
+	     "$JAVA_BIN" $JAVA_OPTS -classpath "$DENODO_SUPPORT_UTILS_CLASSPATH" com.denodo.connect.support.utils.PortTester $PORT_HOST $PORT_LIST $PORT_TIMEOUT
+     fi
+   else
+     echo "ERROR: Unable to gather the host information!"
+     echo "* There is a problem executing $JAVA_BIN"
+   fi
+fi
+
+if [[ "$item_type_flag" = "true" ]]; then
+  # From here we need Oauth credentials to continue
+  if [[ "$DEF_CLIENT_ID" = "" || "$DEF_CLIENT_SECRET" = "" ]]; then
+    echo "Credentials were not provided. Aborting."
+    exit 1;
+  fi
+
+  # denodo endpoints
+  DENODO_OAUTH_ENDPOINT=https://auth.denodo.com/oauth2.0/accessToken
+  DENODO_ITEMS_ENDPOINT=https://support.denodo.com/repository/user/items
+  TYPE_LIST="installer update beta-update hotfix denodoconnect-enterprise denodoconnect-open driver"
+
+  # list/download updates
+  if [[ $TYPE_LIST =~ (^|[[:space:]])"$TYPE"($|[[:space:]]) ]]; then
+    if [[ "$TYPE" = "installer" ]]; then
+      TYPEID=3
+    fi
+    if [[ "$TYPE" = "update" ]]; then
+      TYPEID=2
+    fi
+    if [[ "$TYPE" = "beta-update" ]]; then
+      TYPEID=8
+    fi
+    if [[ "$TYPE" = "hotfix" ]]; then
+      TYPEID=9
+    fi
+    if [[ "$TYPE" = "denodoconnect-open" ]]; then
+      TYPEID=6
+    fi
+    if [[ "$TYPE" = "denodoconnect-enterprise" ]]; then
+      TYPEID=7
+    fi
+    if [[ "$TYPE" = "driver" ]]; then
+      TYPEID=10
+    fi
+
+    #Product IDs: 30 (6.0), 32 (7.0), 34 (8.0), 36 (9)
+    if [[ "$DND_VERSION" = "6.0" ]]; then
+      PRID=30
+    elif [[ "$DND_VERSION" = "7.0" ]]; then
+      PRID=32
+    elif [[ "$DND_VERSION" = "8.0" ]]; then
+      PRID=34
+    elif [[ "$DND_VERSION" = "9" || "$DND_VERSION" = "" ]]; then
+      DND_VERSION="9"
+      PRID=36
+    else
+      echo "Aborting! Invalid Denodo Platform version!"
+      echo "Please use one of the supported versions: 6.0, 7.0, 8.0 or 9"
+      exit 1
+    fi
+
+    # getting oauth token
+    echo -n "Authenticating... "
+    ACCESS_TOKEN=$(curl -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "grant_type=client_credentials&client_id=$DEF_CLIENT_ID&client_secret=$DEF_CLIENT_SECRET" $DENODO_OAUTH_ENDPOINT | jq -r .access_token)
+    if [[ "$ACCESS_TOKEN" = "null" ]]; then
+      echo "Invalid credentials!"
+      echo "Please configure the right tokens. Review the arguments used for calling the script or use the '--configure' option"
+      exit 1
+    fi
+    echo "OK!"
+
+    # download items
+    if [[ "$item_name_flag" = "true" ]]; then
+      ITEM_ID=$ITEM_NM
+      DOWNLOAD_PATH="./"
+      if [ -z "$PATH_NM" ]; then
+        DOWNLOAD_PATH="./"
+      else
+        DOWNLOAD_PATH=$PATH_NM
+        if [[ "${DOWNLOAD_PATH}" != */ ]]; then
+          DOWNLOAD_PATH="${DOWNLOAD_PATH}/"
+        fi
+      fi
+
+      echo -n "Getting the download URL of item $ITEM_NM... "
+      OUTPUT_JSON=$(curl -s "$DENODO_ITEMS_ENDPOINT?itemType=$TYPEID&productId=$PRID" -H "Authorization: Bearer $ACCESS_TOKEN")
+      DOWNLOAD_URL=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" '.[]|select(.name==$param)|.downloadUrl' | sed -e 's/^"//' -e 's/"$//')
+      DOWNLOAD_FILE_NAME=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" '.[]|select(.name==$param)|.name' | sed -e 's/^"//' -e 's/"$//')
+
+      if [[ "$DOWNLOAD_URL" == https* ]]; then
+        echo "OK!"
+        DESCRIPTION=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" '.[]|select(.name==$param)|.description' | sed -e 's/^"//' -e 's/"$//' | sed -e 's/<[^>]*>//g')
+        echo ""
+        echo "IMPORTANT! READ THIS:"
+        echo "====================="
+        printf "$DESCRIPTION \n"
+        echo "====================="
+        echo ""
+        echo "Download is starting:"
+        wget -O "$DOWNLOAD_PATH$DOWNLOAD_FILE_NAME.zip" --header="Authorization: Bearer $ACCESS_TOKEN" "$DOWNLOAD_URL"
+        exit 0
+      else
+        echo "Not found!"
+        echo "Please check this name is correct and if your Denodo Support user has access to it: $ITEM_ID"
+        exit 1
+      fi
+    else
+      # list items
+      echo "Getting the $TYPE list of Denodo $DND_VERSION ..."
+      OUTPUT_JSON=$(curl -s "$DENODO_ITEMS_ENDPOINT?itemType=$TYPEID&productId=$PRID" -H "Authorization: Bearer $ACCESS_TOKEN")
+      echo "$OUTPUT_JSON" | jq -r '["NAME"], ["==============================="], (sort_by(.name)[] | [.name]) | @tsv'
+      exit 0
+    fi
+  else
+    echo "Aborting! Invalid type provided ($TYPE)"
+    echo "Please use one of the supported types: installer, update, beta-update, hotfix, denodoconnect-enterprise, denodoconnect-open or driver"
+    exit 1
+  fi
+fi

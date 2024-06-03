@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+
+    <!-- ****************************************************************** -->
+    <!--  BASIC PROJECT INFO                                                -->
+    <!-- ****************************************************************** -->
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.denodo.connect.support.utils</groupId>
+    <artifactId>denodo-support-utils</artifactId>
+    <packaging>jar</packaging>
+    <version>1.3</version>
+    <name>denodo-support-utils</name>
+
+
+    <!-- ****************************************************************** -->
+    <!--  BUILD INFO                                                        -->
+    <!-- ****************************************************************** -->
+    <build>
+        
+        <resources>
+            <!-- ========================================================== -->
+            <!-- "Non-java" resources (src/main/resources)                  -->
+            <!--  * Mainly Spring-related XML files                         -->
+            <!-- ========================================================== -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>standalone-zip.xml</exclude>
+                </excludes>                
+            </resource>
+            <!-- ========================================================== -->
+            <!-- "Java" resources (disperse through the package structure)  -->
+            <!--  * ".properties": plugins, i18n and other uses             -->
+            <!--  * ".xml": Hibernate mappings and other users              -->
+            <!-- ========================================================== -->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.png</include>
+                </includes>                
+            </resource>  
+                          
+        </resources>
+
+        <!-- ============================================================== -->
+        <!-- Test-related directory locations                               -->
+        <!-- ============================================================== -->
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <testOutputDirectory>target/test-classes</testOutputDirectory>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+
+        <plugins>
+            <!-- ========================================================== -->
+            <!-- Compiler plugin                                            -->
+            <!--  * Set the Java version (source and bytecode) to J2SE 6    -->
+            <!--  * Other possible values if required: "1.4" | "1.5"        -->
+            <!-- ========================================================== -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+	           <artifactId>maven-assembly-plugin</artifactId>
+               <configuration>
+                   <descriptors>
+                       <descriptor>src/main/resources/standalone-zip.xml</descriptor>                      
+                   </descriptors>
+	           </configuration>
+               <executions>
+	               <execution>
+	                   <id>make-assembly</id>
+	                   <phase>package</phase>
+	                   <goals>
+	                       <goal>attached</goal>
+	                   </goals>
+	               </execution>
+	           </executions>
+            </plugin>            
+        </plugins>
+
+    </build>
+
+    <!-- ****************************************************************** -->
+    <!--  DEPENDENCIES                                                      -->
+    <!-- ****************************************************************** -->
+    <dependencies>         
+    </dependencies>
+    
+</project>
