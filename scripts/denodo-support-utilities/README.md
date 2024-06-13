@@ -39,28 +39,31 @@ This section describes how to install the Denodo Support CLI on your computer. T
 
 Follow these steps to install the Denodo Support CLI:
 
-1. Download the component Denodo Support Utilities from [here](https://github.com/denodo/denodocommunity-resources/releases/latest/download/denodo-support-utilities.zip)
+1. Download the component Denodo Support Utilities from [here](https://github.com/denodo/denodocommunity-resources/releases/latest)
 2. Move the file to your server.
 3. Uncompress the zip file by executing:
 ```bash
-$ unzip "Denodo Support Utilities.zip"
-Archive:  Denodo Support Utilities.zip
+$ unzip Denodo.Support.Utilities.v1.3.0.zip
+Archive:  Denodo.Support.Utilities.v1.3.0.zip
    creating: denodo-support-utils/
-   creating: denodo-support-utils/lib/
-  inflating: denodo-support-utils/lib/denodo-support-utils-1.3.jar
    creating: denodo-support-utils/bin/
   inflating: denodo-support-utils/bin/denodo-support
   inflating: denodo-support-utils/bin/port_tester.bat
   inflating: denodo-support-utils/bin/support_info.bat
-  inflating: denodo-support-utils/LICENSE.txt
+   creating: denodo-support-utils/lib/
+  inflating: denodo-support-utils/lib/denodo-support-utils-1.3.jar
+  inflating: denodo-support-utils/LICENSE
+ extracting: denodo-support-utils/NOTICE
+  inflating: denodo-support-utils/README.md
 ```
 4. Remove the zip file:
 ```bash
-$ rm "Denodo Support Utilities.zip"
+$ rm Denodo.Support.Utilities.v1.3.0.zip
 ```
 5. Go to the denodo-support-utils/bin folder and confirm the installation (example in Linux):
 ```bash
 $ cd denodo-support-utils/bin/
+$ chmod +x denodo-support
 $ ./denodo-support --version
 
 denodo-support v1.1
@@ -106,9 +109,9 @@ To create or regenerate the Denodo Support access keys, follow these steps:
 
 1. Sign in to the Denodo Support Site and open the Licenses section at https://support.denodo.com/resources/license/list.
 2. Click on the **Generate Credentials / Regenerate Credentials** button.
-3. You will receive an email with the Support Site credentials. Your credentials will look something like this:
-    * Denodo Client ID: 9tmtyViaek9XLkGacU9LDwi0KlpklBi6
-    * Denodo Client Secret: ay4rHxeMyraD9UVko2mH58ybGjdKNcv1
+3. You will receive an email with the Support Site credentials. Your credentials will look something like this (these are fake credentials):
+    * Denodo Client ID: 9tmtyek9XLkGacwi0KlpklBi6
+    * Denodo Client Secret: ao2mH58ybGjdKNcv1
 4. Please store the keys in a secure location and delete the email.
 5. When you create the keys, they are active by default, so you can use them for configuring the Denodo Support CLI.
 
@@ -248,7 +251,7 @@ Press any key to continue . . .
 
 #### Examples 
 ```bash
--- Get the list of Denodo 9 installers
+-- Get the list of Denodo 9 installers passing the user credentials as parameters
 
 
 $ ./denodo-support -t installer -u AXe45h -s 21Hyxd8
