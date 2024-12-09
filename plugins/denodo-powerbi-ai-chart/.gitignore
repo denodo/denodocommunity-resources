@@ -1,0 +1,32 @@
+# Include the required files
+!.gitignore
+!capabilities.json
+!pbiviz.json
+!README.md
+!tsconfig.json
+!tslint.json
+!webpack.config.js
+
+
+# Include required folders
+!assets/
+!src/
+!style/
+
+
+# Ignore everything inside .vscode
+.vscode/
+.tmp/
+.DS_Store
+dist/
+
+# Ignore node_modules folder
+node_modules/
+
+# Ignore dist folder
+dist/
+
+# Ignore any new files added later parallel to the specified ones
+*-lock.json
+webpack.statistics.prod.html
+openssl_pm_paris9.cnf

@@ -1,0 +1,81 @@
+{
+    "dataRoles": [
+        {
+            "name": "used_tables",
+            "kind": "Grouping",
+            "displayName": "used tables"
+        }
+    ],
+    "dataViewMappings": [
+        {
+            "categorical": {
+                "categories": {
+                    "for": {
+                        "in": "used_tables"
+                    },
+                    "dataReductionAlgorithm": {
+                        "top": {}
+                    }
+                }
+            }
+        }
+    ],
+    "supportsLandingPage": true,
+    "supportsEmptyDataView": true,
+    "objects": {
+        "dataPoint": {
+            "displayName": "Data Point",
+            "properties": {
+                "defaultColor": {
+                    "displayName": "Default Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "showAllDataPoints": {
+                    "displayName": "Show All Data Points",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fill": {
+                    "displayName": "Fill",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fillRule": {
+                    "displayName": "Fill Rule",
+                    "type": {
+                        "fill": {}
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Font Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "privileges": [
+        {
+            "name": "WebAccess",
+            "essential": true,
+            "parameters": [
+                "*"        
+            ]
+        }
+    ]
+}
