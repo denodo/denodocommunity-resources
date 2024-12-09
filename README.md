@@ -30,7 +30,13 @@ In these subprojects you can find samples of custom components using the Denodo 
 * [Custom Functions](./custom-functions/)
 * [Custom Stored Procedures](./custom-stored-procedures/)
 
-### Denodo Scripts
+### Plugins
+
+In this subproject you can find plugins for third-party applications that are connected to the Denodo Platform:
+
+* [Denodo AI PowerBI Widget](./plugins/denodo-powerbi-ai-chart/README.md)
+  
+### Scripts
 
 In this subproject you can find useful scripts for working with Denodo:
 
