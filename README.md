@@ -5,7 +5,7 @@ layout: Doc
 authorLink: ''
 authorName: 'Denodo Community'
 authorAvatar: ''
-collaborators: Javier Diez
+collaborators:
 -->
 
 # Denodo Community Resources
@@ -34,13 +34,13 @@ In these subprojects you can find samples of custom components using the Denodo 
 
 In this subproject you can find plugins for third-party applications that are connected to the Denodo Platform:
 
-* [Denodo AI PowerBI Widget](./plugins/denodo-powerbi-ai-chart/README.md)
+* [Denodo AI PowerBI Widget](./plugins/denodo-powerbi-ai-chart/)
   
 ### Scripts
 
 In this subproject you can find useful scripts for working with Denodo:
 
-* [Denodo Support Utilities](./scripts/denodo-support-utilities/README.md)
+* [Denodo Support Utilities](./scripts/denodo-support-utilities/)
 
 # Join the Denodo Community
 
