@@ -1,0 +1,2866 @@
+{
+ "Transform": "AWS::LanguageExtensions",
+ "Metadata": {
+  "AWS::CloudFormation::Interface": {
+   "ParameterGroups": [
+    {
+     "Label": {
+      "default": "EKS Cluster Configuration"
+     },
+     "Parameters": [
+      "EnvironmentName",
+      "EKSNodeNumber",
+      "EKSNodeType"
+     ]
+    },
+    {
+     "Label": {
+      "default": "Deployment Options"
+     },
+     "Parameters": [
+      "CreateEC2InstanceProfile",
+      "CreatePodIdentityAssociation",
+      "CreateValuesYaml"
+     ]
+    },
+    {
+     "Label": {
+      "default": "Networking"
+     },
+     "Parameters": [
+      "VPCCIDRBlock"
+     ]
+    },
+    {
+     "Label": {
+      "default": "Optional values.yaml Configuration"
+     },
+     "Parameters": [
+      "PrivateLoadBalancer",
+      "UseRoleForAgora",
+      "ImageRepository",
+      "PullSecretValue",
+      "DenodoHarborUser",
+      "DenodoHarborCLIPassword",
+      "DenodoIP",
+      "MppHost",
+      "DenodoUser",
+      "DenodoPassword"
+     ]
+    }
+   ]
+  }
+ },
+ "Parameters": {
+  "EKSNodeType": {
+   "Type": "String",
+   "Default": "m6a.2xlarge (RAM: 32.0, vCPU: 8)",
+   "AllowedValues": [
+    "c4.2xlarge (RAM: 15.0, vCPU: 8)",
+    "c4.4xlarge (RAM: 30.0, vCPU: 16)",
+    "c4.8xlarge (RAM: 60.0, vCPU: 36)",
+    "c4.large (RAM: 3.8, vCPU: 2)",
+    "c4.xlarge (RAM: 7.5, vCPU: 4)",
+    "c5.12xlarge (RAM: 96.0, vCPU: 48)",
+    "c5.18xlarge (RAM: 144.0, vCPU: 72)",
+    "c5.24xlarge (RAM: 192.0, vCPU: 96)",
+    "c5.2xlarge (RAM: 16.0, vCPU: 8)",
+    "c5.4xlarge (RAM: 32.0, vCPU: 16)",
+    "c5.9xlarge (RAM: 72.0, vCPU: 36)",
+    "c5.metal (RAM: 192.0, vCPU: 96)",
+    "c5.xlarge (RAM: 8.0, vCPU: 4)",
+    "c5a.12xlarge (RAM: 96.0, vCPU: 48)",
+    "c5a.16xlarge (RAM: 128.0, vCPU: 64)",
+    "c5a.24xlarge (RAM: 192.0, vCPU: 96)",
+    "c5a.2xlarge (RAM: 16.0, vCPU: 8)",
+    "c5a.4xlarge (RAM: 32.0, vCPU: 16)",
+    "c5a.8xlarge (RAM: 64.0, vCPU: 32)",
+    "c5a.xlarge (RAM: 8.0, vCPU: 4)",
+    "c5ad.12xlarge (RAM: 96.0, vCPU: 48)",
+    "c5ad.16xlarge (RAM: 128.0, vCPU: 64)",
+    "c5ad.24xlarge (RAM: 192.0, vCPU: 96)",
+    "c5ad.2xlarge (RAM: 16.0, vCPU: 8)",
+    "c5ad.4xlarge (RAM: 32.0, vCPU: 16)",
+    "c5ad.8xlarge (RAM: 64.0, vCPU: 32)",
+    "c5ad.xlarge (RAM: 8.0, vCPU: 4)",
+    "c5d.12xlarge (RAM: 96.0, vCPU: 48)",
+    "c5d.18xlarge (RAM: 144.0, vCPU: 72)",
+    "c5d.24xlarge (RAM: 192.0, vCPU: 96)",
+    "c5d.2xlarge (RAM: 16.0, vCPU: 8)",
+    "c5d.4xlarge (RAM: 32.0, vCPU: 16)",
+    "c5d.9xlarge (RAM: 72.0, vCPU: 36)",
+    "c5d.metal (RAM: 192.0, vCPU: 96)",
+    "c5d.xlarge (RAM: 8.0, vCPU: 4)",
+    "c5n.18xlarge (RAM: 192.0, vCPU: 72)",
+    "c5n.2xlarge (RAM: 21.0, vCPU: 8)",
+    "c5n.4xlarge (RAM: 42.0, vCPU: 16)",
+    "c5n.9xlarge (RAM: 96.0, vCPU: 36)",
+    "c5n.large (RAM: 5.2, vCPU: 2)",
+    "c5n.metal (RAM: 192.0, vCPU: 72)",
+    "c5n.xlarge (RAM: 10.5, vCPU: 4)",
+    "c6a.12xlarge (RAM: 96.0, vCPU: 48)",
+    "c6a.16xlarge (RAM: 128.0, vCPU: 64)",
+    "c6a.24xlarge (RAM: 192.0, vCPU: 96)",
+    "c6a.2xlarge (RAM: 16.0, vCPU: 8)",
+    "c6a.32xlarge (RAM: 256.0, vCPU: 128)",
+    "c6a.48xlarge (RAM: 384.0, vCPU: 192)",
+    "c6a.4xlarge (RAM: 32.0, vCPU: 16)",
+    "c6a.8xlarge (RAM: 64.0, vCPU: 32)",
+    "c6a.metal (RAM: 384.0, vCPU: 192)",
+    "c6a.xlarge (RAM: 8.0, vCPU: 4)",
+    "c6i.12xlarge (RAM: 96.0, vCPU: 48)",
+    "c6i.16xlarge (RAM: 128.0, vCPU: 64)",
+    "c6i.24xlarge (RAM: 192.0, vCPU: 96)",
+    "c6i.2xlarge (RAM: 16.0, vCPU: 8)",
+    "c6i.32xlarge (RAM: 256.0, vCPU: 128)",
+    "c6i.4xlarge (RAM: 32.0, vCPU: 16)",
+    "c6i.8xlarge (RAM: 64.0, vCPU: 32)",
+    "c6i.metal (RAM: 256.0, vCPU: 128)",
+    "c6i.xlarge (RAM: 8.0, vCPU: 4)",
+    "c6id.12xlarge (RAM: 96.0, vCPU: 48)",
+    "c6id.16xlarge (RAM: 128.0, vCPU: 64)",
+    "c6id.24xlarge (RAM: 192.0, vCPU: 96)",
+    "c6id.2xlarge (RAM: 16.0, vCPU: 8)",
+    "c6id.32xlarge (RAM: 256.0, vCPU: 128)",
+    "c6id.4xlarge (RAM: 32.0, vCPU: 16)",
+    "c6id.8xlarge (RAM: 64.0, vCPU: 32)",
+    "c6id.metal (RAM: 256.0, vCPU: 128)",
+    "c6id.xlarge (RAM: 8.0, vCPU: 4)",
+    "c6in.12xlarge (RAM: 96.0, vCPU: 48)",
+    "c6in.16xlarge (RAM: 128.0, vCPU: 64)",
+    "c6in.24xlarge (RAM: 192.0, vCPU: 96)",
+    "c6in.2xlarge (RAM: 16.0, vCPU: 8)",
+    "c6in.32xlarge (RAM: 256.0, vCPU: 128)",
+    "c6in.4xlarge (RAM: 32.0, vCPU: 16)",
+    "c6in.8xlarge (RAM: 64.0, vCPU: 32)",
+    "c6in.metal (RAM: 256.0, vCPU: 128)",
+    "c6in.xlarge (RAM: 8.0, vCPU: 4)",
+    "c7a.12xlarge (RAM: 96.0, vCPU: 48)",
+    "c7a.16xlarge (RAM: 128.0, vCPU: 64)",
+    "c7a.24xlarge (RAM: 192.0, vCPU: 96)",
+    "c7a.2xlarge (RAM: 16.0, vCPU: 8)",
+    "c7a.32xlarge (RAM: 256.0, vCPU: 128)",
+    "c7a.48xlarge (RAM: 384.0, vCPU: 192)",
+    "c7a.4xlarge (RAM: 32.0, vCPU: 16)",
+    "c7a.8xlarge (RAM: 64.0, vCPU: 32)",
+    "c7a.metal-48xl (RAM: 384.0, vCPU: 192)",
+    "c7a.xlarge (RAM: 8.0, vCPU: 4)",
+    "c7i.12xlarge (RAM: 96.0, vCPU: 48)",
+    "c7i.16xlarge (RAM: 128.0, vCPU: 64)",
+    "c7i.24xlarge (RAM: 192.0, vCPU: 96)",
+    "c7i.2xlarge (RAM: 16.0, vCPU: 8)",
+    "c7i.48xlarge (RAM: 384.0, vCPU: 192)",
+    "c7i.4xlarge (RAM: 32.0, vCPU: 16)",
+    "c7i.8xlarge (RAM: 64.0, vCPU: 32)",
+    "c7i.metal-24xl (RAM: 192.0, vCPU: 96)",
+    "c7i.metal-48xl (RAM: 384.0, vCPU: 192)",
+    "c7i.xlarge (RAM: 8.0, vCPU: 4)",
+    "d2.2xlarge (RAM: 61.0, vCPU: 8)",
+    "d2.4xlarge (RAM: 122.0, vCPU: 16)",
+    "d2.8xlarge (RAM: 244.0, vCPU: 36)",
+    "d2.xlarge (RAM: 30.5, vCPU: 4)",
+    "d3.2xlarge (RAM: 64.0, vCPU: 8)",
+    "d3.4xlarge (RAM: 128.0, vCPU: 16)",
+    "d3.8xlarge (RAM: 256.0, vCPU: 32)",
+    "d3.xlarge (RAM: 32.0, vCPU: 4)",
+    "g3.16xlarge (RAM: 488.0, vCPU: 64)",
+    "g3.4xlarge (RAM: 122.0, vCPU: 16)",
+    "g3.8xlarge (RAM: 244.0, vCPU: 32)",
+    "g3s.xlarge (RAM: 30.5, vCPU: 4)",
+    "g4ad.16xlarge (RAM: 256.0, vCPU: 64)",
+    "g4ad.2xlarge (RAM: 32.0, vCPU: 8)",
+    "g4ad.4xlarge (RAM: 64.0, vCPU: 16)",
+    "g4ad.8xlarge (RAM: 128.0, vCPU: 32)",
+    "g4ad.xlarge (RAM: 16.0, vCPU: 4)",
+    "g4dn.12xlarge (RAM: 192.0, vCPU: 48)",
+    "g4dn.16xlarge (RAM: 256.0, vCPU: 64)",
+    "g4dn.2xlarge (RAM: 32.0, vCPU: 8)",
+    "g4dn.4xlarge (RAM: 64.0, vCPU: 16)",
+    "g4dn.8xlarge (RAM: 128.0, vCPU: 32)",
+    "g4dn.metal (RAM: 384.0, vCPU: 96)",
+    "g4dn.xlarge (RAM: 16.0, vCPU: 4)",
+    "g5.12xlarge (RAM: 192.0, vCPU: 48)",
+    "g5.16xlarge (RAM: 256.0, vCPU: 64)",
+    "g5.24xlarge (RAM: 384.0, vCPU: 96)",
+    "g5.2xlarge (RAM: 32.0, vCPU: 8)",
+    "g5.48xlarge (RAM: 768.0, vCPU: 192)",
+    "g5.4xlarge (RAM: 64.0, vCPU: 16)",
+    "g5.8xlarge (RAM: 128.0, vCPU: 32)",
+    "g5.xlarge (RAM: 16.0, vCPU: 4)",
+    "g6.12xlarge (RAM: 192.0, vCPU: 48)",
+    "g6.16xlarge (RAM: 256.0, vCPU: 64)",
+    "g6.24xlarge (RAM: 384.0, vCPU: 96)",
+    "g6.2xlarge (RAM: 32.0, vCPU: 8)",
+    "g6.48xlarge (RAM: 768.0, vCPU: 192)",
+    "g6.4xlarge (RAM: 64.0, vCPU: 16)",
+    "g6.8xlarge (RAM: 128.0, vCPU: 32)",
+    "g6.xlarge (RAM: 16.0, vCPU: 4)",
+    "gr6.4xlarge (RAM: 128.0, vCPU: 16)",
+    "gr6.8xlarge (RAM: 256.0, vCPU: 32)",
+    "h1.16xlarge (RAM: 256.0, vCPU: 64)",
+    "h1.2xlarge (RAM: 32.0, vCPU: 8)",
+    "h1.4xlarge (RAM: 64.0, vCPU: 16)",
+    "h1.8xlarge (RAM: 128.0, vCPU: 32)",
+    "hpc6a.48xlarge (RAM: 384.0, vCPU: 96)",
+    "hpc6id.32xlarge (RAM: 1024.0, vCPU: 64)",
+    "hpc7a.12xlarge (RAM: 768.0, vCPU: 24)",
+    "hpc7a.24xlarge (RAM: 768.0, vCPU: 48)",
+    "hpc7a.48xlarge (RAM: 768.0, vCPU: 96)",
+    "hpc7a.96xlarge (RAM: 768.0, vCPU: 192)",
+    "i2.2xlarge (RAM: 61.0, vCPU: 8)",
+    "i2.4xlarge (RAM: 122.0, vCPU: 16)",
+    "i2.8xlarge (RAM: 244.0, vCPU: 32)",
+    "i2.xlarge (RAM: 30.5, vCPU: 4)",
+    "i3.16xlarge (RAM: 488.0, vCPU: 64)",
+    "i3.2xlarge (RAM: 61.0, vCPU: 8)",
+    "i3.4xlarge (RAM: 122.0, vCPU: 16)",
+    "i3.8xlarge (RAM: 244.0, vCPU: 32)",
+    "i3.large (RAM: 15.2, vCPU: 2)",
+    "i3.metal (RAM: 512.0, vCPU: 72)",
+    "i3.xlarge (RAM: 30.5, vCPU: 4)",
+    "i3en.12xlarge (RAM: 384.0, vCPU: 48)",
+    "i3en.24xlarge (RAM: 768.0, vCPU: 96)",
+    "i3en.2xlarge (RAM: 64.0, vCPU: 8)",
+    "i3en.3xlarge (RAM: 96.0, vCPU: 12)",
+    "i3en.6xlarge (RAM: 192.0, vCPU: 24)",
+    "i3en.large (RAM: 16.0, vCPU: 2)",
+    "i3en.metal (RAM: 768.0, vCPU: 96)",
+    "i3en.xlarge (RAM: 32.0, vCPU: 4)",
+    "i4i.12xlarge (RAM: 384.0, vCPU: 48)",
+    "i4i.16xlarge (RAM: 512.0, vCPU: 64)",
+    "i4i.24xlarge (RAM: 768.0, vCPU: 96)",
+    "i4i.2xlarge (RAM: 64.0, vCPU: 8)",
+    "i4i.32xlarge (RAM: 1024.0, vCPU: 128)",
+    "i4i.4xlarge (RAM: 128.0, vCPU: 16)",
+    "i4i.8xlarge (RAM: 256.0, vCPU: 32)",
+    "i4i.large (RAM: 16.0, vCPU: 2)",
+    "i4i.metal (RAM: 1024.0, vCPU: 128)",
+    "i4i.xlarge (RAM: 32.0, vCPU: 4)",
+    "inf1.24xlarge (RAM: 192.0, vCPU: 96)",
+    "inf1.2xlarge (RAM: 16.0, vCPU: 8)",
+    "inf1.6xlarge (RAM: 48.0, vCPU: 24)",
+    "inf1.xlarge (RAM: 8.0, vCPU: 4)",
+    "inf2.24xlarge (RAM: 384.0, vCPU: 96)",
+    "inf2.48xlarge (RAM: 768.0, vCPU: 192)",
+    "inf2.8xlarge (RAM: 128.0, vCPU: 32)",
+    "inf2.xlarge (RAM: 16.0, vCPU: 4)",
+    "m4.10xlarge (RAM: 160.0, vCPU: 40)",
+    "m4.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m4.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m4.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m4.large (RAM: 8.0, vCPU: 2)",
+    "m4.xlarge (RAM: 16.0, vCPU: 4)",
+    "m5.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m5.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m5.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m5.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m5.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m5.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m5.large (RAM: 8.0, vCPU: 2)",
+    "m5.metal (RAM: 384.0, vCPU: 96)",
+    "m5.xlarge (RAM: 16.0, vCPU: 4)",
+    "m5a.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m5a.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m5a.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m5a.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m5a.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m5a.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m5a.large (RAM: 8.0, vCPU: 2)",
+    "m5a.xlarge (RAM: 16.0, vCPU: 4)",
+    "m5ad.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m5ad.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m5ad.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m5ad.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m5ad.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m5ad.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m5ad.large (RAM: 8.0, vCPU: 2)",
+    "m5ad.xlarge (RAM: 16.0, vCPU: 4)",
+    "m5d.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m5d.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m5d.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m5d.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m5d.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m5d.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m5d.large (RAM: 8.0, vCPU: 2)",
+    "m5d.metal (RAM: 384.0, vCPU: 96)",
+    "m5d.xlarge (RAM: 16.0, vCPU: 4)",
+    "m5dn.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m5dn.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m5dn.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m5dn.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m5dn.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m5dn.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m5dn.large (RAM: 8.0, vCPU: 2)",
+    "m5dn.metal (RAM: 384.0, vCPU: 96)",
+    "m5dn.xlarge (RAM: 16.0, vCPU: 4)",
+    "m5n.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m5n.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m5n.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m5n.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m5n.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m5n.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m5n.large (RAM: 8.0, vCPU: 2)",
+    "m5n.metal (RAM: 384.0, vCPU: 96)",
+    "m5n.xlarge (RAM: 16.0, vCPU: 4)",
+    "m5zn.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m5zn.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m5zn.3xlarge (RAM: 48.0, vCPU: 12)",
+    "m5zn.6xlarge (RAM: 96.0, vCPU: 24)",
+    "m5zn.large (RAM: 8.0, vCPU: 2)",
+    "m5zn.metal (RAM: 192.0, vCPU: 48)",
+    "m5zn.xlarge (RAM: 16.0, vCPU: 4)",
+    "m6a.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m6a.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m6a.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m6a.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m6a.32xlarge (RAM: 512.0, vCPU: 128)",
+    "m6a.48xlarge (RAM: 768.0, vCPU: 192)",
+    "m6a.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m6a.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m6a.large (RAM: 8.0, vCPU: 2)",
+    "m6a.metal (RAM: 768.0, vCPU: 192)",
+    "m6a.xlarge (RAM: 16.0, vCPU: 4)",
+    "m6i.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m6i.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m6i.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m6i.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m6i.32xlarge (RAM: 512.0, vCPU: 128)",
+    "m6i.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m6i.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m6i.large (RAM: 8.0, vCPU: 2)",
+    "m6i.metal (RAM: 512.0, vCPU: 128)",
+    "m6i.xlarge (RAM: 16.0, vCPU: 4)",
+    "m6id.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m6id.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m6id.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m6id.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m6id.32xlarge (RAM: 512.0, vCPU: 128)",
+    "m6id.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m6id.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m6id.large (RAM: 8.0, vCPU: 2)",
+    "m6id.metal (RAM: 512.0, vCPU: 128)",
+    "m6id.xlarge (RAM: 16.0, vCPU: 4)",
+    "m6idn.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m6idn.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m6idn.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m6idn.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m6idn.32xlarge (RAM: 512.0, vCPU: 128)",
+    "m6idn.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m6idn.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m6idn.large (RAM: 8.0, vCPU: 2)",
+    "m6idn.metal (RAM: 512.0, vCPU: 128)",
+    "m6idn.xlarge (RAM: 16.0, vCPU: 4)",
+    "m6in.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m6in.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m6in.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m6in.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m6in.32xlarge (RAM: 512.0, vCPU: 128)",
+    "m6in.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m6in.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m6in.large (RAM: 8.0, vCPU: 2)",
+    "m6in.metal (RAM: 512.0, vCPU: 128)",
+    "m6in.xlarge (RAM: 16.0, vCPU: 4)",
+    "m7a.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m7a.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m7a.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m7a.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m7a.32xlarge (RAM: 512.0, vCPU: 128)",
+    "m7a.48xlarge (RAM: 768.0, vCPU: 192)",
+    "m7a.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m7a.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m7a.large (RAM: 8.0, vCPU: 2)",
+    "m7a.metal-48xl (RAM: 768.0, vCPU: 192)",
+    "m7a.xlarge (RAM: 16.0, vCPU: 4)",
+    "m7i-flex.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m7i-flex.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m7i-flex.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m7i-flex.large (RAM: 8.0, vCPU: 2)",
+    "m7i-flex.xlarge (RAM: 16.0, vCPU: 4)",
+    "m7i.12xlarge (RAM: 192.0, vCPU: 48)",
+    "m7i.16xlarge (RAM: 256.0, vCPU: 64)",
+    "m7i.24xlarge (RAM: 384.0, vCPU: 96)",
+    "m7i.2xlarge (RAM: 32.0, vCPU: 8)",
+    "m7i.48xlarge (RAM: 768.0, vCPU: 192)",
+    "m7i.4xlarge (RAM: 64.0, vCPU: 16)",
+    "m7i.8xlarge (RAM: 128.0, vCPU: 32)",
+    "m7i.large (RAM: 8.0, vCPU: 2)",
+    "m7i.metal-24xl (RAM: 384.0, vCPU: 96)",
+    "m7i.metal-48xl (RAM: 768.0, vCPU: 192)",
+    "m7i.xlarge (RAM: 16.0, vCPU: 4)",
+    "p2.16xlarge (RAM: 732.0, vCPU: 64)",
+    "p2.8xlarge (RAM: 488.0, vCPU: 32)",
+    "p2.xlarge (RAM: 61.0, vCPU: 4)",
+    "p3.16xlarge (RAM: 488.0, vCPU: 64)",
+    "p3.2xlarge (RAM: 61.0, vCPU: 8)",
+    "p3.8xlarge (RAM: 244.0, vCPU: 32)",
+    "p4d.24xlarge (RAM: 1152.0, vCPU: 96)",
+    "p5.48xlarge (RAM: 2048.0, vCPU: 192)",
+    "r3.2xlarge (RAM: 61.0, vCPU: 8)",
+    "r3.4xlarge (RAM: 122.0, vCPU: 16)",
+    "r3.8xlarge (RAM: 244.0, vCPU: 32)",
+    "r3.large (RAM: 15.0, vCPU: 2)",
+    "r3.xlarge (RAM: 30.5, vCPU: 4)",
+    "r4.16xlarge (RAM: 488.0, vCPU: 64)",
+    "r4.2xlarge (RAM: 61.0, vCPU: 8)",
+    "r4.4xlarge (RAM: 122.0, vCPU: 16)",
+    "r4.8xlarge (RAM: 244.0, vCPU: 32)",
+    "r4.large (RAM: 15.2, vCPU: 2)",
+    "r4.xlarge (RAM: 30.5, vCPU: 4)",
+    "r5.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r5.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r5.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r5.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r5.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r5.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r5.large (RAM: 16.0, vCPU: 2)",
+    "r5.metal (RAM: 768.0, vCPU: 96)",
+    "r5.xlarge (RAM: 32.0, vCPU: 4)",
+    "r5a.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r5a.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r5a.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r5a.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r5a.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r5a.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r5a.large (RAM: 16.0, vCPU: 2)",
+    "r5a.xlarge (RAM: 32.0, vCPU: 4)",
+    "r5ad.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r5ad.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r5ad.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r5ad.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r5ad.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r5ad.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r5ad.large (RAM: 16.0, vCPU: 2)",
+    "r5ad.xlarge (RAM: 32.0, vCPU: 4)",
+    "r5b.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r5b.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r5b.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r5b.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r5b.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r5b.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r5b.large (RAM: 16.0, vCPU: 2)",
+    "r5b.metal (RAM: 768.0, vCPU: 96)",
+    "r5b.xlarge (RAM: 32.0, vCPU: 4)",
+    "r5d.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r5d.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r5d.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r5d.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r5d.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r5d.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r5d.large (RAM: 16.0, vCPU: 2)",
+    "r5d.metal (RAM: 768.0, vCPU: 96)",
+    "r5d.xlarge (RAM: 32.0, vCPU: 4)",
+    "r5dn.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r5dn.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r5dn.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r5dn.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r5dn.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r5dn.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r5dn.large (RAM: 16.0, vCPU: 2)",
+    "r5dn.metal (RAM: 768.0, vCPU: 96)",
+    "r5dn.xlarge (RAM: 32.0, vCPU: 4)",
+    "r5n.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r5n.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r5n.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r5n.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r5n.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r5n.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r5n.large (RAM: 16.0, vCPU: 2)",
+    "r5n.metal (RAM: 768.0, vCPU: 96)",
+    "r5n.xlarge (RAM: 32.0, vCPU: 4)",
+    "r6a.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r6a.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r6a.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r6a.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r6a.32xlarge (RAM: 1024.0, vCPU: 128)",
+    "r6a.48xlarge (RAM: 1536.0, vCPU: 192)",
+    "r6a.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r6a.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r6a.large (RAM: 16.0, vCPU: 2)",
+    "r6a.metal (RAM: 1536.0, vCPU: 192)",
+    "r6a.xlarge (RAM: 32.0, vCPU: 4)",
+    "r6i.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r6i.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r6i.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r6i.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r6i.32xlarge (RAM: 1024.0, vCPU: 128)",
+    "r6i.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r6i.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r6i.large (RAM: 16.0, vCPU: 2)",
+    "r6i.metal (RAM: 1024.0, vCPU: 128)",
+    "r6i.xlarge (RAM: 32.0, vCPU: 4)",
+    "r6id.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r6id.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r6id.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r6id.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r6id.32xlarge (RAM: 1024.0, vCPU: 128)",
+    "r6id.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r6id.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r6id.large (RAM: 16.0, vCPU: 2)",
+    "r6id.metal (RAM: 1024.0, vCPU: 128)",
+    "r6id.xlarge (RAM: 32.0, vCPU: 4)",
+    "r6idn.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r6idn.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r6idn.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r6idn.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r6idn.32xlarge (RAM: 1024.0, vCPU: 128)",
+    "r6idn.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r6idn.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r6idn.large (RAM: 16.0, vCPU: 2)",
+    "r6idn.metal (RAM: 1024.0, vCPU: 128)",
+    "r6idn.xlarge (RAM: 32.0, vCPU: 4)",
+    "r6in.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r6in.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r6in.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r6in.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r6in.32xlarge (RAM: 1024.0, vCPU: 128)",
+    "r6in.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r6in.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r6in.large (RAM: 16.0, vCPU: 2)",
+    "r6in.metal (RAM: 1024.0, vCPU: 128)",
+    "r6in.xlarge (RAM: 32.0, vCPU: 4)",
+    "r7a.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r7a.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r7a.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r7a.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r7a.32xlarge (RAM: 1024.0, vCPU: 128)",
+    "r7a.48xlarge (RAM: 1536.0, vCPU: 192)",
+    "r7a.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r7a.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r7a.large (RAM: 16.0, vCPU: 2)",
+    "r7a.metal-48xl (RAM: 1536.0, vCPU: 192)",
+    "r7a.xlarge (RAM: 32.0, vCPU: 4)",
+    "r7i.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r7i.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r7i.24xlarge (RAM: 768.0, vCPU: 96)",
+    "r7i.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r7i.48xlarge (RAM: 1536.0, vCPU: 192)",
+    "r7i.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r7i.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r7i.large (RAM: 16.0, vCPU: 2)",
+    "r7i.metal-24xl (RAM: 768.0, vCPU: 96)",
+    "r7i.metal-48xl (RAM: 1536.0, vCPU: 192)",
+    "r7i.xlarge (RAM: 32.0, vCPU: 4)",
+    "r7iz.12xlarge (RAM: 384.0, vCPU: 48)",
+    "r7iz.16xlarge (RAM: 512.0, vCPU: 64)",
+    "r7iz.2xlarge (RAM: 64.0, vCPU: 8)",
+    "r7iz.32xlarge (RAM: 1024.0, vCPU: 128)",
+    "r7iz.4xlarge (RAM: 128.0, vCPU: 16)",
+    "r7iz.8xlarge (RAM: 256.0, vCPU: 32)",
+    "r7iz.large (RAM: 16.0, vCPU: 2)",
+    "r7iz.metal-16xl (RAM: 512.0, vCPU: 64)",
+    "r7iz.metal-32xl (RAM: 1024.0, vCPU: 128)",
+    "r7iz.xlarge (RAM: 32.0, vCPU: 4)",
+    "t2.2xlarge (RAM: 32.0, vCPU: 8)",
+    "t2.large (RAM: 8.0, vCPU: 2)",
+    "t2.xlarge (RAM: 16.0, vCPU: 4)",
+    "t3.2xlarge (RAM: 32.0, vCPU: 8)",
+    "t3.large (RAM: 8.0, vCPU: 2)",
+    "t3.xlarge (RAM: 16.0, vCPU: 4)",
+    "t3a.2xlarge (RAM: 32.0, vCPU: 8)",
+    "t3a.large (RAM: 8.0, vCPU: 2)",
+    "t3a.xlarge (RAM: 16.0, vCPU: 4)",
+    "trn1.2xlarge (RAM: 32.0, vCPU: 8)",
+    "trn1.32xlarge (RAM: 512.0, vCPU: 128)",
+    "trn1n.32xlarge (RAM: 512.0, vCPU: 128)",
+    "u-12tb1.112xlarge (RAM: 12288.0, vCPU: 448)",
+    "u-3tb1.56xlarge (RAM: 3072.0, vCPU: 224)",
+    "u-6tb1.112xlarge (RAM: 6144.0, vCPU: 448)",
+    "u-6tb1.56xlarge (RAM: 6144.0, vCPU: 224)",
+    "u-9tb1.112xlarge (RAM: 9216.0, vCPU: 448)",
+    "x1.16xlarge (RAM: 976.0, vCPU: 64)",
+    "x1.32xlarge (RAM: 1952.0, vCPU: 128)",
+    "x1e.16xlarge (RAM: 1952.0, vCPU: 64)",
+    "x1e.2xlarge (RAM: 244.0, vCPU: 8)",
+    "x1e.32xlarge (RAM: 3904.0, vCPU: 128)",
+    "x1e.4xlarge (RAM: 488.0, vCPU: 16)",
+    "x1e.8xlarge (RAM: 976.0, vCPU: 32)",
+    "x1e.xlarge (RAM: 122.0, vCPU: 4)",
+    "x2idn.16xlarge (RAM: 1024.0, vCPU: 64)",
+    "x2idn.24xlarge (RAM: 1536.0, vCPU: 96)",
+    "x2idn.32xlarge (RAM: 2048.0, vCPU: 128)",
+    "x2idn.metal (RAM: 2048.0, vCPU: 128)",
+    "x2iedn.16xlarge (RAM: 2048.0, vCPU: 64)",
+    "x2iedn.24xlarge (RAM: 3072.0, vCPU: 96)",
+    "x2iedn.2xlarge (RAM: 256.0, vCPU: 8)",
+    "x2iedn.32xlarge (RAM: 4096.0, vCPU: 128)",
+    "x2iedn.4xlarge (RAM: 512.0, vCPU: 16)",
+    "x2iedn.8xlarge (RAM: 1024.0, vCPU: 32)",
+    "x2iedn.metal (RAM: 4096.0, vCPU: 128)",
+    "x2iedn.xlarge (RAM: 128.0, vCPU: 4)",
+    "z1d.12xlarge (RAM: 384.0, vCPU: 48)",
+    "z1d.2xlarge (RAM: 64.0, vCPU: 8)",
+    "z1d.3xlarge (RAM: 96.0, vCPU: 12)",
+    "z1d.6xlarge (RAM: 192.0, vCPU: 24)",
+    "z1d.large (RAM: 16.0, vCPU: 2)",
+    "z1d.metal (RAM: 384.0, vCPU: 48)",
+    "z1d.xlarge (RAM: 32.0, vCPU: 4)"
+   ],
+   "Description": "Enter your preferred instance type. You have to select one that is supported in your region"
+  },
+  "EnvironmentName": {
+   "Type": "String",
+   "Default": "dev",
+   "Description": "This parameter will be used as a suffix to uniquely identify all resources created during that deployment. This suffix helps in organizing and distinguishing resources across different environments or executions of the script . E.g. poc, dev, prod, 04112024"
+  },
+  "EKSNodeNumber": {
+   "Type": "Number",
+   "Default": 3,
+   "Description": "The number of nodes (EC2 instances) to launch for the cluster nodegroup. A correct MPP deployment requires at least 3 nodes, adjust the node type to match your expected processing capacity, each extra node will correspond with one extra worker, deploying by default 1 worker with 3 nodes selected (One node for MPP's coordinator, one node for MPP's Metastore and PostgreSQL and one MPP worker)",
+   "MinValue": 3
+  },
+  "CreateEC2InstanceProfile": {
+   "Type": "String",
+   "Default": "true",
+   "AllowedValues": [
+    "true",
+    "false"
+   ],
+   "Description": "Specify whether to create an EC2 role and instance profile granting access to the EKS cluster provisioned by this template. Set to 'true' to create the role, 'false' otherwise."
+  },
+  "CreatePodIdentityAssociation": {
+   "Type": "String",
+   "Default": "true",
+   "AllowedValues": [
+    "true",
+    "false"
+   ],
+   "Description": "Specify whether to create and configure a Pod Identity Association instead of Node Roles. Set to 'true' to create and configure the association and role, 'false' otherwise."
+  },
+  "CreateValuesYaml": {
+   "Type": "String",
+   "Default": "true",
+   "AllowedValues": [
+    "true",
+    "false"
+   ],
+   "Description": "If set to 'true' the template will create an S3 bucket and upload a modified version of the values.yaml adapted to the deployment. Remember to protect your values.yaml as it may have sensible information!"
+  },
+  "PrivateLoadBalancer": {
+   "Type": "String",
+   "Default": "true",
+   "AllowedValues": [
+    "true",
+    "false"
+   ],
+   "Description": "Specify whether the load balancer of the Denodo MPP is PRIVATE: It will require manual setup of VPC Peering/other routing solution or PUBLIC: no setup needed but traffic will reach the internet. Set to 'true' to deploy a private load balancer, 'false' otherwise."
+  },
+  "UseRoleForAgora": {
+   "Type": "String",
+   "Default": "false",
+   "AllowedValues": [
+    "true",
+    "false"
+   ],
+   "Description": "Property to enable using ROLE during registration instead of creating a new USER. If you are using AGORA you must set this property to true."
+  },
+  "ImageRepository": {
+   "Type": "String",
+   "Default": "harbor.open.denodo.com/denodo-connects-9/images",
+   "Description": "The container registry containing the Denodo Embedded MPP images. By default uses the denodo Harbor repository and requires that you fill the PullSecretValue or the DenodoHarborUser and DenodoHarborCLIPassword. If you want to use AWS Container Registry leave PullSecretValue empty and write your ecr repository <account_id>.dkr.ecr.<ecr_region>.amazonaws.com"
+  },
+  "PullSecretValue": {
+   "Type": "String",
+   "Default": "",
+   "Description": "References the kubernetes secret with the credentials that will be used to download images from the Container registry",
+   "NoEcho": true
+  },
+  "DenodoHarborUser": {
+   "Type": "String",
+   "Default": "",
+   "Description": "Denodo harbor account username, required only when using harbor and you dont have a Pull Secret created"
+  },
+  "DenodoHarborCLIPassword": {
+   "Type": "String",
+   "Default": "",
+   "Description": "CLI secret in the Denodo Container Registry, required only when using harbor and you dont have a Pull Secret created",
+   "NoEcho": true
+  },
+  "DenodoIP": {
+   "Type": "String",
+   "Default": "",
+   "Description": "The IP/Hostname of your Denodo installation, could be private or public. If using a private IP, you have to ensure that this network is interconnected with the private subnet of the Cluster (using VPC Peering or similar)"
+  },
+  "MppHost": {
+   "Type": "String",
+   "Default": "presto-denodo",
+   "Description": "The IP/Hostname of your Denodo MPP installation, could be private or public. By default uses 'presto-denodo' hostname and it will be registering this hostname/IP in the denodo datasource, changing this parameter is common with Agora deployments but not needed most of the times. If using a private IP, you have to ensure that this network is interconnected with the private subnet of the Cluster (using VPC Peering or similar)"
+  },
+  "DenodoUser": {
+   "Type": "String",
+   "Default": "denodo_mpp_user",
+   "Description": "The user name to create in your Denodo installation when you run ./cluster.sh register. It's replaced in the values.yaml and will allow presto to connect to Denodo. Default value is 'denodo_mpp_user'"
+  },
+  "DenodoPassword": {
+   "Type": "String",
+   "Default": "d3n0do_MPP_p*d",
+   "Description": "The user password to create in your Denodo installation when you run ./cluster.sh register. It's replaced in the values.yaml and will allow presto to connect to Denodo. Default value is 'd3n0do_MPP_p*d'",
+   "NoEcho": true
+  },
+  "VPCCIDRBlock": {
+   "Type": "String",
+   "Default": "10.99.0.0/16",
+   "AllowedPattern": "^(([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){2}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))\\/([1][6-9]|[2][0-1])$",
+   "Description": "The CIDR Block to use in your new VPC to create the network, mask should be between 16 and 21, by default will be 10.99.0.0/16 and the format should be <IPaddress>/<mask>"
+  }
+ },
+ "Resources": {
+  "DenMPPGetSubnetsCIDRLambdaServiceRole01621C2D": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPGetSubnetsCIDRLambda/ServiceRole/Resource"
+   }
+  },
+  "DenMPPGetSubnetsCIDRLambdaBB8E8F35": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "ZipFile": "import json\nimport cfnresponse\nfrom ipaddress import IPv4Network\n\ndef lambda_handler(event, context):\n    print(\"entering handler\")\n\n    try:\n        print(\"printing event\")\n        print(json.dumps(event))\n        vpc_cidr = event[\"ResourceProperties\"][\"CIDR\"]\n        \n        if event[\"RequestType\"] == \"Create\":\n            cidr_list = calculate_subnets(IPv4Network(vpc_cidr))\n        elif event[\"RequestType\"] == \"Update\":\n            cidr_list = calculate_subnets(IPv4Network(vpc_cidr))\n        \n        if event[\"RequestType\"] == \"Delete\":\n            response = {\n                \"requestId\": event[\"RequestId\"], \n                \"status\": \"success\",\n            }\n        else:\n            response = {\n                \"requestId\": event[\"RequestId\"], \n                \"status\": \"success\",\n                \"publicSubnet1\": cidr_list[0],\n                \"publicSubnet2\": cidr_list[1],\n                \"privateSubnet1\": cidr_list[2],\n                \"privateSubnet2\": cidr_list[3],\n            }\n        cfnresponse.send(event, context, cfnresponse.SUCCESS, response)\n\n    except Exception as e:\n        print(\"entering except\")\n        print(\"Exception is:\", e)\n        response = {\n            \"requestId\": event[\"RequestId\"],\n            \"status\": \"failed\",\n        }\n        cfnresponse.send(event, context, cfnresponse.FAILED, response)\n\n    finally:\n        print(\"end request\")\n\n# Logic to calculate subnets from a CIDR Block\ndef calculate_subnets(ipv4network: IPv4Network):\n    cidr_list: list[str] = []\n    for ipv4 in ipv4network.subnets(2):\n        cidr_list.append(str(ipv4))\n    return cidr_list\n\ndef delete_enis():\n    return \"\""
+    },
+    "Handler": "index.lambda_handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "DenMPPGetSubnetsCIDRLambdaServiceRole01621C2D",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.8",
+    "Timeout": 240
+   },
+   "DependsOn": [
+    "DenMPPGetSubnetsCIDRLambdaServiceRole01621C2D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPGetSubnetsCIDRLambda/Resource"
+   }
+  },
+  "DenMPPGetSubnetsCIDRResource": {
+   "Type": "AWS::CloudFormation::CustomResource",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "DenMPPGetSubnetsCIDRLambdaBB8E8F35",
+      "Arn"
+     ]
+    },
+    "CIDR": {
+     "Ref": "VPCCIDRBlock"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPGetSubnetsCIDRResource/Default"
+   }
+  },
+  "DenMPPVpc": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": {
+     "Ref": "VPCCIDRBlock"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": {
+       "Fn::Join": [
+        "",
+        [
+         "DenodoMPP-VPC-",
+         {
+          "Ref": "EnvironmentName"
+         }
+        ]
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPVpc"
+   }
+  },
+  "DenMPPPublicSubnet1SubnetD5F1406C": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": {
+     "Fn::Select": [
+      0,
+      {
+       "Fn::GetAZs": ""
+      }
+     ]
+    },
+    "CidrBlock": {
+     "Fn::GetAtt": [
+      "DenMPPGetSubnetsCIDRResource",
+      "publicSubnet1"
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Fn::GetAtt": [
+      "DenMPPVpc",
+      "VpcId"
+     ]
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicIGW",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet1/Subnet"
+   }
+  },
+  "DenMPPPublicSubnet1RouteTableC0E7C2E3": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Fn::GetAtt": [
+      "DenMPPVpc",
+      "VpcId"
+     ]
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicIGW",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet1/RouteTable"
+   }
+  },
+  "DenMPPPublicSubnet1RouteTableAssociationD846949A": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "DenMPPPublicSubnet1RouteTableC0E7C2E3"
+    },
+    "SubnetId": {
+     "Ref": "DenMPPPublicSubnet1SubnetD5F1406C"
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicIGW",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet1/RouteTableAssociation"
+   }
+  },
+  "DenMPPPublicSubnet1EIPC49DC504": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet1"
+     }
+    ]
+   },
+   "DependsOn": [
+    "DenMPPPublicIGW",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet1/EIP"
+   }
+  },
+  "DenMPPPublicSubnet1NATGateway179A1102": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "DenMPPPublicSubnet1EIPC49DC504",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "DenMPPPublicSubnet1SubnetD5F1406C"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet1"
+     }
+    ]
+   },
+   "DependsOn": [
+    "DenMPPPublicIGW",
+    "DenMPPPublicSubnet1DefaultRoute9D5E2185",
+    "DenMPPPublicSubnet1RouteTableAssociationD846949A",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet1/NATGateway"
+   }
+  },
+  "DenMPPPublicSubnet1DefaultRoute9D5E2185": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Fn::GetAtt": [
+      "DenMPPPublicIGW",
+      "InternetGatewayId"
+     ]
+    },
+    "RouteTableId": {
+     "Ref": "DenMPPPublicSubnet1RouteTableC0E7C2E3"
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicIGW",
+    "DenMPPPublicIgwAttachment",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet1/DefaultRoute"
+   }
+  },
+  "DenMPPPublicSubnet2Subnet3745A750": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": {
+     "Fn::Select": [
+      1,
+      {
+       "Fn::GetAZs": ""
+      }
+     ]
+    },
+    "CidrBlock": {
+     "Fn::GetAtt": [
+      "DenMPPGetSubnetsCIDRResource",
+      "publicSubnet2"
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Fn::GetAtt": [
+      "DenMPPVpc",
+      "VpcId"
+     ]
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicIGW",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet2/Subnet"
+   }
+  },
+  "DenMPPPublicSubnet2RouteTable5499C825": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Fn::GetAtt": [
+      "DenMPPVpc",
+      "VpcId"
+     ]
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicIGW",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet2/RouteTable"
+   }
+  },
+  "DenMPPPublicSubnet2RouteTableAssociation4BCE6610": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "DenMPPPublicSubnet2RouteTable5499C825"
+    },
+    "SubnetId": {
+     "Ref": "DenMPPPublicSubnet2Subnet3745A750"
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicIGW",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet2/RouteTableAssociation"
+   }
+  },
+  "DenMPPPublicSubnet2DefaultRoute5A9F332D": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Fn::GetAtt": [
+      "DenMPPPublicIGW",
+      "InternetGatewayId"
+     ]
+    },
+    "RouteTableId": {
+     "Ref": "DenMPPPublicSubnet2RouteTable5499C825"
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicIGW",
+    "DenMPPPublicIgwAttachment",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicSubnet2/DefaultRoute"
+   }
+  },
+  "DenMPPPublicIGW": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicIGW"
+   }
+  },
+  "DenMPPPublicIgwAttachment": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Fn::GetAtt": [
+      "DenMPPPublicIGW",
+      "InternetGatewayId"
+     ]
+    },
+    "VpcId": {
+     "Fn::GetAtt": [
+      "DenMPPVpc",
+      "VpcId"
+     ]
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicSubnet1SubnetD5F1406C",
+    "DenMPPPublicSubnet2Subnet3745A750",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPublicIgwAttachment"
+   }
+  },
+  "DenMPPPrivateSubnet1Subnet3F4388E4": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": {
+     "Fn::Select": [
+      0,
+      {
+       "Fn::GetAZs": ""
+      }
+     ]
+    },
+    "CidrBlock": {
+     "Fn::GetAtt": [
+      "DenMPPGetSubnetsCIDRResource",
+      "privateSubnet1"
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Fn::GetAtt": [
+      "DenMPPVpc",
+      "VpcId"
+     ]
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicSubnet1DefaultRoute9D5E2185",
+    "DenMPPPublicSubnet1EIPC49DC504",
+    "DenMPPPublicSubnet1NATGateway179A1102",
+    "DenMPPPublicSubnet1RouteTableC0E7C2E3",
+    "DenMPPPublicSubnet1RouteTableAssociationD846949A",
+    "DenMPPPublicSubnet1SubnetD5F1406C",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet1/Subnet"
+   }
+  },
+  "DenMPPPrivateSubnet1RouteTableD169E86D": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Fn::GetAtt": [
+      "DenMPPVpc",
+      "VpcId"
+     ]
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicSubnet1DefaultRoute9D5E2185",
+    "DenMPPPublicSubnet1EIPC49DC504",
+    "DenMPPPublicSubnet1NATGateway179A1102",
+    "DenMPPPublicSubnet1RouteTableC0E7C2E3",
+    "DenMPPPublicSubnet1RouteTableAssociationD846949A",
+    "DenMPPPublicSubnet1SubnetD5F1406C",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet1/RouteTable"
+   }
+  },
+  "DenMPPPrivateSubnet1RouteTableAssociation4A35AEBC": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "DenMPPPrivateSubnet1RouteTableD169E86D"
+    },
+    "SubnetId": {
+     "Ref": "DenMPPPrivateSubnet1Subnet3F4388E4"
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicSubnet1DefaultRoute9D5E2185",
+    "DenMPPPublicSubnet1EIPC49DC504",
+    "DenMPPPublicSubnet1NATGateway179A1102",
+    "DenMPPPublicSubnet1RouteTableC0E7C2E3",
+    "DenMPPPublicSubnet1RouteTableAssociationD846949A",
+    "DenMPPPublicSubnet1SubnetD5F1406C",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet1/RouteTableAssociation"
+   }
+  },
+  "DenMPPPrivateSubnet1DefaultRoute5A55E4EF": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Fn::GetAtt": [
+      "DenMPPPublicSubnet1NATGateway179A1102",
+      "NatGatewayId"
+     ]
+    },
+    "RouteTableId": {
+     "Ref": "DenMPPPrivateSubnet1RouteTableD169E86D"
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicSubnet1DefaultRoute9D5E2185",
+    "DenMPPPublicSubnet1EIPC49DC504",
+    "DenMPPPublicSubnet1NATGateway179A1102",
+    "DenMPPPublicSubnet1RouteTableC0E7C2E3",
+    "DenMPPPublicSubnet1RouteTableAssociationD846949A",
+    "DenMPPPublicSubnet1SubnetD5F1406C",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet1/DefaultRoute"
+   }
+  },
+  "DenMPPPrivateSubnet2Subnet603990B7": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": {
+     "Fn::Select": [
+      1,
+      {
+       "Fn::GetAZs": ""
+      }
+     ]
+    },
+    "CidrBlock": {
+     "Fn::GetAtt": [
+      "DenMPPGetSubnetsCIDRResource",
+      "privateSubnet2"
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Fn::GetAtt": [
+      "DenMPPVpc",
+      "VpcId"
+     ]
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicSubnet1NATGateway179A1102",
+    "DenMPPPublicSubnet2DefaultRoute5A9F332D",
+    "DenMPPPublicSubnet2RouteTable5499C825",
+    "DenMPPPublicSubnet2RouteTableAssociation4BCE6610",
+    "DenMPPPublicSubnet2Subnet3745A750",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet2/Subnet"
+   }
+  },
+  "DenMPPPrivateSubnet2RouteTable7CCCC9D0": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Fn::GetAtt": [
+      "DenMPPVpc",
+      "VpcId"
+     ]
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicSubnet1NATGateway179A1102",
+    "DenMPPPublicSubnet2DefaultRoute5A9F332D",
+    "DenMPPPublicSubnet2RouteTable5499C825",
+    "DenMPPPublicSubnet2RouteTableAssociation4BCE6610",
+    "DenMPPPublicSubnet2Subnet3745A750",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet2/RouteTable"
+   }
+  },
+  "DenMPPPrivateSubnet2RouteTableAssociation22DB48A5": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "DenMPPPrivateSubnet2RouteTable7CCCC9D0"
+    },
+    "SubnetId": {
+     "Ref": "DenMPPPrivateSubnet2Subnet603990B7"
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicSubnet1NATGateway179A1102",
+    "DenMPPPublicSubnet2DefaultRoute5A9F332D",
+    "DenMPPPublicSubnet2RouteTable5499C825",
+    "DenMPPPublicSubnet2RouteTableAssociation4BCE6610",
+    "DenMPPPublicSubnet2Subnet3745A750",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet2/RouteTableAssociation"
+   }
+  },
+  "DenMPPPrivateSubnet2DefaultRoute40B875F5": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Fn::GetAtt": [
+      "DenMPPPublicSubnet1NATGateway179A1102",
+      "NatGatewayId"
+     ]
+    },
+    "RouteTableId": {
+     "Ref": "DenMPPPrivateSubnet2RouteTable7CCCC9D0"
+    }
+   },
+   "DependsOn": [
+    "DenMPPPublicSubnet1NATGateway179A1102",
+    "DenMPPPublicSubnet2DefaultRoute5A9F332D",
+    "DenMPPPublicSubnet2RouteTable5499C825",
+    "DenMPPPublicSubnet2RouteTableAssociation4BCE6610",
+    "DenMPPPublicSubnet2Subnet3745A750",
+    "DenMPPVpc"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPPrivateSubnet2/DefaultRoute"
+   }
+  },
+  "DenMPPS3BucketValuesYamlA76E47CE": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPS3BucketValuesYaml/Resource"
+   },
+   "Condition": "DenMPPCreateValuesYamlCondition"
+  },
+  "DenMPPGenerateValuesYamlLambdaServiceRole38ECB0E3": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "DenMPPS3BucketValuesYamlA76E47CE"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPGenerateValuesYamlLambda/ServiceRole/Resource"
+   },
+   "Condition": "DenMPPCreateValuesYamlCondition"
+  },
+  "DenMPPGenerateValuesYamlLambda1827A339": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "ZipFile": "import json\nfrom tokenize import String\nimport boto3\nimport cfnresponse\nfrom io import BytesIO\nimport re\n\ns3_client = boto3.client(\"s3\")\n\ndef lambda_handler(event, context):\n    print(\"entering handler\")\n\n    try:\n        print(\"printing event\")\n        print(json.dumps(event))\n        s3_bucket_name = event[\"ResourceProperties\"][\"S3BucketName\"]\n        base_values_yaml = event[\"ResourceProperties\"][\"BaseValuesYaml\"]\n        \n        if event[\"RequestType\"] == \"Create\":\n            upload_values_yaml(s3_bucket_name, replace_placeholders(base_values_yaml,event))\n        if event[\"RequestType\"] == \"Update\":\n            delete_values_yaml(s3_bucket_name)\n            upload_values_yaml(s3_bucket_name, replace_placeholders(base_values_yaml,event))\n        elif event[\"RequestType\"] == \"Delete\":\n            delete_values_yaml(s3_bucket_name)\n\n        response = {\"requestId\": event[\"RequestId\"], \"status\": \"success\"}\n        cfnresponse.send(event, context, cfnresponse.SUCCESS, response)\n\n    except Exception as e:\n        print(\"entering except\")\n        print(\"Exception is:\", e)\n        response = {\n            \"requestId\": event[\"RequestId\"],\n            \"status\": \"failed\",\n        }\n        cfnresponse.send(event, context, cfnresponse.FAILED, response)\n\n    finally:\n        print(\"end request\")\n\n# Function to upload the values.yaml file content to a bucket\ndef upload_values_yaml(s3_bucket_name: str, base_values_yaml: str):\n    values_yaml_file_object = BytesIO()\n    values_yaml_file_object.write(base_values_yaml.encode('utf-8'))\n    values_yaml_file_object.seek(0)\n    \n    s3_client.upload_fileobj(\n        Fileobj=values_yaml_file_object,\n        Bucket=s3_bucket_name,\n        Key='values.yaml',\n    )\n    print(f'File \"values.yaml\" uploaded to bucket \"{s3_bucket_name}\" successfully.')\n\ndef delete_values_yaml(s3_bucket_name):\n    response = s3_client.delete_object(\n        Bucket=s3_bucket_name, \n        Key='values.yaml'\n    )\n    return response\n\ndef replace_placeholders(base_values_yaml:str, event):\n    subnet_id_1 = get_subnet_id(event[\"ResourceProperties\"][\"SubnetId1\"])\n    subnet_id_2 = get_subnet_id(event[\"ResourceProperties\"][\"SubnetId2\"])    \n    if event[\"ResourceProperties\"][\"PrivateLoadBalancer\"] == \"true\":\n        private_load_balancer = (\n            f\"\\n      service.beta.kubernetes.io/aws-load-balancer-internal: \\\"true\\\"\\n\"\n            f\"      service.beta.kubernetes.io/aws-load-balancer-type: \\\"nlb\\\"\\n\"\n            f\"      service.beta.kubernetes.io/aws-load-balancer-subnets: \\\"{subnet_id_1},{subnet_id_2}\\\"\\n\"\n            f\"      # This is for fixing IPs, use only if you installed the network load balancer controller\\n\"\n            f\"      #service.beta.kubernetes.io/aws-load-balancer-private-ipv4-addresses: \\\"fixed-ip-subnet1,fixed-ip-subnet2\\\"\"\n        )\n    else:\n        private_load_balancer = (\n            f\"\\n      service.beta.kubernetes.io/aws-load-balancer-type: \\\"nlb\\\"\\n\"\n            f\"      service.beta.kubernetes.io/aws-load-balancer-subnets: \\\"{subnet_id_1},{subnet_id_2}\\\"\\n\"\n            f\"      # This is for fixing IPs, use only if you installed the network load balancer controller\\n\"\n            f\"      #service.beta.kubernetes.io/aws-load-balancer-private-ipv4-addresses: \\\"fixed-ip-subnet1,fixed-ip-subnet2\\\"\"\n        )   \n    use_role_for_agora = event[\"ResourceProperties\"][\"UseRoleForAgora\"]\n    image_repository = event[\"ResourceProperties\"][\"ImageRepository\"]\n    pull_secret = event[\"ResourceProperties\"][\"PullSecret\"]\n    denodo_ip = event[\"ResourceProperties\"][\"DenodoIP\"]\n    mpphost = event[\"ResourceProperties\"][\"MppHost\"]\n    instance_type = event[\"ResourceProperties\"][\"InstanceType\"]\n    node_number = int(event[\"ResourceProperties\"][\"NodeNumber\"])\n    denodo_user = event[\"ResourceProperties\"][\"DenodoUser\"]\n    denodo_password = event[\"ResourceProperties\"][\"DenodoPassword\"]\n    denodo_harbor_user = event[\"ResourceProperties\"][\"DenodoHarborUser\"]\n    denodo_harbor_cli_password = event[\"ResourceProperties\"][\"DenodoHarborCLIPassword\"]\n    # This parameter is not needed for standard S3 deployment\n    # hive_s3_endpoint = event[\"ResourceProperties\"][\"HiveS3Endpoint\"]\n    \n    base_values_yaml = base_values_yaml.replace('{{IMAGE_REPOSITORY}}',image_repository)\n    base_values_yaml = base_values_yaml.replace('{{PULL_SECRET}}',pull_secret)\n    if denodo_harbor_user=='':\n        base_values_yaml = base_values_yaml.replace(\"'{{PULL_CREDENTIALS_ENABLED}}'\",'false')\n    else:\n        base_values_yaml = base_values_yaml.replace(\"'{{PULL_CREDENTIALS_ENABLED}}'\",'true')\n    base_values_yaml = base_values_yaml.replace('{{DENODO_HARBOR_USER}}',denodo_harbor_user)\n    base_values_yaml = base_values_yaml.replace('{{DENODO_HARBOR_CLI_PASSWORD}}',denodo_harbor_cli_password)\n    if denodo_ip=='':\n        denodo_ip='DENODO_IP'\n    base_values_yaml = base_values_yaml.replace('{{DENODO_IP}}',denodo_ip)\n    base_values_yaml = base_values_yaml.replace('{{MPPHOST}}',mpphost)\n    base_values_yaml = base_values_yaml.replace('{{DENODO_USER}}',denodo_user)\n    base_values_yaml = base_values_yaml.replace('{{DENODO_PASSWORD}}',denodo_password)\n    base_values_yaml = base_values_yaml.replace(\"'{{USE_ROLE}}'\",use_role_for_agora)\n    # We need the previous version for the load balancer to work\n    # base_values_yaml = base_values_yaml.replace(\"'{{PRESTO_ANNOTATIONS}}'\",'{service.beta.kubernetes.io/aws-load-balancer-scheme: \"internal\"}')\n    base_values_yaml = base_values_yaml.replace(\"'{{PRESTO_ANNOTATIONS}}'\", private_load_balancer)\n    base_values_yaml = base_values_yaml.replace(\"'{{NUM_WORKERS}}'\",str(node_number-2))\n    pattern_ram = r'RAM: (\\d+)'\n    pattern_vcpu = r'vCPU: (\\d+)'\n    memory_per_node = re.search(pattern_ram, instance_type).group(1)\n    cpus_per_node = re.search(pattern_vcpu, instance_type).group(1)\n    base_values_yaml = base_values_yaml.replace(\"'{{MEMORY_PER_NODE}}'\",memory_per_node)\n    base_values_yaml = base_values_yaml.replace(\"'{{CPUS_PER_NODE}}'\",cpus_per_node)\n    base_values_yaml = base_values_yaml.replace('{{STORAGE_CLASS_NAME}}',\"gp2\")\n    # This parameter is not needed for standard S3 deployment\n    # base_values_yaml = base_values_yaml.replace(\"{{HIVE_S3_ENDPOINT}}\",hive_s3_endpoint)\n    \n    return base_values_yaml\n\ndef get_subnet_id(subnet):\n    if isinstance(subnet, list):\n        return subnet[0]\n    return subnet"
+    },
+    "Handler": "index.lambda_handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "DenMPPGenerateValuesYamlLambdaServiceRole38ECB0E3",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.8",
+    "Timeout": 240
+   },
+   "DependsOn": [
+    "DenMPPGenerateValuesYamlLambdaServiceRole38ECB0E3",
+    "DenMPPS3BucketValuesYamlA76E47CE"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPGenerateValuesYamlLambda/Resource"
+   },
+   "Condition": "DenMPPCreateValuesYamlCondition"
+  },
+  "DenMPPAllowS3DenBucketAccessPolicyAFA2FBEF": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:PutObject"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:s3:::*/*",
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:s3:::",
+           {
+            "Ref": "DenMPPS3BucketValuesYamlA76E47CE"
+           }
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "DenMPPAllowS3DenBucketAccessPolicyAFA2FBEF",
+    "Roles": [
+     {
+      "Ref": "DenMPPGenerateValuesYamlLambdaServiceRole38ECB0E3"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPAllowS3DenBucketAccessPolicy/Resource"
+   },
+   "Condition": "DenMPPCreateValuesYamlCondition"
+  },
+  "DenMPPGenerateValuesYamlResource": {
+   "Type": "AWS::CloudFormation::CustomResource",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "DenMPPGenerateValuesYamlLambda1827A339",
+      "Arn"
+     ]
+    },
+    "PrivateLoadBalancer": {
+     "Ref": "PrivateLoadBalancer"
+    },
+    "UseRoleForAgora": {
+     "Ref": "UseRoleForAgora"
+    },
+    "ImageRepository": {
+     "Ref": "ImageRepository"
+    },
+    "PullSecret": {
+     "Ref": "PullSecretValue"
+    },
+    "DenodoHarborUser": {
+     "Ref": "DenodoHarborUser"
+    },
+    "DenodoHarborCLIPassword": {
+     "Ref": "DenodoHarborCLIPassword"
+    },
+    "DenodoIP": {
+     "Ref": "DenodoIP"
+    },
+    "MppHost": {
+     "Ref": "MppHost"
+    },
+    "InstanceType": {
+     "Ref": "EKSNodeType"
+    },
+    "NodeNumber": {
+     "Ref": "EKSNodeNumber"
+    },
+    "DenodoUser": {
+     "Ref": "DenodoUser"
+    },
+    "DenodoPassword": {
+     "Ref": "DenodoPassword"
+    },
+    "S3BucketName": {
+     "Ref": "DenMPPS3BucketValuesYamlA76E47CE"
+    },
+    "SubnetId1": {
+     "Ref": "DenMPPPrivateSubnet1Subnet3F4388E4"
+    },
+    "SubnetId2": {
+     "Ref": "DenMPPPrivateSubnet2Subnet603990B7"
+    },
+    "BaseValuesYaml": "# Default values for prestocluster.\n\nimage:\n  # -- Container Registry\n  repository: \"{{IMAGE_REPOSITORY}}\"\n  # --  Kubernetes imagePullPolicy value\n  pullPolicy: IfNotPresent\n  # -- Secret to use when pulling the image from the Container Registry\n  # -- https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/\n  # -- The alternative to creating the pullSecret, is to add the credentials to the Container Registry to the image.pullCredentials section\n  # -- and let the Helm chart handle the creation of the secret.\n  pullSecret: \"{{PULL_SECRET}}\"\n\n  pullCredentials:\n    # -- Whether to use the credentials in this section to create a secret to use when pulling the image from the Denodo Container Registry\n    enabled: '{{PULL_CREDENTIALS_ENABLED}}'\n    # -- Name of the secret to be created.\n    name: \"registry-secret\"\n    # -- Denodo Container Registry\n    registry: \"harbor.open.denodo.com\"\n    # -- Denodo account username\n    username: \"{{DENODO_HARBOR_USER}}\"\n    # -- CLI secret in the Denodo Container Registry\n    pwd: \"{{DENODO_HARBOR_CLI_PASSWORD}}\"\n\n# -- https://kubernetes.io/docs/concepts/security/service-accounts/\nserviceAccount:\n  # -- Whether to create a service account or not. If false, 'default' will be used\n  create: true\n  # -- service account name. If you do not specify it an autogenerated name will be used\n  name: \"\"\n  # -- Annotations for the Presto service account\n  annotations: {}\n\npresto:\n  # -- Number of Presto workers in the cluster\n  numWorkers: '{{NUM_WORKERS}}'\n  # -- Number of cores assigned to each worker\n  cpusPerNode: '{{CPUS_PER_NODE}}'\n  # -- Total memory, in GB, assigned to each worker\n  memoryPerNode: '{{MEMORY_PER_NODE}}'\n\n  mppHost: \"{{MPPHOST}}\"\n\n  service:\n    # -- Presto service name\n    name: presto\n    # -- Service type: ClusterIP, NodePort or LoadBalancer\n    type: LoadBalancer\n    # -- Annotations for the Presto service. This is the recommended way to specify an IP address for the Service Type: LoadBalancer\n    annotations: '{{PRESTO_ANNOTATIONS}}'\n    # -- IP address for Presto service. Only applies to Service Type: LoadBalancer\n    # -- Some cloud providers allow you to specify the loadBalancerIP. In those cases, the load-balancer is created\n    # -- with the user-specified loadBalancerIP. If the loadBalancerIP field is not specified, the loadBalancer is\n    # -- set up with an ephemeral IP address. If you specify a loadBalancerIP but your cloud provider does not support\n    # -- the feature, the loadbalancerIP field that you set is ignored.\n    loadBalancerIP: \"\"\n    # -- List of IPs to restrict traffic through the load balancer. Only applies to Service Type: LoadBalancer.\n    # -- This field is ignored if the cloud-provider does not support the feature.\n    loadBalancerSourceRanges: []\n\n\n  coordinator:\n    # -- Presto coordinator deployment name\n    name: presto-coordinator\n    # -- Presto Coordinator HTTPS endpoint port\n    serverHttpsPort: 8443\n    # -- Presto Coordinator HTTP endpoint port\n    serverHttpPort: 8080\n\n    passwordAuth:\n      # -- Username\n      prestoUser: \"presto\"\n      # -- Password for the username\n      prestoPassword: \"pr3st%\"\n\n    # -- Enables the Resource management in Presto\n    resourceGroups: false\n\n    # -- Entries for extra config properties\n    additionalConfig: []\n\n    securityContext:\n      # -- Forces to run as a non-root user to ensure least privilege\n      runAsNonRoot: true\n\n    containerSecurityContext:\n      # -- Ensures that no child process of a container can gain more privileges than its parent\n      allowPrivilegeEscalation: false\n      # -- Drops all capabilities (kernel level calls)\n      capabilities:\n        drop:\n          - ALL\n\n    # -- Resource requests and limits for the Presto Coordinator\n    resources: {}\n      # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n      # If you do want to specify resources, uncomment the following\n      # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n      # limits:\n      #   cpu: 0.8\n      #   memory: 100Gi\n      # requests:\n      #   cpu: 0.7\n      #   memory: 90Gi\n\n    # -- Presto Coordinator node labels for pod scheduling\n    nodeSelector: {}\n\n    # -- Presto Coordinator affinity\n    affinity: {}\n\n    # -- Presto Coordinator tolerations\n    tolerations: []\n\n    # -- Topology constraints for the Presto Coordinator\n    topologySpreadConstraints:\n      # This configuration distributes pods in an absolute even manner (maxSkew),\n      # using the hostname as topology domain (topologyKey),\n      # scheduling pods even if it can't satisfy even distribution of pods (whenUnsatisfiable),\n      # acting on Pods that match this selector (labelSelector).\n      - maxSkew: 1\n        topologyKey: kubernetes.io/hostname\n        whenUnsatisfiable: ScheduleAnyway\n        labelSelector:\n          matchExpressions:\n            - {key: app, operator: In, values: [presto-coordinator, presto-worker]}\n\n    livenessreadiness:\n      enabled: true\n    livenessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n    readinessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n\n    env:\n      # additional environment variables for coordinator\n      # NAME: VALUE\n\n\n  worker:\n    # -- Presto worker deployment name\n    name: presto-worker\n\n    # -- Presto Worker HTTP endpoint port\n    serverHttpPort: 8080\n\n    # -- Entries for extra config properties\n    additionalConfig: []\n\n    securityContext:\n      # -- Force to run as a non-root user to ensure least privilege\n      runAsNonRoot: true\n\n    containerSecurityContext:\n      # -- Ensures that no child process of a container can gain more privileges than its parent\n      allowPrivilegeEscalation: false\n      # -- Drops all capabilities (kernel level calls)\n      capabilities:\n        drop:\n          - ALL\n\n    # -- Resource requests and limits for the Presto Workers\n    resources: {}\n      # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n      # If you do want to specify resources, uncomment the following\n      # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n      # limits:\n      #   cpu: 0.8\n      #   memory: 100Gi\n      # requests:\n      #   cpu: 0.7\n      #   memory: 90Gi\n\n    # -- Presto Workers node labels for pod scheduling\n    nodeSelector: {}\n\n    # -- Presto Workers affinity\n    affinity: {}\n\n    # -- Presto Workers tolerations\n    tolerations: []\n\n    # -- Topology constraints for the Presto Workers\n    topologySpreadConstraints:\n      # This configuration distributes pods in an absolute even manner (maxSkew),\n      # using the hostname as topology domain (topologyKey),\n      # scheduling pods even if it can't satisfy even distribution of pods (whenUnsatisfiable),\n      # acting on Pods that match this selector (labelSelector).\n      - maxSkew: 1\n        topologyKey: kubernetes.io/hostname\n        whenUnsatisfiable: ScheduleAnyway\n        labelSelector:\n          matchExpressions:\n            - {key: app, operator: In, values: [presto-coordinator, presto-worker]}\n\n    livenessreadiness:\n      enabled: true\n    livenessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n    readinessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n\n    env:\n      # additional environment variables for workers\n      # NAME: VALUE\n\n  # -- Dynamic filtering optimizations significantly improve the performance of queries with selective\n  # -- joins by avoiding reading of data that would be filtered by join condition.\n  enableDynamicFiltering: true\n\n  jvm:\n    # -- Entries for extra JVM config properties\n    additionalJVMConfig: []\n\n  log:\n    # -- Log level for com.facebook.presto\n    facebook: ERROR\n    # -- Log level for org.apache.hadoop\n    hadoop: ERROR\n    # -- Entries for extra log categories\n    additionalLogs: []\n\n  node:\n    # --  Name of the environment\n    environment: \"production\"\n    # --  Location where Presto will store logs and other data\n    dataDir: \"/var/presto/data\"\n\n  # -- Connection details to Denodo. Denodo will use Presto to accelerate queries\n  denodoConnector:\n    # -- Denodo server uri\n    server: \"//{{DENODO_IP}}:9999/admin_denodo_mpp\"\n    # -- i18n configuration of the connection with Denodo\n    i18n: \"us_utc_iso\"\n    # -- Denodo user\n    user: \"{{DENODO_USER}}\"\n    # -- Denodo password, must be compliant with Denodo password policies\n    password: \"{{DENODO_PASSWORD}}\"\n    # -- Maximum number of results that a block can contain. When Denodo obtains enough results to complete a block, it sends this block to Presto and continues processing the next results. Default value is 100000\n    chunkSize: 100000\n    # -- Maximum time, in milliseconds, Denodo waits before returning a new block to Presto. Default value is 90000 ms\n    chunkTimeout: 90000\n    # -- Maximum time, in milliseconds, Presto will wait for a Denodo query to finish. If it is not set default value is 900000 ms\n    queryTimeout: 900000\n    # -- Whether SSL is enabled in Denodo server\n    ssl: false\n    # -- File name of trust store file that contains the SSL certificates. File should be placed in the 'presto' directory.\n    trustStore: \"\"\n    # -- Password of the trust store\n    trustStorePassword: \"\"\n    # -- Name of the infrastructure provider (On-premises, AWS, Azure, Google Cloud, Alibaba, etc.) where the client and Virtual DataPort server is running.\n    infrastructureProvider: \"\"\n    # -- Name of the infrastructure provider region where the client and Virtual DataPort server is running.\n    infrastructureRegion: \"\"\n    # -- Property to enable using ROLE during registration instead of creating a new USER. If you are using AGORA you must set this property to true.\n    useRole: '{{USE_ROLE}}'\n    # -- Denodo role\n    role: \"embedded_mpp_role\"\n\n  # -- Hive catalog configuration: for accessing Hive tables over Parquet files\n  hive:\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- hive.parquet-batch-read-optimization-enabled=true enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: false\n    # hive.pushdown-filter-enabled=true enables pushdown filter\n    pushdownFilterEnabled: true\n    # quick-stats property adds a mechanism to create statistics from metadata for tables/partitions with missing statistics\n    quickStats: true\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Iceberg catalog configuration: for accessing Iceberg tables\n  iceberg:\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- hive.parquet-batch-read-optimization-enabled=true enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: false\n    # hive.pushdown-filter-enabled=true enables pushdown filter\n    pushdownFilterEnabled: true\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Delta catalog configuration: for accessing Delta tables\n  delta:\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- hive.parquet-batch-read-optimization-enabled=true enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: false\n    # hive.pushdown-filter-enabled=true enables pushdown filter\n    pushdownFilterEnabled: true\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Additional catalogs, as an example the jmx catalog provides JMX information from all nodes in the cluster.\n  catalog:\n    #jmx: |-\n    #  connector.name=jmx\n    #\n    #glue-hive: |-\n    #  connector.name=hive-hadoop2\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n    #\n    #glue-iceberg: |-\n    #  connector.name=iceberg\n    #  iceberg.catalog.type=HIVE\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n    #\n    #glue-delta: |-\n    #  connector.name=delta\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n\n  # -- Enables autoscale creating a HorizontalPodScaler\n  autoscaling:\n      # If you want to autoscale based on a resource's utilization as a percentage, you must specify\n      # requests for that resource in the 'presto.worker.resources' parameter of this file.\n      # This example creates HorizontalPodAutoscaler object to autoscale the Presto Deployment when\n      # CPU utilization surpasses 80%, and ensures that there is always a minimum of\n      # presto.numWorkers replica and a maximum of 20 replicas.\n    enabled: false\n    maxReplicas: 20\n    targetCPUUtilizationPercentage: 80\n      # -- Entries for scaling up and down configuration\n    behavior: {}\n      #  scaleDown:\n      #    stabilizationWindowSeconds: 300\n      #    policies:\n      #    - type: Percent\n      #      value: 100\n      #      periodSeconds: 15\n      #  scaleUp:\n      #    stabilizationWindowSeconds: 0\n      #    policies:\n      #    - type: Percent\n      #      value: 100\n      #      periodSeconds: 15\n      #    - type: Pods\n      #      value: 4\n      #      periodSeconds: 15\n      #    selectPolicy: Max\n\n  # -- Ingress exposes HTTP(S) routes from outside the cluster to services within the cluster.\n  # -- Traffic routing is controlled by rules that define which inbound connections reach which services.\n  # -- In order for the Ingress resource to work, the cluster must have an ingress controller running, like NGINX Ingress Controller.\n  ingress:\n    enabled: false\n      # -- Presto ingress name\n    name: presto-ingress\n      # -- Annotations for the Presto ingress\n    annotations: {}\n      # -- If the ingressClassName is omitted, a default Ingress class should be defined.\n    className: \"\"\n      # -- Hostname for Ingress\n    host: \"\"\n      # -- URL path which is used for routing. Only requests to this path will be forwarded to the service\n    path: /\n      # -- Supported path types: ImplementationSpecific, Exact, Prefix\n    pathType: ImplementationSpecific\n      # -- Enable/disable TLS\n    tls:\n      enabled: true\n        # -- `name` will only be used, if `create` is set to false to bind an existing secret that contains the key/certificate for TLS\n      secretName: \"\"\n      create: false\n        # -- File name of the certificate file, required if `create` is set to true. File should be placed in the 'presto' directory.\n      certFile: \"\"\n        # -- File name of the private key file, required if `create` is set to true. File should be placed in the 'presto' directory.\n      keyFile: \"\"\n\n\nmetastore:\n  # -- Use the internal Hive Metastore. Default is true.\n  enabled: true\n  # -- JDBC connection string of the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's URL\n  connectionUrl: \"jdbc:postgresql://postgresql:5432/metastore\"\n  # connectionUrl: \"jdbc:mysql://HOST:3306/metastore\"\n  # connectionUrl: \"jdbc:sqlserver://HOST:1433;DatabaseName=metastore\"\n  # connectionUrl: \"jdbc:oracle:thin:@//HOST:1521/ORCLPDB1\"\n\n  # -- JDBC Driver class name to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's driver\n  connectionDriverName: \"org.postgresql.Driver\"\n  # connectionDriverName: \"org.mariadb.jdbc.Driver\"\n  # connectionDriverName: \"com.microsoft.sqlserver.jdbc.SQLServerDriver\"\n  # connectionDriverName: \"oracle.jdbc.OracleDriver\"\n\n  # -- Database to connect with the RDBMS of the Hive Metastore. Required for the internal PostgreSQL's database only\n  connectionDatabase: \"metastore\"\n\n  # -- User to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's user: hive\n  connectionUser: \"hive\"\n\n  # -- Password to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's password: hive\n  connectionPassword: \"hive\"\n\n  # -- Classpath to the JDBC drivers of the Hive Metastore\n  driversPath: \"/opt/hive/jdbc-drivers\"\n\n  maxHeapSize: 2048\n\n  service:\n    # -- Hive Metastore service name\n    name: hive-metastore\n    # -- Hive Metastore port\n    port: 9083\n  deployment:\n    # -- Hive Metastore deployment name\n    name: hive-metastore\n    # -- Hive Metastore port\n    port: 9083\n  livenessreadiness:\n    enabled: true\n  livenessProbe:\n    initialDelaySeconds: 25\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  readinessProbe:\n    initialDelaySeconds: 25\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n\n  env:\n    # additional environment variables for metastore\n    # NAME: VALUE\n\n  # -- Hive Metastore node labels for pod scheduling\n  nodeSelector: {}\n\n  # -- Hive Metastore inter-pod affinity, that allows you to schedule pods based on their relationship to other pods\n  affinity:\n    # Run Hive Metastore on the same machine as PostgreSQL\n    # to improve performance, avoid network latency issues and connection failures\n    podAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        - labelSelector:\n            matchExpressions:\n              - {key: app, operator: In, values: [hive-metastore, postgresql]}\n          topologyKey: kubernetes.io/hostname\n    # ensure it runs on different machines than presto, if possible\n    podAntiAffinity:\n      preferredDuringSchedulingIgnoredDuringExecution:\n        - weight: 100\n          podAffinityTerm:\n            labelSelector:\n              matchExpressions:\n                - {key: app, operator: In, values: [presto-coordinator, presto-worker]}\n            topologyKey: \"kubernetes.io/hostname\"\n\n  # -- Hive Metastore tolerations\n  tolerations: []\n\n  # -- Topology constraints for Hive Metastore\n  topologySpreadConstraints: []\n\n  securityContext:\n    # -- Force to run as a non-root user to ensure least privilege\n    runAsNonRoot: true\n\n  containerSecurityContext:\n    # -- Ensures that no child process of a container can gain more privileges than its parent\n    allowPrivilegeEscalation: false\n    # -- Drops all capabilities (kernel level calls)\n    capabilities:\n      drop:\n        - ALL\n  # -- Resource requests and limits for the Hive Metastore\n  resources: {}\n    # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n    # If you do want to specify resources, uncomment the following\n    # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n    # limits:\n    #   cpu: 0.8\n    #   memory: 100Gi\n    # requests:\n    #   cpu: 0.7\n    #   memory: 90Gi\n\npostgresql:\n  # -- Whether to use an internal PostgreSQL or an external RDBMS for the Hive Metastore. Default is true.\n  enabled: true\n\n  # -- Whether to warn about the need of perform a manual backup of the Embedded PostgreSQL due to the major version upgrade.\n  version15BackupWarning: true\n\n  service:\n    # -- PostgreSQL service name\n    name: postgresql\n    # -- PostgreSQL port\n    port: 5432\n  deployment:\n    # -- PostgreSQL deployment name\n    name: postgresql\n    # -- PostgreSQL port\n    port: 5432\n  livenessreadiness:\n    enabled: true\n  livenessProbe:\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  readinessProbe:\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n\n  env:\n    # additional environment variables for PostgreSQL\n    # NAME: VALUE\n\n  pvClaim:\n    # -- Annotations for the Persistent Volume Claim\n    annotations: {}\n      # If you do want to specify annotations, uncomment the following lines,\n      # adjust them as necessary, and REMOVE the curly braces after 'annotations:'.\n\n      # Add the following annotation if you want to preserve Presto metadata after cluster removal\n      # \"helm.sh/resource-policy\": keep\n\n\n    # -- Storage size requested for the PostgreSQL's volume\n    storage: 5Gi\n    # -- Persistent Volume Claim Storage the for PostgreSQL's volume\n    storageClassName: \"{{STORAGE_CLASS_NAME}}\"\n\n  # -- PostgreSQL node labels for pod scheduling\n  nodeSelector: {}\n\n  # -- PostgreSQL inter-pod affinity, that allows you to schedule pods based on their relationship to other pods\n  affinity:\n    # Run PostgreSQL on the same machine as Hive Metastore\n    # to improve performance, avoid network latency issues and connection failures\n    podAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        - labelSelector:\n            matchExpressions:\n              - {key: app, operator: In, values: [hive-metastore, postgresql]}\n          topologyKey: kubernetes.io/hostname\n\n  # -- PostgreSQL tolerations\n  tolerations: []\n\n  # -- Topology constraints for PostgreSQL\n  topologySpreadConstraints: []\n\n  securityContext:\n    # -- Force to run as a non-root user to ensure the least privilege\n    runAsNonRoot: true\n    # -- User ID for the container. Ignored on OpenShift.\n    runAsUser: 1001\n    # -- Group ID for the pod volumes. Ignored on OpenShift\n    fsGroup: 1001\n    fsGroupChangePolicy: OnRootMismatch\n\n  containerSecurityContext:\n    # -- Ensures that no child process of a container can gain more privileges than its parent\n    allowPrivilegeEscalation: false\n    # -- Drops all capabilities (kernel level calls)\n    capabilities:\n      drop:\n        - ALL\n  # -- Resource requests and limits for postgresql\n  resources: {}\n    # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n    # If you do want to specify resources, uncomment the following\n    # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n    # limits:\n    #   cpu: 0.8\n    #   memory: 100Gi\n    # requests:\n    #   cpu: 0.7\n    #   memory: 90Gi\n"
+   },
+   "DependsOn": [
+    "DenMPPGenerateValuesYamlLambda1827A339",
+    "DenMPPS3BucketValuesYamlA76E47CE"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPGenerateValuesYamlResource/Default"
+   },
+   "Condition": "DenMPPCreateValuesYamlCondition"
+  },
+  "DenMPPClusterDenMPPEksClusterRoleC13157D3": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "eks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEKSClusterPolicy"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEKSVPCResourceController"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEKSServicePolicy"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPEksClusterRole/Resource"
+   }
+  },
+  "DenMPPClusterDenMPPEksNodegroupRole17D86F44": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ec2.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEKSWorkerNodePolicy"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEKS_CNI_Policy"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonS3FullAccess"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AWSGlueSchemaRegistryFullAccess"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPEksNodegroupRole/Resource"
+   },
+   "Condition": "NotDenMPPCreatePodIdentityAssociationCondition"
+  },
+  "DenMPPClusterDenMPPEksNodegroupRolePodIdentity1BAE8A34": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ec2.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEKSWorkerNodePolicy"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEKS_CNI_Policy"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPEksNodegroupRolePodIdentity/Resource"
+   },
+   "Condition": "DenMPPCreatePodIdentityAssociationCondition"
+  },
+  "DenMPPClusterDenMPPPodIdentityRole9AC85F31": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole",
+        "sts:TagSession"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "pods.eks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "A role for a Service Accout that grants access to EKS pods",
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonS3FullAccess"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AWSGlueSchemaRegistryFullAccess"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPPodIdentityRole/Resource"
+   },
+   "Condition": "DenMPPCreatePodIdentityAssociationCondition"
+  },
+  "DenMPPClusterDenMPPPrestoClusterFAD1D6ED": {
+   "Type": "AWS::EKS::Cluster",
+   "Properties": {
+    "AccessConfig": {
+     "AuthenticationMode": "API_AND_CONFIG_MAP"
+    },
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "ResourcesVpcConfig": {
+     "EndpointPrivateAccess": true,
+     "EndpointPublicAccess": true,
+     "SubnetIds": [
+      {
+       "Ref": "DenMPPPrivateSubnet1Subnet3F4388E4"
+      },
+      {
+       "Ref": "DenMPPPrivateSubnet2Subnet603990B7"
+      }
+     ]
+    },
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "DenMPPClusterDenMPPEksClusterRoleC13157D3",
+      "Arn"
+     ]
+    },
+    "Version": "1.31"
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPPrestoCluster"
+   }
+  },
+  "DenMPPClusterDenMPPaddonEbsCsi1CCDBA6B": {
+   "Type": "AWS::EKS::Addon",
+   "Properties": {
+    "AddonName": "aws-ebs-csi-driver",
+    "AddonVersion": "v1.38.1-eksbuild.1",
+    "ClusterName": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "PreserveOnDelete": false,
+    "ResolveConflicts": "OVERWRITE"
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPaddonEbsCsi"
+   },
+   "Condition": "NotDenMPPCreatePodIdentityAssociationCondition"
+  },
+  "DenMPPClusterDenMPPaddonVpcCniA2AC4FD3": {
+   "Type": "AWS::EKS::Addon",
+   "Properties": {
+    "AddonName": "vpc-cni",
+    "AddonVersion": "v1.18.5-eksbuild.1",
+    "ClusterName": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "PreserveOnDelete": false,
+    "ResolveConflicts": "OVERWRITE"
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPaddonVpcCni"
+   }
+  },
+  "DenMPPClusterDenMPPaddonCorednsDD47DB3E": {
+   "Type": "AWS::EKS::Addon",
+   "Properties": {
+    "AddonName": "coredns",
+    "AddonVersion": "v1.11.3-eksbuild.1",
+    "ClusterName": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "PreserveOnDelete": false,
+    "ResolveConflicts": "OVERWRITE"
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPaddonCoredns"
+   }
+  },
+  "DenMPPClusterDenMPPaddonKubeProxyA128A3C6": {
+   "Type": "AWS::EKS::Addon",
+   "Properties": {
+    "AddonName": "kube-proxy",
+    "AddonVersion": "v1.29.7-eksbuild.9",
+    "ClusterName": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "PreserveOnDelete": false,
+    "ResolveConflicts": "OVERWRITE"
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPaddonKubeProxy"
+   }
+  },
+  "DenMPPClusterDenMPPaddonPodIdentityAgent52B3D29D": {
+   "Type": "AWS::EKS::Addon",
+   "Properties": {
+    "AddonName": "eks-pod-identity-agent",
+    "AddonVersion": "v1.3.2-eksbuild.2",
+    "ClusterName": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "PreserveOnDelete": false,
+    "ResolveConflicts": "OVERWRITE"
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPaddonPodIdentityAgent"
+   }
+  },
+  "DenMPPClusterDenMPPLaunchTemplateEC2PodIdentity76D3783A": {
+   "Type": "AWS::EC2::LaunchTemplate",
+   "Properties": {
+    "LaunchTemplateData": {
+     "MetadataOptions": {
+      "HttpPutResponseHopLimit": 1,
+      "HttpTokens": "required"
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPLaunchTemplateEC2PodIdentity"
+   },
+   "Condition": "DenMPPCreatePodIdentityAssociationCondition"
+  },
+  "DenMPPClusterDenMPPNodeGroupPodIdentity5AA56618": {
+   "Type": "AWS::EKS::Nodegroup",
+   "Properties": {
+    "AmiType": "AL2_x86_64",
+    "ClusterName": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "InstanceTypes": [
+     {
+      "Fn::Select": [
+       0,
+       {
+        "Fn::Split": [
+         " (",
+         {
+          "Ref": "EKSNodeType"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "LaunchTemplate": {
+     "Id": {
+      "Ref": "DenMPPClusterDenMPPLaunchTemplateEC2PodIdentity76D3783A"
+     }
+    },
+    "NodeRole": {
+     "Fn::GetAtt": [
+      "DenMPPClusterDenMPPEksNodegroupRolePodIdentity1BAE8A34",
+      "Arn"
+     ]
+    },
+    "NodegroupName": "denodomppnodegroup",
+    "ScalingConfig": {
+     "DesiredSize": {
+      "Ref": "EKSNodeNumber"
+     },
+     "MaxSize": {
+      "Ref": "EKSNodeNumber"
+     },
+     "MinSize": {
+      "Ref": "EKSNodeNumber"
+     }
+    },
+    "Subnets": [
+     {
+      "Fn::Select": [
+       0,
+       [
+        {
+         "Ref": "DenMPPPrivateSubnet1Subnet3F4388E4"
+        },
+        {
+         "Ref": "DenMPPPrivateSubnet2Subnet603990B7"
+        }
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPEksNodegroupRolePodIdentity1BAE8A34",
+    "DenMPPClusterDenMPPLaunchTemplateEC2PodIdentity76D3783A",
+    "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPNodeGroupPodIdentity"
+   },
+   "Condition": "DenMPPCreatePodIdentityAssociationCondition"
+  },
+  "DenMPPClusterDenMPPMyNodeGroup92822708": {
+   "Type": "AWS::EKS::Nodegroup",
+   "Properties": {
+    "AmiType": "AL2_x86_64",
+    "ClusterName": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "InstanceTypes": [
+     {
+      "Fn::Select": [
+       0,
+       {
+        "Fn::Split": [
+         " (",
+         {
+          "Ref": "EKSNodeType"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "NodeRole": {
+     "Fn::GetAtt": [
+      "DenMPPClusterDenMPPEksNodegroupRole17D86F44",
+      "Arn"
+     ]
+    },
+    "NodegroupName": "denodomppnodegroup",
+    "ScalingConfig": {
+     "DesiredSize": {
+      "Ref": "EKSNodeNumber"
+     },
+     "MaxSize": {
+      "Ref": "EKSNodeNumber"
+     },
+     "MinSize": {
+      "Ref": "EKSNodeNumber"
+     }
+    },
+    "Subnets": [
+     {
+      "Fn::Select": [
+       0,
+       [
+        {
+         "Ref": "DenMPPPrivateSubnet1Subnet3F4388E4"
+        },
+        {
+         "Ref": "DenMPPPrivateSubnet2Subnet603990B7"
+        }
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPEksNodegroupRole17D86F44",
+    "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPMyNodeGroup"
+   },
+   "Condition": "NotDenMPPCreatePodIdentityAssociationCondition"
+  },
+  "DenMPPClusterDenMPPEksEc2Role308E2BC9": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ec2.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "A role for EC2 that grants access to EKS",
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonS3FullAccess"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AWSGlueSchemaRegistryFullAccess"
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPEksEc2Role/Resource"
+   },
+   "Condition": "DenMPPCreateEc2RoleCondition"
+  },
+  "DenMPPClusterDenMPPAllowEKSAccessPolicyBD093C6C": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ec2:ModifyInstanceMetadataOptions",
+        "eks:DescribeCluster"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "eks:UpdateClusterConfig",
+        "eks:UpdateClusterVersion"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "DenMPPClusterDenMPPPrestoClusterFAD1D6ED",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "DenMPPClusterDenMPPAllowEKSAccessPolicyBD093C6C",
+    "Roles": [
+     {
+      "Ref": "DenMPPClusterDenMPPEksEc2Role308E2BC9"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPAllowEKSAccessPolicy/Resource"
+   }
+  },
+  "DenMPPClusterEksEc2RoleInstanceProfileF45B33B9": {
+   "Type": "AWS::IAM::InstanceProfile",
+   "Properties": {
+    "Roles": [
+     {
+      "Ref": "DenMPPClusterDenMPPEksEc2Role308E2BC9"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/EksEc2RoleInstanceProfile/Resource"
+   }
+  },
+  "DenMPPClusterDenMPPEksEc2RoleAccessEntry6890E56B": {
+   "Type": "AWS::EKS::AccessEntry",
+   "Properties": {
+    "AccessPolicies": [
+     {
+      "AccessScope": {
+       "Type": "cluster"
+      },
+      "PolicyArn": "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+     }
+    ],
+    "ClusterName": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "PrincipalArn": {
+     "Fn::GetAtt": [
+      "DenMPPClusterDenMPPEksEc2Role308E2BC9",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPEksEc2Role308E2BC9"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPEksEc2RoleAccessEntry"
+   },
+   "Condition": "DenMPPCreateEc2RoleCondition"
+  },
+  "DenMPPClusterDenMPPEksPrestoPodIdentityAssociationE459C3B7": {
+   "Type": "AWS::EKS::PodIdentityAssociation",
+   "Properties": {
+    "ClusterName": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "Namespace": "default",
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "DenMPPClusterDenMPPPodIdentityRole9AC85F31",
+      "Arn"
+     ]
+    },
+    "ServiceAccount": "prestocluster"
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPPodIdentityRole9AC85F31",
+    "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPEksPrestoPodIdentityAssociation"
+   },
+   "Condition": "DenMPPCreatePodIdentityAssociationCondition"
+  },
+  "DenMPPClusterDenMPPEksNLBPodIdentityAssociation94BA8A61": {
+   "Type": "AWS::EKS::PodIdentityAssociation",
+   "Properties": {
+    "ClusterName": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "Namespace": "kube-system",
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "DenMPPClusterDenMPPPodIdentityRole9AC85F31",
+      "Arn"
+     ]
+    },
+    "ServiceAccount": "aws-load-balancer-controller"
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPPodIdentityRole9AC85F31",
+    "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPEksNLBPodIdentityAssociation"
+   },
+   "Condition": "DenMPPCreatePodIdentityAssociationCondition"
+  },
+  "DenMPPClusterDenMPPaddonEbsCsiPodIdentity4D9975AF": {
+   "Type": "AWS::EKS::Addon",
+   "Properties": {
+    "AddonName": "aws-ebs-csi-driver",
+    "AddonVersion": "v1.38.1-eksbuild.1",
+    "ClusterName": {
+     "Fn::Join": [
+      "",
+      [
+       "DenodoMPP-Presto-",
+       {
+        "Ref": "EnvironmentName"
+       }
+      ]
+     ]
+    },
+    "PodIdentityAssociations": [
+     {
+      "RoleArn": {
+       "Fn::GetAtt": [
+        "DenMPPClusterDenMPPPodIdentityRole9AC85F31",
+        "Arn"
+       ]
+      },
+      "ServiceAccount": "ebs-csi-controller-sa"
+     }
+    ],
+    "PreserveOnDelete": false,
+    "ResolveConflicts": "OVERWRITE"
+   },
+   "DependsOn": [
+    "DenMPPClusterDenMPPaddonPodIdentityAgent52B3D29D",
+    "DenMPPClusterDenMPPEksPrestoPodIdentityAssociationE459C3B7",
+    "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/DenMPPCluster/DenMPPaddonEbsCsiPodIdentity"
+   },
+   "Condition": "DenMPPCreatePodIdentityAssociationCondition"
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/11Q0WrDMAz8lr67Hk0f9tyZbhRGZ9LS16E4yuolkYstr4SQfx+J26XsSafTcZwuk6vntcwWcA1LU9bLxhayPzCYWqiKNHhokdELuIbPvoG2KEH2r5EMW0ej5I4HYaGVfe4aHOlpatdY001GCe0oMJBB7V1lk/AfNQg0mexVRSethI5FY80hFoQ8imeUu8h4hCKZJH7mNiE4Y+GecbvT49gDvwHjFbo/h5SA0RM+3k5a3bYNM5hzi8RCe/sDjHOGd4hkzkdsLw0wDiKsZf8STZ2uCQ0C6zD9o5oYxiZVRZuyTMH2rsQv7+JlYo3BELbE/lZZuSuR2HL38M4wiByDi96gUDGwa+e1okesHJX23sBH5EvkQeiOz46e1nKVyWzxHaxd+khsW5R5mr+/l1K2EQIAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250116/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Conditions": {
+  "DenMPPCreateEc2RoleCondition": {
+   "Fn::Equals": [
+    {
+     "Ref": "CreateEC2InstanceProfile"
+    },
+    "true"
+   ]
+  },
+  "DenMPPCreatePodIdentityAssociationCondition": {
+   "Fn::Equals": [
+    {
+     "Ref": "CreatePodIdentityAssociation"
+    },
+    "true"
+   ]
+  },
+  "NotDenMPPCreatePodIdentityAssociationCondition": {
+   "Fn::Equals": [
+    {
+     "Ref": "CreatePodIdentityAssociation"
+    },
+    "false"
+   ]
+  },
+  "DenMPPCreateValuesYamlCondition": {
+   "Fn::Equals": [
+    {
+     "Ref": "CreateValuesYaml"
+    },
+    "true"
+   ]
+  },
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-3"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-4"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "il-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AWS::Region"
+      },
+      "us-west-2"
+     ]
+    }
+   ]
+  }
+ },
+ "Outputs": {
+  "ValuesYamlBucket": {
+   "Description": "Bucket URL containing the generated values.yaml for MPP deployment",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".console.aws.amazon.com/s3/buckets/",
+      {
+       "Ref": "DenMPPS3BucketValuesYamlA76E47CE"
+      },
+      "?region=",
+      {
+       "Ref": "AWS::Region"
+      }
+     ]
+    ]
+   },
+   "Condition": "DenMPPCreateValuesYamlCondition"
+  },
+  "EKSClusterName": {
+   "Description": "EKS Cluster name for MPP",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "DenodoMPP-Presto-",
+      {
+       "Ref": "EnvironmentName"
+      }
+     ]
+    ]
+   }
+  },
+  "EKSClusterURL": {
+   "Description": "EKS Cluster URL for MPP",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".console.aws.amazon.com/eks/home?#/clusters/DenodoMPP-Presto-",
+      {
+       "Ref": "EnvironmentName"
+      }
+     ]
+    ]
+   }
+  },
+  "EKSClusterRole": {
+   "Description": "IAM Role to use with your EKS cluster",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".console.aws.amazon.com/iam/home?#/roles/",
+      {
+       "Ref": "DenMPPClusterDenMPPEksClusterRoleC13157D3"
+      }
+     ]
+    ]
+   },
+   "Condition": "NotDenMPPCreatePodIdentityAssociationCondition"
+  },
+  "EKSNodegroupRole": {
+   "Description": "IAM Role to use with your EKS Cluster Nodegroup",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".console.aws.amazon.com/iam/home?#/roles/",
+      {
+       "Ref": "DenMPPClusterDenMPPEksNodegroupRole17D86F44"
+      }
+     ]
+    ]
+   },
+   "Condition": "NotDenMPPCreatePodIdentityAssociationCondition"
+  },
+  "EKSNodegroupRolePodIdentity": {
+   "Description": "IAM Role to use with your EKS Cluster Nodegroup",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".console.aws.amazon.com/iam/home?#/roles/",
+      {
+       "Ref": "DenMPPClusterDenMPPEksNodegroupRolePodIdentity1BAE8A34"
+      }
+     ]
+    ]
+   },
+   "Condition": "DenMPPCreatePodIdentityAssociationCondition"
+  },
+  "EC2InstanceProfile": {
+   "Description": "IAM Role attachable to your EC2 Instance as your instance profile to access S3, Glue, and your EKS Cluster",
+   "Value": {
+    "Ref": "DenMPPClusterEksEc2RoleInstanceProfileF45B33B9"
+   },
+   "Condition": "DenMPPCreateEc2RoleCondition"
+  },
+  "PodIdentityAssociationRole": {
+   "Description": "Pod Identity Association Role attached to your Pod Identity Association inside the created EKS cluster in the 'default' namespace and 'prestocluster' service account (The default service account that the values.yaml creates)",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".console.aws.amazon.com/iam/home?#/roles/",
+      {
+       "Ref": "DenMPPClusterDenMPPPodIdentityRole9AC85F31"
+      }
+     ]
+    ]
+   },
+   "Condition": "DenMPPCreatePodIdentityAssociationCondition"
+  }
+ }
+}
