@@ -1643,7 +1643,7 @@
                                 }
                             },
                             "properties": {
-                                "kubernetesVersion": "1.28.5",
+                                "kubernetesVersion": "1.30.9",
                                 "dnsPrefix": "DenMPP",
                                 "publicNetworkAccess": "Disabled",
                                 "apiServerAccessProfile": {
