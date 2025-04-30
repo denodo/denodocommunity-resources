@@ -1,0 +1,221 @@
+﻿# Generated with Denodo Platform 9.0.5.
+
+ENTER SINGLE USER MODE;
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+# 0 ====================================================================
+
+# #######################################
+# DATABASE
+# #######################################
+CREATE OR REPLACE DATABASE vdb_promotion_automation '';
+
+CONNECT DATABASE vdb_promotion_automation;
+
+# #######################################
+# RESOURCES
+# #######################################
+# No vault resources
+# #######################################
+# LISTENERS JMS
+# #######################################
+# No listeners jms
+# #######################################
+# LISTENERS KAFKA
+# #######################################
+# No listeners kafka
+# #######################################
+# DATASOURCES
+# #######################################
+CREATE OR REPLACE DATASOURCE CUSTOM ds_ssh_file_executor
+    CLASSNAME='com.denodo.connect.ssh.SSHWrapper'
+    JARS 'denodo-ssh-customwrapper'
+    PARAMETERS (
+      'Host' = '127.0.0.1',
+      'Port' = 22,
+      'User' = 'sftpuser',
+      'Password' = 'wr33tSPyGhUwx4Uax5w4lSbFtu/zrTjA1TsLp5tYIzWFChuErAZXyeVbur7AVAhyVcXJ286x1sYIU0qKGufizvHzFV6ehMHi5hWbGszIjPwOXb3Io+lHucAgFpzf202f5dXy5zYIcmyTybI/87hSMQ==' ENCRYPTED
+    );
+
+CREATE OR REPLACE DATASOURCE JDBC ds_audit_table
+    DRIVERCLASSNAME = 'com.microsoft.sqlserver.jdbc.SQLServerDriver'
+    DATABASEURI = 'jdbc:sqlserver://127.0.0.1:1433;databaseName=cache_transfer;encrypt=false'
+    USERNAME = 'user1'
+    USERPASSWORD = 'vI1kk75G7EQIyZkmyv0cc3lECvltOgOels16VKk1UMUvdOFp4zA9GBUS5JZr/+brC1zorqgtC5r1z15ygbR6WT3HDU3VI9h/6fIZLHku81K0kbP1tfmafmd2+kVgY2Fj' ENCRYPTED
+    CLASSPATH = 'mssql-jdbc-10.x'
+    DATABASENAME = 'sqlserver'
+    DATABASEVERSION = '2017'
+    FETCHSIZE = 1000
+    VALIDATIONQUERY = 'Select 1'
+    INITIALSIZE = 4
+    MAXIDLE = -1
+    MINIDLE = 0
+    MAXACTIVE = 20
+    EXHAUSTEDACTION = 1
+    TESTONBORROW = true
+    TESTONRETURN = false
+    TESTWHILEIDLE = false
+    TIMEBETWEENEVICTION = -1
+    NUMTESTPEREVICTION = 3
+    MINEVICTABLETIME = 1800000
+    POOLPREPAREDSTATEMENTS = false
+    MAXOPENPREPAREDSTATEMENTS = -1
+    DATA_LOAD_CONFIGURATION (
+        BATCHINSERTSIZE = 1000
+    )
+    SOURCECONFIGURATION (
+        delegatescalarfunctionslist = (abs, acos, addday, addhour, addminute, addmonth, addsecond, addweek, addyear, ascii, asin, atan, atan2, case, cast, ceil, char, coalesce, concat, convert_timezone, convert_timezone(evaluate_literal), cos, cot, current_date, degrees, div, exp, firstdayofmonth, firstdayofweek, floor, formatdate, getday, getdayofweek, getdayofyear, getdaysbetween, gethour, getmicrosecond, getmillisecond, getminute, getmonth, getmonthsbetween, getnanosecond, getquarter, getsecond, gettimeinmillis, getweek, getyear, instr, lastdayofmonth, lastdayofweek, len, ln, localtimestamp(evaluate_literal), log, lower, ltrim, mod, mult, nextweekday, now, nullif, pi, position, pow, power, previousweekday, radians, rand, removeaccents, repeat, replace, round, rownum, rtrim, sign, sin, sqrt, substr, substring, subtract, sum, tan, textcat, to_date, to_localdate, to_time, to_timestamp, to_timestamptz, trim, trunc, upper, xmlquery, xpath)
+    );
+
+CREATE OR REPLACE DATASOURCE JSON ds_rest_api_to_deploy_revision
+    ROUTE HTTP 'http.ApacheHttpClientConnection,120000' POST 'http://127.0.0.1:10090/deployments'
+    HEADERS (
+        'content-type'='application/json'
+    )
+    AUTHENTICATION BASIC ( 
+      USER 'admin'
+      PASSWORD 'JM6eH4+Pq0ojrWnwQwATLDkA72yfAwzMua0DfA42DwiW24BwohQqh5Lk6n8wxAAmYRUbSLY1S7A8kQf5ICfUAMNg6vxFsVBhSHF6iaciUF6bJWHIp01PWZ9fEVlohDFX' ENCRYPTED )
+    PROXY OFF;
+
+# #######################################
+# DATABASE CONFIGURATION
+# #######################################
+ALTER DATABASE vdb_promotion_automation
+  CHARSET DEFAULT;
+
+# #######################################
+# WRAPPERS
+# #######################################
+CREATE OR REPLACE WRAPPER CUSTOM bv_ssh_shell_script_executor
+    DATASOURCENAME=ds_ssh_file_executor
+    PARAMETERS (
+      'Command' = 'powershell -ExecutionPolicy Bypass -File C:/Users/DineshrajaAnnadurai/Downloads/create_revision.ps1'
+    )
+    OUTPUTSCHEMA (
+        "Exit code" = 'Exit code' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE,
+        "Execution result" = 'Execution result' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE
+    );
+
+CREATE OR REPLACE WRAPPER JDBC bv_last_modify_table
+    DATASOURCENAME=ds_audit_table
+    CATALOGNAME='master' 
+    SCHEMANAME='dbo' 
+    RELATIONNAME='last_modiy_table' 
+    OUTPUTSCHEMA (
+        date_values = 'date_values' :'java.time.LocalDateTime' (OPT) (sourcetypedecimals='3', sourcetypesize='23', sourcetypeid='93', sourcetypename='datetime')  SORTABLE,
+        flag = 'flag' :'java.lang.String' (OPT) (sourcetypesize='234', sourcetypeid='12', sourcetypename='varchar')  SORTABLE
+    );
+
+CREATE OR REPLACE WRAPPER JSON bv_rest_api_to_deploy_revision
+    DATASOURCENAME=ds_rest_api_to_deploy_revision
+    TUPLEROOT '/JSONFile'
+    ROUTE HTTP 'http.ApacheHttpClientConnection,120000' POST ''
+    POSTBODY '\{
+    "revisionIds":[@id],
+    "environmentId": 1,
+    "description": "My first deployment"
+
+\}'
+    MIME 'application/json'
+    OUTPUTSCHEMA ("JSONFile" = 'JSONFile' : REGISTER OF (
+        "ID" = 'ID' : 'java.lang.String' (OBL) (DEFAULTVALUE='148') EXTERN,
+        "deploymentId" = 'deploymentId' : 'java.lang.Integer'
+    )
+    );
+
+# #######################################
+# STORED PROCEDURES
+# #######################################
+# No stored procedures
+# #######################################
+# TYPES
+# #######################################
+# No types
+# #######################################
+# MAPS
+# #######################################
+# No maps
+# #######################################
+# BASE VIEWS
+# #######################################
+CREATE OR REPLACE TABLE bv_audit_table I18N au_cst (
+        date_values:timestamp (sourcetypeid = '93', sourcetypedecimals = '3', sourcetypesize = '23'),
+        flag:text (sourcetypeid = '12', sourcetypesize = '234')
+    )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD bv_last_modify_table(
+        I18N au_cst
+        CONSTRAINTS (
+             ADD date_values (any) OPT ANY
+             ADD flag (any) OPT ANY
+        )
+        OUTPUTLIST (date_values, flag
+        )
+        WRAPPER (jdbc bv_last_modify_table)
+    );
+
+CREATE OR REPLACE TABLE bv_rest_api_to_deploy_revision I18N au_cst (
+        "ID":text (extern),
+        "deploymentId":int
+    )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD bv_rest_api_to_deploy_revision(
+        I18N au_cst
+        CONSTRAINTS (
+             ADD "ID" (=) OBL ONE
+             ADD "deploymentId" NOS ZERO ()
+        )
+        OUTPUTLIST ("deploymentId"
+        )
+        WRAPPER (json bv_rest_api_to_deploy_revision)
+    );
+
+CREATE OR REPLACE TABLE bv_ssh_shell_script_executor I18N au_cst (
+        "Exit code":text (sourcetypeid = '12'),
+        "Execution result":text (sourcetypeid = '12')
+    )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD bv_ssh_shell_script_executor(
+        I18N au_cst
+        CONSTRAINTS (
+             ADD "Exit code" NOS ZERO ()
+             ADD "Execution result" NOS ZERO ()
+        )
+        OUTPUTLIST ("Execution result", "Exit code"
+        )
+        WRAPPER (custom bv_ssh_shell_script_executor)
+    );
+
+# #######################################
+# VIEWS
+# #######################################
+# No views
+# #######################################
+# ASSOCIATIONS
+# #######################################
+# No associations
+# #######################################
+# WEBSERVICES
+# #######################################
+# #######################################
+# WEBSERVICES
+# #######################################
+# No web services
+# #######################################
+# WEBCONTAINER WEB SERVICE DEPLOYMENTS
+# #######################################
+# No deployed web services
+# #######################################
+# Closing connection with database vdb_promotion_automation
+# #######################################
+CLOSE;
+
+
+
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+EXIT SINGLE USER MODE;

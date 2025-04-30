@@ -1,0 +1,169 @@
+# Generated with Denodo Platform 8.0 20240926.1.
+
+ENTER SINGLE USER MODE;
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+# 0 ====================================================================
+
+# #######################################
+# DATABASE
+# #######################################
+CREATE OR REPLACE DATABASE vdb_promotion_automation '';
+
+CONNECT DATABASE vdb_promotion_automation;
+
+# #######################################
+# RESOURCES
+# #######################################
+# No vault resources
+# #######################################
+# LISTENERS JMS
+# #######################################
+# No listeners jms
+# #######################################
+# LISTENERS KAFKA
+# #######################################
+# No listeners kafka
+# #######################################
+# DATASOURCES
+# #######################################
+CREATE OR REPLACE DATASOURCE CUSTOM ds_ssh_file_executor
+    CLASSNAME='com.denodo.connect.ssh.SSHWrapper'
+    JARS 'denodo-ssh-customwrapper'
+    PARAMETERS (
+      'Host' = '127.0.0.1',
+      'Port' = 22,
+      'User' = 'sftpuser',
+      'Password' = 'dGAzEHpjqnjk2qJR/s1OPvNKAle9Lqt4u9lUCxHyWlEmcKrsVVwpFAPTb4/fvCYdP0rbu9SsaRuXGyWY3j2OqXHuoMwRJ6kJk4/nZN6gGEwJatj/xtD6nyqDvr5rCN+KL5W046RJ9DHPGsEV4cCM6Q==' ENCRYPTED
+    );
+
+CREATE OR REPLACE DATASOURCE JSON ds_rest_api_to_deploy_revision
+    ROUTE HTTP 'http.CommonsHttpClientConnection,120000' POST 'http://127.0.0.1:10090/deployments'
+    HEADERS (
+        'content-type'='application/json'
+    )
+    AUTHENTICATION BASIC ( 
+      USER 'admin'
+      PASSWORD 'IrOMYoHAVdsvZsZW+4ylGt38Jav5o/fje+44jYAo5y6sO3eZXvtmb9VUGoH9oPKLkDMu5Ph3w6FDZ3MZFlgxqJw9t3RHY/Wfr74uw9dI74PfMGx4EzumTQgWdxzLZwMr' ENCRYPTED )
+    PROXY OFF;
+
+# #######################################
+# DATABASE CONFIGURATION
+# #######################################
+ALTER DATABASE vdb_promotion_automation
+  CHARSET DEFAULT;
+
+# #######################################
+# WRAPPERS
+# #######################################
+CREATE OR REPLACE WRAPPER CUSTOM bv_ssh_shell_script_executor
+    DATASOURCENAME=ds_ssh_file_executor
+    PARAMETERS (
+      'Command' = 'powershell -ExecutionPolicy Bypass -File C:/Users/DineshrajaAnnadurai/Downloads/create_revision.ps1'
+    )
+    OUTPUTSCHEMA (
+        "Exit code" = 'Exit code' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE,
+        "Execution result" = 'Execution result' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE
+    );
+
+CREATE OR REPLACE WRAPPER JSON bv_rest_api_to_deploy_revision
+    DATASOURCENAME=ds_rest_api_to_deploy_revision
+    TUPLEROOT '/JSONFile'
+    ROUTE HTTP 'http.CommonsHttpClientConnection,120000' POST ''
+    POSTBODY '\{
+    "revisionIds":[@id],
+    "environmentId": 1,
+    "description": "My first deployment"
+
+\}'
+    MIME 'application/json'
+    OUTPUTSCHEMA (jsonfile = 'JSONFile' : REGISTER OF (
+        id = 'ID' : 'java.lang.String' (OBL) (DEFAULTVALUE='160') EXTERN,
+        deploymentid = 'deploymentId' : 'java.lang.Integer'
+    )
+    );
+
+# #######################################
+# STORED PROCEDURES
+# #######################################
+# No stored procedures
+# #######################################
+# TYPES
+# #######################################
+# No types
+# #######################################
+# MAPS
+# #######################################
+# No maps
+# #######################################
+# BASE VIEWS
+# #######################################
+CREATE OR REPLACE TABLE bv_rest_api_to_deploy_revision I18N au_cst (
+        id:text (extern),
+        deploymentid:int
+    )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD bv_rest_api_to_deploy_revision(
+        I18N au_cst
+        CONSTRAINTS (
+             ADD id (=) OBL ONE
+             ADD deploymentid NOS ZERO ()
+        )
+        OUTPUTLIST (deploymentid
+        )
+        WRAPPER (json bv_rest_api_to_deploy_revision)
+    );
+
+CREATE OR REPLACE TABLE bv_ssh_shell_script_executor I18N au_cst (
+        "Exit code":text (sourcetypeid = '12'),
+        "Execution result":text (sourcetypeid = '12')
+    )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD bv_ssh_shell_script_executor(
+        I18N au_cst
+        CONSTRAINTS (
+             ADD "Exit code" NOS ZERO ()
+             ADD "Execution result" NOS ZERO ()
+        )
+        OUTPUTLIST ("Execution result", "Exit code"
+        )
+        WRAPPER (custom bv_ssh_shell_script_executor)
+    );
+
+# #######################################
+# VIEWS
+# #######################################
+# No views
+# #######################################
+# ASSOCIATIONS
+# #######################################
+# No associations
+# #######################################
+# WEBSERVICES
+# #######################################
+# No web services
+# #######################################
+# WIDGETS
+# #######################################
+# No widgets
+# #######################################
+# WEBCONTAINER WEB SERVICE DEPLOYMENTS
+# #######################################
+# No deployed web services
+# #######################################
+# WEBCONTAINER WIDGET DEPLOYMENTS
+# #######################################
+# No deployed widgets
+# #######################################
+# Closing connection with database vdb_promotion_automation
+# #######################################
+CLOSE;
+
+
+
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+EXIT SINGLE USER MODE;

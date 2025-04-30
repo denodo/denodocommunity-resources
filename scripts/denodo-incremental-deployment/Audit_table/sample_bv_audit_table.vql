@@ -1,0 +1,27 @@
+CREATE OR REPLACE WRAPPER JDBC bv_last_modify_table
+    DATASOURCENAME=ds_audit_table
+    CATALOGNAME='master' 
+    SCHEMANAME='dbo' 
+    RELATIONNAME='last_modiy_table' 
+    OUTPUTSCHEMA (
+        date_values = 'date_values' :'java.time.LocalDateTime' (OPT) (sourcetypedecimals='3', sourcetypesize='23', sourcetypeid='93', sourcetypename='datetime')  SORTABLE,
+        flag = 'flag' :'java.lang.String' (OPT) (sourcetypesize='234', sourcetypeid='12', sourcetypename='varchar')  SORTABLE
+    );
+
+CREATE OR REPLACE TABLE bv_audit_table I18N au_cst (
+        date_values:timestamp (sourcetypeid = '93', sourcetypedecimals = '3', sourcetypesize = '23'),
+        flag:text (sourcetypeid = '12', sourcetypesize = '234')
+    )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD bv_last_modify_table(
+        I18N au_cst
+        CONSTRAINTS (
+             ADD date_values (any) OPT ANY
+             ADD flag (any) OPT ANY
+        )
+        OUTPUTLIST (date_values, flag
+        )
+        WRAPPER (jdbc bv_last_modify_table)
+    );
+
