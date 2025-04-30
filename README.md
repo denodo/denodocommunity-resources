@@ -27,20 +27,27 @@ Please read the documentation of each subproject to get more information.
 
 In these subprojects you can find samples of custom components using the Denodo Java API:
 
-* [Custom Functions](./custom-functions/)
-* [Custom Stored Procedures](./custom-stored-procedures/)
+* [Custom Functions](./custom-functions/): sample Virtual DataPort custom functions .
+* [Custom Stored Procedures](./custom-stored-procedures/): sample Virtual DataPort tored procedures.
 
 ### Plugins
 
 In this subproject you can find plugins for third-party applications that are connected to the Denodo Platform:
 
-* [Denodo AI PowerBI Widget](./plugins/denodo-powerbi-ai-chart/)
+* [Denodo AI PowerBI Widget](./plugins/denodo-powerbi-ai-chart/): sample PowerBI widget that communicates with the Denodo AI SDK.
   
 ### Scripts
 
 In this subproject you can find useful scripts for working with Denodo:
 
-* [Denodo Support Utilities](./scripts/denodo-support-utilities/)
+* [Denodo Support Utilities](./scripts/denodo-support-utilities/): this tool enables you to interact with the Denodo Support Site using commands in your command-line shell.
+* [Denodo Incremental Deployment](./scripts/denodo-incremental-deployment/): automation framework for code promotion within the Denodo Major versions and also moving code from one major version to another version
+
+### Templates
+
+In this subproject you can find useful templates for working with Denodo:
+
+* [Denodo Embedded MPP Templates](./templates/denodo-embedded-mpp/): templates for deploying the Denodo Embedded MPP in Azure and AWS.
 
 # Join the Denodo Community
 
