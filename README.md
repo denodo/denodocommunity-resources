@@ -21,7 +21,27 @@ To get started, you’ll need to grab the code. If you are familiar with Git, ju
 ```bash
 git clone https://github.com/denodo/denodocommunity-resources.git
 ```
-Please read the documentation of each subproject to get more information. 
+\* Please read the documentation of each subproject to get more information. 
+
+### Clone a Single Project
+
+This repository includes different projects. If you don't want to clone/download the entire repository to save disk space in your machine, you can download a specific subproject by executing these commands:
+
+```bash
+git clone  --no-checkout https://github.com/denodo/denodocommunity-resources.git
+cd denodocommunity-resources
+git sparse-checkout init
+git sparse-checkout set <project_folder_name>
+```
+For example, for cloning the **Denodo AI PowerBI Widget**, execute:
+```bash
+git clone  --no-checkout https://github.com/denodo/denodocommunity-resources.git
+cd denodocommunity-resources
+git sparse-checkout init
+git sparse-checkout set plugins/denodo-powerbi-ai-chart
+```
+
+## List of Projects included in this Repository
 
 ### Denodo Custom Components
 
@@ -35,6 +55,12 @@ In these subprojects you can find samples of custom components using the Denodo 
 In this subproject you can find plugins for third-party applications that are connected to the Denodo Platform:
 
 * [Denodo AI PowerBI Widget](./plugins/denodo-powerbi-ai-chart/): sample PowerBI widget that communicates with the Denodo AI SDK.
+  
+### Tools
+
+In this subproject you can find useful applications that can be connected to Denodo Platform components:
+
+* [Denodo AI SDK Evaluator](./tools/denodo-aisdk-evaluator/): this is a specialized tool for assessing the performance and accuracy of queries generated using the Denodo AI SDK.
   
 ### Scripts
 
