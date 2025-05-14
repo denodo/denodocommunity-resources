@@ -1,0 +1,7 @@
+pandas
+argparse
+tqdm
+func_timeout
+requests
+openpyxl
+xlsxwriter
