@@ -1,0 +1,39 @@
+spring:
+  batch:
+    datasource:
+      jdbcUrl: jdbc:mysql://localhost:3306/test_schema
+      username: denodo
+      password: denodo
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximumPoolSize: 2
+    initialize-schema: never
+
+  datasource:
+    isolationLevel: ISOLATION_READ_COMMITTED
+    jdbcUrl: jdbc:denodo://localhost:9999/my_database
+    username: admin
+    password: admin
+    driver-class-name: com.denodo.vdp.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximumPoolSize: 3
+      minimumIdle: 2
+      idleTimeout: 30000
+
+
+logging:
+  level:
+    root: INFO
+  file:
+    path: "logs/"
+
+#connectors:
+#  jdbc:
+#    reader:
+#      datasource:
+#        url: jdbc:denodo://localhost:9999/my_database
+#        username: admin
+#        password: admin
+#        type: com.zaxxer.hikari.HikariDataSource
+#        driver-class-name: com.denodo.vdp.jdbc.Driver

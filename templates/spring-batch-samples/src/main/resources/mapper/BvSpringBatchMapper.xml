@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.denodo.springbatchkb.BvSpringBatchMapper">
+
+    <!-- Select all query -->
+    <select databaseId="denodo"  id="selectAllFromRead" resultType="com.denodo.springbatchkb.entity.MyReadEntityPOJO">
+        SELECT id, string_col_1, numeric_col_1, numeric_col_2, timestamp_column
+        FROM bv_springbatch_read
+        ORDER BY id
+    </select>
+
+    <!-- Select with filter query -->
+    <select databaseId="denodo" id="selectWithFilter" resultType="com.denodo.springbatchkb.entity.MyReadEntityPOJO">
+        SELECT id, string_col_1, numeric_col_1, numeric_col_2, timestamp_column
+        FROM bv_springbatch_read
+        WHERE timestamp_column > #{timestampColumn}
+        ORDER BY id
+    </select>
+
+    <!-- Select with analytic function and database dependent syntax -->
+    <select id="selectAnalytical" resultType="com.denodo.springbatchkb.entity.MyReadEntityAnalyticalPOJO">
+        SELECT
+        id,
+        numeric_col_1,
+        timestamp_column,
+        <choose>
+            <when test="_databaseId == 'denodo'">
+                RANK() OVER (PARTITION BY timestamp_column ORDER BY numeric_col_1)
+            </when>
+            <otherwise>-1</otherwise>
+        </choose> as rownum
+        FROM bv_springbatch_read
+        ORDER BY timestamp_column, rownum;
+    </select>
+
+    <!-- Write queries -->
+    <insert databaseId="denodo" id="insertIntoWrite" parameterType="com.denodo.springbatchkb.entity.MyWriteEntityPOJO">
+        INSERT INTO bv_springbatch_write (id, string_col_1, numeric_col_1, numeric_col_2, total, timestamp_column)
+        VALUES (#{id}, #{string_col_1}, #{numeric_col_1}, #{numeric_col_2}, #{total}, #{timestamp_column})
+    </insert>
+
+    <insert databaseId="denodo" id="insertIntoWriteAnalytical" parameterType="com.denodo.springbatchkb.entity.MyWriteEntityAnalyticalPOJO">
+        INSERT INTO bv_springbatch_write_analytical (id, numeric_col_1, timestamp_column, rownum)
+        VALUES (#{id}, #{numeric_col_1}, #{timestamp_column}, #{rownum})
+    </insert>
+
+</mapper>

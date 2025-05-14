@@ -1,0 +1,1721 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "EnvironmentName": {
+            "type": "string",
+            "defaultValue": "dev",
+            "metadata": {
+                "description": "This parameter will be used as a suffix to uniquely identify the AKS Cluster. This suffix helps in organizing and distinguishing resources across different environments or executions of the script . E.g. poc, dev, prod, 04112024"
+            }
+        },
+        "AKSNodeNumber": {
+            "type": "int",
+            "defaultValue": 3,
+            "metadata": {
+                "description": "Specifies the number of nodes (Azure VM instances) to launch in the AKS cluster node pool"
+            }
+        },
+        "AKSNodeType": {
+            "type": "string",
+            "metadata": {
+                "description": "Determines the Azure VM instance type for the nodes in the AKS cluster."
+            },
+            "defaultValue": "Standard_B16s_v2, (RAM: 64 GB, CPU: 16)",
+            "allowedValues": [
+                "Standard_A2m_v2, (RAM: 16 GB, CPU: 2)",
+                "Standard_A2_v2, (RAM: 4 GB, CPU: 2)",
+                "Standard_A4m_v2, (RAM: 32 GB, CPU: 4)",
+                "Standard_A4_v2, (RAM: 8 GB, CPU: 4)",
+                "Standard_A8m_v2, (RAM: 64 GB, CPU: 8)",
+                "Standard_A8_v2, (RAM: 16 GB, CPU: 8)",
+                "Standard_B12ms, (RAM: 48 GB, CPU: 12)",
+                "Standard_B16als_v2, (RAM: 32 GB, CPU: 16)",
+                "Standard_B16as_v2, (RAM: 64 GB, CPU: 16)",
+                "Standard_B16ls_v2, (RAM: 32 GB, CPU: 16)",
+                "Standard_B16ms, (RAM: 64 GB, CPU: 16)",
+                "Standard_B16s_v2, (RAM: 64 GB, CPU: 16)",
+                "Standard_B20ms, (RAM: 80 GB, CPU: 20)",
+                "Standard_B2als_v2, (RAM: 4 GB, CPU: 2)",
+                "Standard_B2as_v2, (RAM: 8 GB, CPU: 2)",
+                "Standard_B2ls_v2, (RAM: 4 GB, CPU: 2)",
+                "Standard_B2ms, (RAM: 8 GB, CPU: 2)",
+                "Standard_B2s, (RAM: 4 GB, CPU: 2)",
+                "Standard_B2s_v2, (RAM: 8 GB, CPU: 2)",
+                "Standard_B32als_v2, (RAM: 64 GB, CPU: 32)",
+                "Standard_B32as_v2, (RAM: 128 GB, CPU: 32)",
+                "Standard_B32ls_v2, (RAM: 64 GB, CPU: 32)",
+                "Standard_B32s_v2, (RAM: 128 GB, CPU: 32)",
+                "Standard_B4als_v2, (RAM: 8 GB, CPU: 4)",
+                "Standard_B4as_v2, (RAM: 16 GB, CPU: 4)",
+                "Standard_B4ls_v2, (RAM: 8 GB, CPU: 4)",
+                "Standard_B4ms, (RAM: 16 GB, CPU: 4)",
+                "Standard_B4s_v2, (RAM: 16 GB, CPU: 4)",
+                "Standard_B8als_v2, (RAM: 16 GB, CPU: 8)",
+                "Standard_B8as_v2, (RAM: 32 GB, CPU: 8)",
+                "Standard_B8ls_v2, (RAM: 16 GB, CPU: 8)",
+                "Standard_B8ms, (RAM: 32 GB, CPU: 8)",
+                "Standard_B8s_v2, (RAM: 32 GB, CPU: 8)",
+                "Standard_D11_v2, (RAM: 14 GB, CPU: 2)",
+                "Standard_D12_v2, (RAM: 28 GB, CPU: 4)",
+                "Standard_D13_v2, (RAM: 56 GB, CPU: 8)",
+                "Standard_D14_v2, (RAM: 112 GB, CPU: 16)",
+                "Standard_D15_v2, (RAM: 140 GB, CPU: 20)",
+                "Standard_D16ads_v5, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16as_v4, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16as_v5, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16a_v4, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16ds_v4, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16ds_v5, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16d_v4, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16d_v5, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16lds_v5, (RAM: 32 GB, CPU: 16)",
+                "Standard_D16ls_v5, (RAM: 32 GB, CPU: 16)",
+                "Standard_D16s_v3, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16s_v4, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16s_v5, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16_v3, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16_v4, (RAM: 64 GB, CPU: 16)",
+                "Standard_D16_v5, (RAM: 64 GB, CPU: 16)",
+                "Standard_D2ads_v5, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2as_v4, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2as_v5, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2a_v4, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2ds_v4, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2ds_v5, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2d_v4, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2d_v5, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2lds_v5, (RAM: 4 GB, CPU: 2)",
+                "Standard_D2ls_v5, (RAM: 4 GB, CPU: 2)",
+                "Standard_D2s_v3, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2s_v4, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2s_v5, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2_v2, (RAM: 7 GB, CPU: 2)",
+                "Standard_D2_v3, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2_v4, (RAM: 8 GB, CPU: 2)",
+                "Standard_D2_v5, (RAM: 8 GB, CPU: 2)",
+                "Standard_D32ads_v5, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32as_v4, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32as_v5, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32a_v4, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32ds_v4, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32ds_v5, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32d_v4, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32d_v5, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32lds_v5, (RAM: 64 GB, CPU: 32)",
+                "Standard_D32ls_v5, (RAM: 64 GB, CPU: 32)",
+                "Standard_D32s_v3, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32s_v4, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32s_v5, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32_v3, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32_v4, (RAM: 128 GB, CPU: 32)",
+                "Standard_D32_v5, (RAM: 128 GB, CPU: 32)",
+                "Standard_D3_v2, (RAM: 14 GB, CPU: 4)",
+                "Standard_D48ads_v5, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48as_v4, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48as_v5, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48a_v4, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48ds_v4, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48ds_v5, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48d_v4, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48d_v5, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48lds_v5, (RAM: 96 GB, CPU: 48)",
+                "Standard_D48ls_v5, (RAM: 96 GB, CPU: 48)",
+                "Standard_D48s_v3, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48s_v4, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48s_v5, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48_v3, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48_v4, (RAM: 192 GB, CPU: 48)",
+                "Standard_D48_v5, (RAM: 192 GB, CPU: 48)",
+                "Standard_D4ads_v5, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4as_v4, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4as_v5, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4a_v4, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4ds_v4, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4ds_v5, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4d_v4, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4d_v5, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4lds_v5, (RAM: 8 GB, CPU: 4)",
+                "Standard_D4ls_v5, (RAM: 8 GB, CPU: 4)",
+                "Standard_D4s_v3, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4s_v4, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4s_v5, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4_v2, (RAM: 28 GB, CPU: 8)",
+                "Standard_D4_v3, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4_v4, (RAM: 16 GB, CPU: 4)",
+                "Standard_D4_v5, (RAM: 16 GB, CPU: 4)",
+                "Standard_D5_v2, (RAM: 56 GB, CPU: 16)",
+                "Standard_D64ads_v5, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64as_v4, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64as_v5, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64a_v4, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64ds_v4, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64ds_v5, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64d_v4, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64d_v5, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64lds_v5, (RAM: 128 GB, CPU: 64)",
+                "Standard_D64ls_v5, (RAM: 128 GB, CPU: 64)",
+                "Standard_D64s_v3, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64s_v4, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64s_v5, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64_v3, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64_v4, (RAM: 256 GB, CPU: 64)",
+                "Standard_D64_v5, (RAM: 256 GB, CPU: 64)",
+                "Standard_D8ads_v5, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8as_v4, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8as_v5, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8a_v4, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8ds_v4, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8ds_v5, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8d_v4, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8d_v5, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8lds_v5, (RAM: 16 GB, CPU: 8)",
+                "Standard_D8ls_v5, (RAM: 16 GB, CPU: 8)",
+                "Standard_D8s_v3, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8s_v4, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8s_v5, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8_v3, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8_v4, (RAM: 32 GB, CPU: 8)",
+                "Standard_D8_v5, (RAM: 32 GB, CPU: 8)",
+                "Standard_D96ads_v5, (RAM: 384 GB, CPU: 96)",
+                "Standard_D96as_v4, (RAM: 384 GB, CPU: 96)",
+                "Standard_D96as_v5, (RAM: 384 GB, CPU: 96)",
+                "Standard_D96a_v4, (RAM: 384 GB, CPU: 96)",
+                "Standard_D96ds_v5, (RAM: 384 GB, CPU: 96)",
+                "Standard_D96d_v5, (RAM: 384 GB, CPU: 96)",
+                "Standard_D96lds_v5, (RAM: 192 GB, CPU: 96)",
+                "Standard_D96ls_v5, (RAM: 192 GB, CPU: 96)",
+                "Standard_D96s_v5, (RAM: 384 GB, CPU: 96)",
+                "Standard_D96_v5, (RAM: 384 GB, CPU: 96)",
+                "Standard_DC16ads_cc_v5, (RAM: 64 GB, CPU: 16)",
+                "Standard_DC16ads_v5, (RAM: 64 GB, CPU: 16)",
+                "Standard_DC16as_cc_v5, (RAM: 64 GB, CPU: 16)",
+                "Standard_DC16as_v5, (RAM: 64 GB, CPU: 16)",
+                "Standard_DC16ds_v3, (RAM: 128 GB, CPU: 16)",
+                "Standard_DC16s_v3, (RAM: 128 GB, CPU: 16)",
+                "Standard_DC24ds_v3, (RAM: 192 GB, CPU: 24)",
+                "Standard_DC24s_v3, (RAM: 192 GB, CPU: 24)",
+                "Standard_DC2ads_v5, (RAM: 8 GB, CPU: 2)",
+                "Standard_DC2as_v5, (RAM: 8 GB, CPU: 2)",
+                "Standard_DC2ds_v3, (RAM: 16 GB, CPU: 2)",
+                "Standard_DC2s_v2, (RAM: 8 GB, CPU: 2)",
+                "Standard_DC2s_v3, (RAM: 16 GB, CPU: 2)",
+                "Standard_DC32ads_cc_v5, (RAM: 128 GB, CPU: 32)",
+                "Standard_DC32ads_v5, (RAM: 128 GB, CPU: 32)",
+                "Standard_DC32as_cc_v5, (RAM: 128 GB, CPU: 32)",
+                "Standard_DC32as_v5, (RAM: 128 GB, CPU: 32)",
+                "Standard_DC32ds_v3, (RAM: 256 GB, CPU: 32)",
+                "Standard_DC32s_v3, (RAM: 256 GB, CPU: 32)",
+                "Standard_DC48ads_cc_v5, (RAM: 192 GB, CPU: 48)",
+                "Standard_DC48ads_v5, (RAM: 192 GB, CPU: 48)",
+                "Standard_DC48as_cc_v5, (RAM: 192 GB, CPU: 48)",
+                "Standard_DC48as_v5, (RAM: 192 GB, CPU: 48)",
+                "Standard_DC48ds_v3, (RAM: 384 GB, CPU: 48)",
+                "Standard_DC48s_v3, (RAM: 384 GB, CPU: 48)",
+                "Standard_DC4ads_cc_v5, (RAM: 16 GB, CPU: 4)",
+                "Standard_DC4ads_v5, (RAM: 16 GB, CPU: 4)",
+                "Standard_DC4as_cc_v5, (RAM: 16 GB, CPU: 4)",
+                "Standard_DC4as_v5, (RAM: 16 GB, CPU: 4)",
+                "Standard_DC4ds_v3, (RAM: 32 GB, CPU: 4)",
+                "Standard_DC4s_v2, (RAM: 16 GB, CPU: 4)",
+                "Standard_DC4s_v3, (RAM: 32 GB, CPU: 4)",
+                "Standard_DC64ads_cc_v5, (RAM: 256 GB, CPU: 64)",
+                "Standard_DC64ads_v5, (RAM: 256 GB, CPU: 64)",
+                "Standard_DC64as_cc_v5, (RAM: 256 GB, CPU: 64)",
+                "Standard_DC64as_v5, (RAM: 256 GB, CPU: 64)",
+                "Standard_DC8ads_cc_v5, (RAM: 32 GB, CPU: 8)",
+                "Standard_DC8ads_v5, (RAM: 32 GB, CPU: 8)",
+                "Standard_DC8as_cc_v5, (RAM: 32 GB, CPU: 8)",
+                "Standard_DC8as_v5, (RAM: 32 GB, CPU: 8)",
+                "Standard_DC8ds_v3, (RAM: 64 GB, CPU: 8)",
+                "Standard_DC8s_v3, (RAM: 64 GB, CPU: 8)",
+                "Standard_DC8_v2, (RAM: 32 GB, CPU: 8)",
+                "Standard_DC96ads_cc_v5, (RAM: 384 GB, CPU: 96)",
+                "Standard_DC96ads_v5, (RAM: 384 GB, CPU: 96)",
+                "Standard_DC96as_cc_v5, (RAM: 384 GB, CPU: 96)",
+                "Standard_DC96as_v5, (RAM: 384 GB, CPU: 96)",
+                "Standard_DS11-1_v2, (RAM: 14 GB, CPU: 2)",
+                "Standard_DS11_v2, (RAM: 14 GB, CPU: 2)",
+                "Standard_DS12-1_v2, (RAM: 28 GB, CPU: 4)",
+                "Standard_DS12-2_v2, (RAM: 28 GB, CPU: 4)",
+                "Standard_DS12_v2, (RAM: 28 GB, CPU: 4)",
+                "Standard_DS13-2_v2, (RAM: 56 GB, CPU: 8)",
+                "Standard_DS13-4_v2, (RAM: 56 GB, CPU: 8)",
+                "Standard_DS13_v2, (RAM: 56 GB, CPU: 8)",
+                "Standard_DS14-4_v2, (RAM: 112 GB, CPU: 16)",
+                "Standard_DS14-8_v2, (RAM: 112 GB, CPU: 16)",
+                "Standard_DS14_v2, (RAM: 112 GB, CPU: 16)",
+                "Standard_DS15_v2, (RAM: 140 GB, CPU: 20)",
+                "Standard_DS2_v2, (RAM: 7 GB, CPU: 2)",
+                "Standard_DS3_v2, (RAM: 14 GB, CPU: 4)",
+                "Standard_DS4_v2, (RAM: 28 GB, CPU: 8)",
+                "Standard_DS5_v2, (RAM: 56 GB, CPU: 16)",
+                "Standard_E104ids_v5, (RAM: 672 GB, CPU: 104)",
+                "Standard_E104id_v5, (RAM: 672 GB, CPU: 104)",
+                "Standard_E104is_v5, (RAM: 672 GB, CPU: 104)",
+                "Standard_E104i_v5, (RAM: 672 GB, CPU: 104)",
+                "Standard_E112iads_v5, (RAM: 672 GB, CPU: 112)",
+                "Standard_E112ias_v5, (RAM: 672 GB, CPU: 112)",
+                "Standard_E112ibds_v5, (RAM: 672 GB, CPU: 112)",
+                "Standard_E112ibs_v5, (RAM: 672 GB, CPU: 112)",
+                "Standard_E16-4ads_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-4as_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-4as_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-4ds_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-4ds_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-4s_v3, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-4s_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-4s_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-8ads_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-8as_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-8as_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-8ds_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-8ds_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-8s_v3, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-8s_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16-8s_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16ads_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16as_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16as_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16a_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16bds_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16bs_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16ds_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16ds_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16d_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16d_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16s_v3, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16s_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16s_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16_v3, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16_v4, (RAM: 128 GB, CPU: 16)",
+                "Standard_E16_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_E20ads_v5, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20as_v4, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20as_v5, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20a_v4, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20ds_v4, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20ds_v5, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20d_v4, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20d_v5, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20s_v3, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20s_v4, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20s_v5, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20_v3, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20_v4, (RAM: 160 GB, CPU: 20)",
+                "Standard_E20_v5, (RAM: 160 GB, CPU: 20)",
+                "Standard_E2ads_v5, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2as_v4, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2as_v5, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2a_v4, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2bds_v5, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2bs_v5, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2ds_v4, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2ds_v5, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2d_v4, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2d_v5, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2s_v3, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2s_v4, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2s_v5, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2_v3, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2_v4, (RAM: 16 GB, CPU: 2)",
+                "Standard_E2_v5, (RAM: 16 GB, CPU: 2)",
+                "Standard_E32-16ads_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-16as_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-16as_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-16ds_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-16ds_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-16s_v3, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-16s_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-16s_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-8ads_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-8as_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-8as_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-8ds_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-8ds_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-8s_v3, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-8s_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32-8s_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32ads_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32as_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32as_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32a_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32bds_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32bs_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32ds_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32ds_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32d_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32d_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32s_v3, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32s_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32s_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32_v3, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32_v4, (RAM: 256 GB, CPU: 32)",
+                "Standard_E32_v5, (RAM: 256 GB, CPU: 32)",
+                "Standard_E4-2ads_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4-2as_v4, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4-2as_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4-2ds_v4, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4-2ds_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4-2s_v3, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4-2s_v4, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4-2s_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E48ads_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48as_v4, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48as_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48a_v4, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48bds_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48bs_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48ds_v4, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48ds_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48d_v4, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48d_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48s_v3, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48s_v4, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48s_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48_v3, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48_v4, (RAM: 384 GB, CPU: 48)",
+                "Standard_E48_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_E4ads_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4as_v4, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4as_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4a_v4, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4bds_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4bs_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4ds_v4, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4ds_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4d_v4, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4d_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4s_v3, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4s_v4, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4s_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4_v3, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4_v4, (RAM: 32 GB, CPU: 4)",
+                "Standard_E4_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_E64-16ads_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64-16as_v4, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64-16as_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64-16ds_v4, (RAM: 504 GB, CPU: 64)",
+                "Standard_E64-16ds_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64-16s_v3, (RAM: 432 GB, CPU: 64)",
+                "Standard_E64-16s_v4, (RAM: 504 GB, CPU: 64)",
+                "Standard_E64-16s_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64-32ads_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64-32as_v4, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64-32as_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64-32ds_v4, (RAM: 504 GB, CPU: 64)",
+                "Standard_E64-32ds_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64-32s_v3, (RAM: 432 GB, CPU: 64)",
+                "Standard_E64-32s_v4, (RAM: 504 GB, CPU: 64)",
+                "Standard_E64-32s_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64ads_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64as_v4, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64as_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64a_v4, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64bds_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64bs_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64ds_v4, (RAM: 504 GB, CPU: 64)",
+                "Standard_E64ds_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64d_v4, (RAM: 504 GB, CPU: 64)",
+                "Standard_E64d_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64is_v3, (RAM: 432 GB, CPU: 64)",
+                "Standard_E64i_v3, (RAM: 432 GB, CPU: 64)",
+                "Standard_E64s_v3, (RAM: 432 GB, CPU: 64)",
+                "Standard_E64s_v4, (RAM: 504 GB, CPU: 64)",
+                "Standard_E64s_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E64_v3, (RAM: 432 GB, CPU: 64)",
+                "Standard_E64_v4, (RAM: 504 GB, CPU: 64)",
+                "Standard_E64_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_E8-2ads_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-2as_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-2as_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-2ds_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-2ds_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-2s_v3, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-2s_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-2s_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-4ads_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-4as_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-4as_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-4ds_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-4ds_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-4s_v3, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-4s_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8-4s_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E80ids_v4, (RAM: 504 GB, CPU: 80)",
+                "Standard_E80is_v4, (RAM: 504 GB, CPU: 80)",
+                "Standard_E8ads_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8as_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8as_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8a_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8bds_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8bs_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8ds_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8ds_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8d_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8d_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8s_v3, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8s_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8s_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8_v3, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8_v4, (RAM: 64 GB, CPU: 8)",
+                "Standard_E8_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_E96-24ads_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96-24as_v4, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96-24as_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96-24ds_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96-24s_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96-48ads_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96-48as_v4, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96-48as_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96-48ds_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96-48s_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96ads_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96as_v4, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96as_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96a_v4, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96bds_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96bs_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96ds_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96d_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96ias_v4, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96s_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_E96_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_EC16ads_cc_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_EC16ads_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_EC16as_cc_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_EC16as_v5, (RAM: 128 GB, CPU: 16)",
+                "Standard_EC20ads_cc_v5, (RAM: 160 GB, CPU: 20)",
+                "Standard_EC20ads_v5, (RAM: 160 GB, CPU: 20)",
+                "Standard_EC20as_cc_v5, (RAM: 160 GB, CPU: 20)",
+                "Standard_EC20as_v5, (RAM: 160 GB, CPU: 20)",
+                "Standard_EC2ads_v5, (RAM: 16 GB, CPU: 2)",
+                "Standard_EC2as_v5, (RAM: 16 GB, CPU: 2)",
+                "Standard_EC32ads_cc_v5, (RAM: 192 GB, CPU: 32)",
+                "Standard_EC32ads_v5, (RAM: 192 GB, CPU: 32)",
+                "Standard_EC32as_cc_v5, (RAM: 192 GB, CPU: 32)",
+                "Standard_EC32as_v5, (RAM: 192 GB, CPU: 32)",
+                "Standard_EC48ads_cc_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_EC48ads_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_EC48as_cc_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_EC48as_v5, (RAM: 384 GB, CPU: 48)",
+                "Standard_EC4ads_cc_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_EC4ads_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_EC4as_cc_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_EC4as_v5, (RAM: 32 GB, CPU: 4)",
+                "Standard_EC64ads_cc_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_EC64ads_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_EC64as_cc_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_EC64as_v5, (RAM: 512 GB, CPU: 64)",
+                "Standard_EC8ads_cc_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_EC8ads_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_EC8as_cc_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_EC8as_v5, (RAM: 64 GB, CPU: 8)",
+                "Standard_EC96ads_cc_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_EC96ads_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_EC96as_cc_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_EC96as_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_EC96iads_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_EC96ias_v5, (RAM: 672 GB, CPU: 96)",
+                "Standard_F16, (RAM: 32 GB, CPU: 16)",
+                "Standard_F16s, (RAM: 32 GB, CPU: 16)",
+                "Standard_F16s_v2, (RAM: 32 GB, CPU: 16)",
+                "Standard_F2, (RAM: 4 GB, CPU: 2)",
+                "Standard_F2s, (RAM: 4 GB, CPU: 2)",
+                "Standard_F2s_v2, (RAM: 4 GB, CPU: 2)",
+                "Standard_F32s_v2, (RAM: 64 GB, CPU: 32)",
+                "Standard_F4, (RAM: 8 GB, CPU: 4)",
+                "Standard_F48s_v2, (RAM: 96 GB, CPU: 48)",
+                "Standard_F4s, (RAM: 8 GB, CPU: 4)",
+                "Standard_F4s_v2, (RAM: 8 GB, CPU: 4)",
+                "Standard_F64s_v2, (RAM: 128 GB, CPU: 64)",
+                "Standard_F72s_v2, (RAM: 144 GB, CPU: 72)",
+                "Standard_F8, (RAM: 16 GB, CPU: 8)",
+                "Standard_F8s, (RAM: 16 GB, CPU: 8)",
+                "Standard_F8s_v2, (RAM: 16 GB, CPU: 8)",
+                "Standard_FX12mds, (RAM: 252 GB, CPU: 12)",
+                "Standard_FX24mds, (RAM: 504 GB, CPU: 24)",
+                "Standard_FX36mds, (RAM: 756 GB, CPU: 36)",
+                "Standard_FX48mds, (RAM: 1008 GB, CPU: 48)",
+                "Standard_FX4mds, (RAM: 84 GB, CPU: 4)",
+                "Standard_G1, (RAM: 28 GB, CPU: 2)",
+                "Standard_G2, (RAM: 56 GB, CPU: 4)",
+                "Standard_G3, (RAM: 112 GB, CPU: 8)",
+                "Standard_G4, (RAM: 224 GB, CPU: 16)",
+                "Standard_G5, (RAM: 448 GB, CPU: 32)",
+                "Standard_GS1, (RAM: 28 GB, CPU: 2)",
+                "Standard_GS2, (RAM: 56 GB, CPU: 4)",
+                "Standard_GS3, (RAM: 112 GB, CPU: 8)",
+                "Standard_GS4, (RAM: 224 GB, CPU: 16)",
+                "Standard_GS4-4, (RAM: 224 GB, CPU: 16)",
+                "Standard_GS4-8, (RAM: 224 GB, CPU: 16)",
+                "Standard_GS5, (RAM: 448 GB, CPU: 32)",
+                "Standard_GS5-16, (RAM: 448 GB, CPU: 32)",
+                "Standard_GS5-8, (RAM: 448 GB, CPU: 32)",
+                "Standard_HB120-16rs_v2, (RAM: 456 GB, CPU: 120)",
+                "Standard_HB120-16rs_v3, (RAM: 456 GB, CPU: 120)",
+                "Standard_HB120-32rs_v2, (RAM: 456 GB, CPU: 120)",
+                "Standard_HB120-32rs_v3, (RAM: 456 GB, CPU: 120)",
+                "Standard_HB120-64rs_v2, (RAM: 456 GB, CPU: 120)",
+                "Standard_HB120-64rs_v3, (RAM: 456 GB, CPU: 120)",
+                "Standard_HB120-96rs_v2, (RAM: 456 GB, CPU: 120)",
+                "Standard_HB120-96rs_v3, (RAM: 456 GB, CPU: 120)",
+                "Standard_HB120rs_v2, (RAM: 456 GB, CPU: 120)",
+                "Standard_HB120rs_v3, (RAM: 456 GB, CPU: 120)",
+                "Standard_HB176-144rs_v4, (RAM: 768 GB, CPU: 176)",
+                "Standard_HB176-24rs_v4, (RAM: 768 GB, CPU: 176)",
+                "Standard_HB176-48rs_v4, (RAM: 768 GB, CPU: 176)",
+                "Standard_HB176-96rs_v4, (RAM: 768 GB, CPU: 176)",
+                "Standard_HB176rs_v4, (RAM: 768 GB, CPU: 176)",
+                "Standard_HB60-15rs, (RAM: 228 GB, CPU: 60)",
+                "Standard_HB60-30rs, (RAM: 228 GB, CPU: 60)",
+                "Standard_HB60-45rs, (RAM: 228 GB, CPU: 60)",
+                "Standard_HB60rs, (RAM: 228 GB, CPU: 60)",
+                "Standard_HC44-16rs, (RAM: 352 GB, CPU: 44)",
+                "Standard_HC44-32rs, (RAM: 352 GB, CPU: 44)",
+                "Standard_HC44rs, (RAM: 352 GB, CPU: 44)",
+                "Standard_HX176-144rs, (RAM: 1408 GB, CPU: 176)",
+                "Standard_HX176-24rs, (RAM: 1408 GB, CPU: 176)",
+                "Standard_HX176-48rs, (RAM: 1408 GB, CPU: 176)",
+                "Standard_HX176-96rs, (RAM: 1408 GB, CPU: 176)",
+                "Standard_HX176rs, (RAM: 1408 GB, CPU: 176)",
+                "Standard_L16as_v3, (RAM: 128 GB, CPU: 16)",
+                "Standard_L16s, (RAM: 128 GB, CPU: 16)",
+                "Standard_L16s_v2, (RAM: 128 GB, CPU: 16)",
+                "Standard_L16s_v3, (RAM: 128 GB, CPU: 16)",
+                "Standard_L32as_v3, (RAM: 256 GB, CPU: 32)",
+                "Standard_L32s, (RAM: 256 GB, CPU: 32)",
+                "Standard_L32s_v2, (RAM: 256 GB, CPU: 32)",
+                "Standard_L32s_v3, (RAM: 256 GB, CPU: 32)",
+                "Standard_L48as_v3, (RAM: 384 GB, CPU: 48)",
+                "Standard_L48s_v2, (RAM: 384 GB, CPU: 48)",
+                "Standard_L48s_v3, (RAM: 384 GB, CPU: 48)",
+                "Standard_L4s, (RAM: 32 GB, CPU: 4)",
+                "Standard_L64as_v3, (RAM: 512 GB, CPU: 64)",
+                "Standard_L64s_v2, (RAM: 512 GB, CPU: 64)",
+                "Standard_L64s_v3, (RAM: 512 GB, CPU: 64)",
+                "Standard_L80as_v3, (RAM: 640 GB, CPU: 80)",
+                "Standard_L80s_v2, (RAM: 640 GB, CPU: 80)",
+                "Standard_L80s_v3, (RAM: 640 GB, CPU: 80)",
+                "Standard_L8as_v3, (RAM: 64 GB, CPU: 8)",
+                "Standard_L8s, (RAM: 64 GB, CPU: 8)",
+                "Standard_L8s_v2, (RAM: 64 GB, CPU: 8)",
+                "Standard_L8s_v3, (RAM: 64 GB, CPU: 8)",
+                "Standard_M128, (RAM: 2048 GB, CPU: 128)",
+                "Standard_M128-32ms, (RAM: 3892 GB, CPU: 128)",
+                "Standard_M128-64ms, (RAM: 3892 GB, CPU: 128)",
+                "Standard_M128dms_v2, (RAM: 3892 GB, CPU: 128)",
+                "Standard_M128ds_v2, (RAM: 2048 GB, CPU: 128)",
+                "Standard_M128m, (RAM: 3892 GB, CPU: 128)",
+                "Standard_M128ms, (RAM: 3892 GB, CPU: 128)",
+                "Standard_M128ms_v2, (RAM: 3892 GB, CPU: 128)",
+                "Standard_M128s, (RAM: 2048 GB, CPU: 128)",
+                "Standard_M128s_v2, (RAM: 2048 GB, CPU: 128)",
+                "Standard_M12ds_v3, (RAM: 240 GB, CPU: 12)",
+                "Standard_M12s_v3, (RAM: 240 GB, CPU: 12)",
+                "Standard_M16-4ms, (RAM: 437.5 GB, CPU: 16)",
+                "Standard_M16-8ms, (RAM: 437.5 GB, CPU: 16)",
+                "Standard_M16ms, (RAM: 437.5 GB, CPU: 16)",
+                "Standard_M176ds_3_v3, (RAM: 2794 GB, CPU: 176)",
+                "Standard_M176ds_4_v3, (RAM: 3892 GB, CPU: 176)",
+                "Standard_M176s_3_v3, (RAM: 2794 GB, CPU: 176)",
+                "Standard_M176s_4_v3, (RAM: 3892 GB, CPU: 176)",
+                "Standard_M192idms_v2, (RAM: 4096 GB, CPU: 192)",
+                "Standard_M192ids_v2, (RAM: 2048 GB, CPU: 192)",
+                "Standard_M192ims_v2, (RAM: 4096 GB, CPU: 192)",
+                "Standard_M192is_v2, (RAM: 2048 GB, CPU: 192)",
+                "Standard_M208ms_v2, (RAM: 5700 GB, CPU: 208)",
+                "Standard_M208s_v2, (RAM: 2850 GB, CPU: 208)",
+                "Standard_M24ds_v3, (RAM: 480 GB, CPU: 24)",
+                "Standard_M24s_v3, (RAM: 480 GB, CPU: 24)",
+                "Standard_M32-16ms, (RAM: 875 GB, CPU: 32)",
+                "Standard_M32-8ms, (RAM: 875 GB, CPU: 32)",
+                "Standard_M32dms_v2, (RAM: 875 GB, CPU: 32)",
+                "Standard_M32ls, (RAM: 256 GB, CPU: 32)",
+                "Standard_M32ms, (RAM: 875 GB, CPU: 32)",
+                "Standard_M32ms_v2, (RAM: 875 GB, CPU: 32)",
+                "Standard_M32ts, (RAM: 192 GB, CPU: 32)",
+                "Standard_M416-208ms_v2, (RAM: 11400 GB, CPU: 416)",
+                "Standard_M416-208s_v2, (RAM: 5700 GB, CPU: 416)",
+                "Standard_M416ms_v2, (RAM: 11400 GB, CPU: 416)",
+                "Standard_M416s_8_v2, (RAM: 7600 GB, CPU: 416)",
+                "Standard_M416s_v2, (RAM: 5700 GB, CPU: 416)",
+                "Standard_M48ds_1_v3, (RAM: 974 GB, CPU: 48)",
+                "Standard_M48s_1_v3, (RAM: 974 GB, CPU: 48)",
+                "Standard_M64, (RAM: 1024 GB, CPU: 64)",
+                "Standard_M64-16ms, (RAM: 1792 GB, CPU: 64)",
+                "Standard_M64-32ms, (RAM: 1792 GB, CPU: 64)",
+                "Standard_M64dms_v2, (RAM: 1792 GB, CPU: 64)",
+                "Standard_M64ds_v2, (RAM: 1024 GB, CPU: 64)",
+                "Standard_M64ls, (RAM: 512 GB, CPU: 64)",
+                "Standard_M64m, (RAM: 1792 GB, CPU: 64)",
+                "Standard_M64ms, (RAM: 1792 GB, CPU: 64)",
+                "Standard_M64ms_v2, (RAM: 1792 GB, CPU: 64)",
+                "Standard_M64s, (RAM: 1024 GB, CPU: 64)",
+                "Standard_M64s_v2, (RAM: 1024 GB, CPU: 64)",
+                "Standard_M8-2ms, (RAM: 218.75 GB, CPU: 8)",
+                "Standard_M8-4ms, (RAM: 218.75 GB, CPU: 8)",
+                "Standard_M8ms, (RAM: 218.75 GB, CPU: 8)",
+                "Standard_M96ds_1_v3, (RAM: 974 GB, CPU: 96)",
+                "Standard_M96ds_2_v3, (RAM: 1946 GB, CPU: 96)",
+                "Standard_M96s_1_v3, (RAM: 974 GB, CPU: 96)",
+                "Standard_M96s_2_v3, (RAM: 1946 GB, CPU: 96)",
+                "Standard_NC12s_v3, (RAM: 224 GB, CPU: 12)",
+                "Standard_NC16ads_A10_v4, (RAM: 200 GB, CPU: 16)",
+                "Standard_NC16as_T4_v3, (RAM: 110 GB, CPU: 16)",
+                "Standard_NC24ads_A100_v4, (RAM: 220 GB, CPU: 24)",
+                "Standard_NC24rs_v3, (RAM: 448 GB, CPU: 24)",
+                "Standard_NC24s_v3, (RAM: 448 GB, CPU: 24)",
+                "Standard_NC32ads_A10_v4, (RAM: 400 GB, CPU: 32)",
+                "Standard_NC40ads_H100_v5, (RAM: 320 GB, CPU: 40)",
+                "Standard_NC48ads_A100_v4, (RAM: 440 GB, CPU: 48)",
+                "Standard_NC4as_T4_v3, (RAM: 28 GB, CPU: 4)",
+                "Standard_NC64as_T4_v3, (RAM: 440 GB, CPU: 64)",
+                "Standard_NC6s_v3, (RAM: 112 GB, CPU: 6)",
+                "Standard_NC80adis_H100_v5, (RAM: 640 GB, CPU: 80)",
+                "Standard_NC8ads_A10_v4, (RAM: 100 GB, CPU: 8)",
+                "Standard_NC8as_T4_v3, (RAM: 56 GB, CPU: 8)",
+                "Standard_NC96ads_A100_v4, (RAM: 880 GB, CPU: 96)",
+                "Standard_ND40rs_v2, (RAM: 672 GB, CPU: 40)",
+                "Standard_ND96asr_v4, (RAM: 900 GB, CPU: 96)",
+                "Standard_NV12ads_A10_v5, (RAM: 110 GB, CPU: 12)",
+                "Standard_NV12s_v3, (RAM: 112 GB, CPU: 12)",
+                "Standard_NV16as_v4, (RAM: 56 GB, CPU: 16)",
+                "Standard_NV18ads_A10_v5, (RAM: 220 GB, CPU: 18)",
+                "Standard_NV24s_v3, (RAM: 224 GB, CPU: 24)",
+                "Standard_NV32as_v4, (RAM: 112 GB, CPU: 32)",
+                "Standard_NV36adms_A10_v5, (RAM: 880 GB, CPU: 36)",
+                "Standard_NV36ads_A10_v5, (RAM: 440 GB, CPU: 36)",
+                "Standard_NV48s_v3, (RAM: 448 GB, CPU: 48)",
+                "Standard_NV4as_v4, (RAM: 14 GB, CPU: 4)",
+                "Standard_NV6ads_A10_v5, (RAM: 55 GB, CPU: 6)",
+                "Standard_NV72ads_A10_v5, (RAM: 880 GB, CPU: 72)",
+                "Standard_NV8as_v4, (RAM: 28 GB, CPU: 8)"
+            ]
+        },
+        "CreateNatGateway": {
+            "type": "bool",
+            "defaultValue": false,
+            "metadata": {
+                "description": "Whether to create a NAT Gateway or not. You will need the NAT Gateway when your private subnet don't have one yet, for connectivity to the Denodo Harbor repository and Azure Services. THIS WILL REPLACE THE DEFAULT OUTBOUND ACCESS IN YOUR PRIVATE SUBNET"
+            }
+        },
+        "AKSVnetId": {
+            "type": "string",
+            "metadata": {
+                "description": "ID of the Virtual Network where the AKS Cluster will be deployed"
+            }
+        },
+        "AKSClusterSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the subnet where the AKS CLuster will be deployed"
+            }
+        },
+        "PrivateLoadBalancer": {
+            "type": "string",
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true",
+            "metadata": {
+                "description": "Specify whether the load balancer of the Denodo MPP is PRIVATE: It will require manual setup of Vnet Peering/other routing solution or PUBLIC: no setup needed but traffic will reach the internet. Set to 'true' to deploy a private load balancer, 'false' otherwise."
+            }
+        },
+        "UseRoleForAgora": {
+            "type": "string",
+            "defaultValue": "false",
+            "metadata": {
+                "description": "Property to enable using ROLE during registration instead of creating a new USER. If you are using AGORA you must set this property to true."
+            }
+        },
+        "ImageRepositoryName": {
+            "type": "string",
+            "defaultValue": "harbor.open.denodo.com/denodo-connects-9/images",
+            "metadata": {
+                "description": "The container registry containing the Denodo Embedded MPP images. By default uses the denodo Harbor repository and requires that you fill the PullSecretValue or the DenodoHarborUser and DenodoHarborCLIPassword. If you want to use Azure Container Registry leave PullSecretValue empty and write your acr repository <acr_repository_name>.azurecr.io"
+            }
+        },
+        "DenodoHarborUser": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Denodo harbor account username, required only when using harbor and you dont have a Pull Secret created"
+            }
+        },
+        "DenodoHarborCLIPassword": {
+            "type": "securestring",
+            "defaultValue": "",
+            "metadata": {
+                "description": "CLI secret in the Denodo Container Registry, required only when using harbor and you dont have a Pull Secret created"
+            }
+        },
+        "PullSecretValue": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "References the kubernetes secret with the credentials that will be used to download images from the Container registry, required if you are not using Azure image registry"
+            }
+        },
+        "DenodoIP": {
+            "type": "string",
+            "metadata": {
+                "description": "The IP/hostname of your Denodo installation, could be private or public. If using a private IP, you have to ensure that this network is interconnected with the private subnet of the Cluster (using Vnet Peering or similar)"
+            }
+        },
+        "MppHost": {
+            "type": "string",
+            "defaultValue": "presto-denodo",
+            "metadata": {
+                "description": "The IP/Hostname of your Denodo MPP installation, could be private or public. By default uses 'presto-denodo' hostname and it will be registering this hostname/IP in the denodo datasource, changing this parameter is common with Agora deployments but not needed most of the times. If using a private IP, you have to ensure that this network is interconnected with the private subnet of the Cluster (using Vnet Peering or similar)"
+            }
+        },
+        "DenodoUser": {
+            "type": "string",
+            "defaultValue": "denodo_mpp_user",
+            "metadata": {
+                "description": "The user name to create in your Denodo installation when you run ./cluster.sh register. It's replaced in the values.yaml and will allow presto to connect to Denodo. Default value is 'denodo_mpp_user'"
+            }
+        },
+        "DenodoPassword": {
+            "type": "securestring",
+            "defaultValue": "d3n0do_MPP_p*d",
+            "metadata": {
+                "description": "The user password to create in your Denodo installation when you run ./cluster.sh register. It's replaced in the values.yaml and will allow presto to connect to Denodo. Default value is 'd3n0do_MPP_p*d'"
+            }
+        }
+
+    },
+    "functions": [],
+    "variables": {
+        "uniqueDeploymentId": "[substring(uniqueString(resourceGroup().id, deployment().name),0,10)]",
+        "resourceNamePrefix": "Den-Mpp-",
+        "vmSize": "[split(parameters('AKSNodeType'), ',')[0]]",
+        "aksManagedIdentityName": "[concat(variables('resourceNamePrefix'),'aks-mi-',variables('uniqueDeploymentId'))]",
+        "aksAgentPoolManagedIdentityName": "[concat(variables('resourceNamePrefix'),'aks-agentpool-mi-',variables('uniqueDeploymentId'))]",
+        "aksClusterAdminManagedIdentityName": "[concat(variables('resourceNamePrefix'),'aks-cluster-admin-mi-', variables('uniqueDeploymentId'))]",
+        "aksDeploymentScriptManagedIdentityName": "[concat(variables('resourceNamePrefix'),'aks-deployment-script-mi-', variables('uniqueDeploymentId'))]",
+        "aksManageClusterRoleDefintionId": "[guid(variables('aksManagedIdentityName'), 'manageClusterRoleDefinition')]",
+        "aksManageClusterRoleDefintionName": "[concat(variables('resourceNamePrefix'),'aks-managed-identity-role-',variables('uniqueDeploymentId'))]",
+        "aksDeploymentScriptRoleDefintionId": "[guid(variables('aksDeploymentScriptManagedIdentityName'), 'deploymentScriptRoleDefintion')]",
+        "aksDeploymentScriptRoleDefintionName": "[concat(variables('resourceNamePrefix'),'aks-deployment-script-managed-identity-role-',variables('uniqueDeploymentId'))]",
+        "aksManageClusterRoleAssignmentName": "[guid(variables('aksManagedIdentityName'), 'manageClusterRoleAssignment')]",
+        "aksClusterAdminRoleAssignmentName": "[guid(variables('aksClusterAdminManagedIdentityName'), 'clusterAdminRoleAssignment')]",
+        "prestoTemplatesStorageName": "[concat('denmpp', variables('uniqueDeploymentId'))]",
+        "prestoTemplatesStorageDisplayName": "[concat(variables('resourceNamePrefix'),'presto-templates-', variables('uniqueDeploymentId'))]",
+        "prestoTemplatesContainerName": "denodo-presto-k8scluster",
+        "natPublicIpPrefixesName": "[concat(variables('resourceNamePrefix'),'nat-public-ip-prefixes-',variables('uniqueDeploymentId'))]",
+        "natGatewayName": "[concat(variables('resourceNamePrefix'),'priv-subnet-nat-gateway-', variables('uniqueDeploymentId'))]",
+        "aksClusterName": "[concat(variables('resourceNamePrefix'),'aks-presto-', parameters('EnvironmentName'), '-' ,variables('uniqueDeploymentId'))]",
+        "acrPullRoleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d",
+        "dataOwnerRoleId": "b7e6dc6d-f1e8-4753-8033-0f276bb0955b",
+        "aksClusterAdminRoleId": "b1ff04bb-8a4e-4dc4-8eb5-8693973ce19b",
+        "utilityDeploymentScriptName": "[concat('utility-deployment-script-', variables('uniqueDeploymentId'))]",
+        "generateValuesTemplateDeploymentScriptName": "[concat('values-template-deployment-script-', variables('uniqueDeploymentId'))]",
+        "natGatewayAssignmentDeploymentScriptName": "[concat('nat-assignment-',variables('uniqueDeploymentId'))]",
+        "aksRoleAssignmentDeploymentScriptName": "[concat('aks-role-assignment-',variables('uniqueDeploymentId'))]",
+        "acrPullRoleAssignmentName": "[guid(resourceGroup().id, 'acrpull-agentpool-mi', variables('uniqueDeploymentId'))]",
+        "StorageAccountAdminRoleAssignment": "[guid(resourceGroup().id, 'adls-agentpool-mi', variables('uniqueDeploymentId'))]",
+        "StorageAccountAgentPoolRoleAssignment": "[guid(resourceGroup().id, 'adls-vm-mi', variables('uniqueDeploymentId'))]",
+        "keyVaultName": "[concat(variables('resourceNamePrefix'),'vault-', variables('uniqueDeploymentId'))]",
+        "aksManagedIdentityPermissions": [
+            "Microsoft.Compute/disks/delete",
+            "Microsoft.Compute/disks/read",
+            "Microsoft.Compute/disks/write",
+            "Microsoft.Compute/virtualMachineScaleSets/manualUpgrade/action",
+            "Microsoft.Compute/virtualMachineScaleSets/read",
+            "Microsoft.Compute/virtualMachineScaleSets/virtualMachines/networkInterfaces/read",
+            "Microsoft.Compute/virtualMachineScaleSets/virtualMachines/read",
+            "Microsoft.Compute/virtualMachineScaleSets/virtualMachines/write",
+            "Microsoft.Compute/virtualMachineScaleSets/write",
+            "Microsoft.Compute/virtualMachines/read",
+            "Microsoft.Compute/virtualMachines/write",
+            "Microsoft.Network/loadBalancers/write",
+            "Microsoft.Network/loadBalancers/backendAddressPools/join/action",
+            "Microsoft.Network/loadBalancers/delete",
+            "Microsoft.Network/loadBalancers/read",
+            "Microsoft.Network/networkInterfaces/join/action",
+            "Microsoft.Network/networkInterfaces/read",
+            "Microsoft.Network/networkInterfaces/write",
+            "Microsoft.Network/networkSecurityGroups/read",
+            "Microsoft.Network/networkSecurityGroups/write",
+            "Microsoft.Network/publicIPAddresses/delete",
+            "Microsoft.Network/publicIPAddresses/join/action",
+            "Microsoft.Network/publicIPAddresses/read",
+            "Microsoft.Network/publicIPAddresses/write",
+            "Microsoft.Network/routeTables/read",
+            "Microsoft.Network/routeTables/routes/delete",
+            "Microsoft.Network/routeTables/routes/write",
+            "Microsoft.Network/routeTables/write",
+            "Microsoft.Network/virtualNetworks/subnets/join/action",
+            "Microsoft.Network/virtualNetworks/subnets/read",
+            "Microsoft.Storage/storageAccounts/listKeys/action",
+            "Microsoft.Storage/storageAccounts/read",
+            "Microsoft.Storage/storageAccounts/write",
+            "Microsoft.ManagedIdentity/userAssignedIdentities/*/read",
+            "Microsoft.ManagedIdentity/userAssignedIdentities/*/assign/action",
+            "Microsoft.Authorization/*/read",
+            "Microsoft.Insights/alertRules/*",
+            "Microsoft.Resources/subscriptions/resourceGroups/read",
+            "Microsoft.Resources/deployments/*",
+            "Microsoft.Support/*"
+        ],
+        "aksDeploymentScriptManagedIdentityPermissions": [
+            "Microsoft.Storage/storageAccounts/*",
+            "Microsoft.ContainerInstance/containerGroups/*",
+            "Microsoft.Resources/deployments/*",
+            "Microsoft.Resources/deploymentScripts/*",
+            "Microsoft.Storage/register/action",
+            "Microsoft.ContainerInstance/register/action",
+            "Microsoft.Network/virtualNetworks/*/read",
+            "Microsoft.Network/virtualnetworks/subnets/write",
+            "Microsoft.Network/natGateways/join/action",
+            "Microsoft.Authorization/roleAssignments/write",
+            "Microsoft.ContainerRegistry/registries/read"
+        ]
+    },
+    "resources": [
+        //Managed identity for the AKS Cluster to automatically manage resources 
+        {
+            "name": "[variables('aksManagedIdentityName')]",
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2023-01-31",
+            "location": "[resourceGroup().location]"
+        },
+        //Role definition for the AKS Cluster Managed Identity
+        {
+            "type": "Microsoft.Authorization/roleDefinitions",
+            "apiVersion": "2022-04-01",
+            "name": "[variables('aksManageClusterRoleDefintionId')]",
+            "properties": {
+                "assignableScopes": [
+                    "[resourceGroup().id]",
+                    "[subscription().id]"
+                ],
+                "description": "role definition for AKS service principal",
+                "permissions": [
+                    {
+                        "actions": "[variables('aksManagedIdentityPermissions')]",
+                        "dataActions": [],
+                        "notActions": [],
+                        "notDataActions": []
+                    }
+                ],
+                "roleName": "[variables('aksManageClusterRoleDefintionName')]",
+                "type": "customRole"
+            }
+        },
+        //Role assignment for the AKS Cluster
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('aksRoleAssignmentDeploymentScriptName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deploymentScripts',variables('utilityDeploymentScriptName'))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('aksManagedIdentityName'))]",
+                "[resourceId('Microsoft.Authorization/roleDefinitions',variables('aksManageClusterRoleDefintionId'))]"
+            ],
+            "kind": "AzureCLI",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[ResourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksDeploymentScriptManagedIdentityName'))]": {
+                    }
+                }
+            },
+            "properties": {
+                "AzCliVersion": "2.40.0",
+                "timeout": "PT5M",
+                "environmentVariables": [
+                    {
+                        "name": "deployment_name",
+                        "value": "[concat('aks-role-assignmnet-', variables('uniqueDeploymentId'))]"
+                    },
+                    {
+                        "name": "aks_role_assignment_name",
+                        "value": "[variables('aksManageClusterRoleAssignmentName')]"
+                    },
+                    {
+                        "name": "aks_role_definition_name",
+                        "value": "[variables('aksManageClusterRoleDefintionId')]"
+                    },
+                    {
+                        "name": "managed_identity_principal_id",
+                        "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksManagedIdentityName')), '2018-11-30').principalId]"
+                    },
+                    {
+                        "name": "resource_group",
+                        "value": "[reference(variables('utilityDeploymentScriptName')).outputs.ResourceGroup]"
+                    },
+                    {
+                        "name": "location",
+                        "value": "[resourceGroup().location]"
+                    },
+                    {
+                        "name": "template",
+                        "value": "{\"\\x24schema\":\"https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{\"aksManageClusterRoleAssignmentName\":{\"type\":\"string\"},\"aksManageClusterRoleDefintionName\":{\"type\":\"string\"},\"managedIdentityPrincipalId\":{\"type\":\"string\"}},\"functions\":[],\"variables\":{},\"resources\":[{\"type\":\"Microsoft.Authorization/roleAssignments\",\"apiVersion\":\"2022-04-01\",\"name\":\"[parameters('aksManageClusterRoleAssignmentName')]\",\"properties\":{\"roleDefinitionId\":\"[concat('/subscriptions/',subscription().subscriptionId,'/providers/Microsoft.Authorization/roleDefinitions/',parameters('aksManageClusterRoleDefintionName'))]\",\"principalId\":\"[parameters('managedIdentityPrincipalId')]\",\"principalType\":\"ServicePrincipal\"}}],\"outputs\":{}}"
+                    }
+                ],
+                "scriptContent": "echo -e $template > deployment.json; az deployment sub create --name $deployment_name --location $location --template-file deployment.json --parameters aksManageClusterRoleAssignmentName=$aks_role_assignment_name aksManageClusterRoleDefintionName=$aks_role_definition_name managedIdentityPrincipalId=$managed_identity_principal_id",
+                "cleanupPreference": "Always",
+                "retentionInterval": "PT1H"
+            }
+        },
+        //Managed identity for the AKS Cluster agent pool (node conection to Azure Resources)
+        {
+            "name": "[variables('aksAgentPoolManagedIdentityName')]",
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2023-01-31",
+            "location": "[resourceGroup().location]"
+        },
+        //Role assigment to enable registry images retrieval from the Presto nodes
+        {
+            "condition": "[not(equals(parameters('ImageRepositoryName'),'harbor.open.denodo.com/denodo-connects-9/images'))]",
+            "type": "Microsoft.Resources/deployments",
+            "name": "[concat('acr-pull-role-assignment-', variables('uniqueDeploymentId'))]",
+            "apiVersion": "2022-09-01",
+            "subscriptionId": "[subscription().subscriptionId]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksAgentPoolManagedIdentityName'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "expressionEvaluationOptions": {
+                    "scope": "Inner"
+                },
+                "parameters": {
+                    "managedIdentityPrincipalId": {
+                        "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksAgentPoolManagedIdentityName')), '2018-11-30').principalId]"
+                    },
+                    "roleAssignmentName": {
+                        "value": "[variables('acrPullRoleAssignmentName')]"
+                    },
+                    "roleDefinitionId": {
+                        "value": "[variables('acrPullRoleId')]"
+                    }
+                },
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "roleAssignmentName": {
+                            "type": "string"
+                        },
+                        "managedIdentityPrincipalId": {
+                            "type": "string"
+                        },
+                        "roleDefinitionId": {
+                            "type": "string"
+                        }
+                    },
+                    "resources": [
+                        {
+                            "apiVersion": "2022-04-01",
+                            "type": "Microsoft.Authorization/roleAssignments",
+                            "name": "[parameters('roleAssignmentName')]",
+                            "properties": {
+                                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', parameters('roleDefinitionId'))]",
+                                "principalId": "[parameters('managedIdentityPrincipalId')]",
+                                "principalType": "ServicePrincipal"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        //Managed identity for the kubectl Admin
+        {
+            "name": "[variables('aksClusterAdminManagedIdentityName')]",
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2023-01-31",
+            "location": "[resourceGroup().location]"
+        },
+        //Role assignments to enable presto nodes and cluster Admin managed identities access to storage account
+
+        {
+            "type": "Microsoft.Resources/deployments",
+            "name": "[concat('storage-accounts-role-assignment-', variables('uniqueDeploymentId'))]",
+            "apiVersion": "2022-09-01",
+            "subscriptionId": "[subscription().subscriptionId]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksAgentPoolManagedIdentityName'))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksClusterAdminManagedIdentityName'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "expressionEvaluationOptions": {
+                    "scope": "Inner"
+                },
+                "parameters": {
+                    "managedIdentityPrincipalId": {
+                        "value": [
+                            "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksAgentPoolManagedIdentityName')), '2018-11-30').principalId]",
+                            "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksClusterAdminManagedIdentityName')), '2018-11-30').principalId]"
+                        ]
+                    },
+                    "roleAssignmentName": {
+                        "value": [
+                            "[variables('StorageAccountAdminRoleAssignment')]",
+                            "[variables('StorageAccountAgentPoolRoleAssignment')]"
+                        ]
+                    },
+                    "roleDefinitionId": {
+                        "value": "[variables('dataOwnerRoleId')]"
+                    }
+                },
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "roleAssignmentName": {
+                            "type": "array"
+                        },
+                        "managedIdentityPrincipalId": {
+                            "type": "array"
+                        },
+                        "roleDefinitionId": {
+                            "type": "string"
+                        }
+                    },
+                    "resources": [
+                        {
+                            "apiVersion": "2022-04-01",
+                            "type": "Microsoft.Authorization/roleAssignments",
+                            "name": "[parameters('roleAssignmentName')[copyIndex()]]",
+                            "properties": {
+                                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', parameters('roleDefinitionId'))]",
+                                "principalId": "[parameters('managedIdentityPrincipalId')[copyIndex()]]",
+                                "principalType": "ServicePrincipal"
+                            },
+                            "copy": {
+                                "name": "test",
+                                "count": "[length(parameters('managedIdentityPrincipalId'))]"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+
+        //role assignment to grant kubectl Cluster Admin permissions
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "name": "[variables('aksClusterAdminRoleAssignmentName')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksClusterAdminManagedIdentityName'))]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', variables('aksClusterAdminRoleId'))]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksClusterAdminManagedIdentityName')), '2018-11-30').principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        //Managed identity for the deployment scripts
+        {
+            "name": "[variables('aksDeploymentScriptManagedIdentityName')]",
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2023-01-31",
+            "location": "[resourceGroup().location]"
+        },
+        //Role definition for the deployment script
+        {
+            "type": "Microsoft.Authorization/roleDefinitions",
+            "apiVersion": "2022-05-01-preview",
+            "name": "[variables('aksDeploymentScriptRoleDefintionId')]",
+            "properties": {
+                "assignableScopes": [
+                    "[subscription().id]",
+                    "[resourceGroup().id]"
+                ],
+                "description": "role for the deployment script to list vnets",
+                "permissions": [
+                    {
+                        "actions": "[variables('aksDeploymentScriptManagedIdentityPermissions')]",
+                        "dataActions": [
+                            "Microsoft.KeyVault/vaults/*",
+                            "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/*"
+                        ],
+                        "notActions": [],
+                        "notDataActions": []
+                    }
+                ],
+                "roleName": "[variables('aksDeploymentScriptRoleDefintionName')]",
+                "type": "customRole"
+            }
+        },
+        //Role assignment for the deployment script
+        {
+            "type": "Microsoft.Resources/deployments",
+            "name": "[concat('deployment-script-role-assignment-', variables('uniqueDeploymentId'))]",
+            "apiVersion": "2022-09-01",
+            "subscriptionId": "[subscription().subscriptionId]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksDeploymentScriptManagedIdentityName'))]",
+                "[resourceId('Microsoft.Authorization/roleDefinitions', variables('aksDeploymentScriptRoleDefintionId'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "apiVersion": "2022-04-01",
+                            "type": "Microsoft.Authorization/roleAssignments",
+                            "name": "[guid(subscription().id, 'deployment-script-mi-ra', variables('uniqueDeploymentId'))]",
+                            "properties": {
+                                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksDeploymentScriptManagedIdentityName')), '2018-11-30').principalId]",
+                                "roleDefinitionId": "[concat(subscription().Id, '/providers/Microsoft.Authorization/roleDefinitions/', variables('aksDeploymentScriptRoleDefintionId'))]",
+                                "principalType": "ServicePrincipal"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        //Deployment script that creates secrets for node access and retrieves information of the vnet deployment
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('utilityDeploymentScriptName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[ResourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksDeploymentScriptManagedIdentityName'))]",
+                "[resourceId('Microsoft.KeyVault/vaults',variables('keyVaultName'))]"
+            ],
+            "kind": "AzureCLI",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[ResourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksDeploymentScriptManagedIdentityName'))]": {
+                    }
+                }
+            },
+            "properties": {
+                "AzCliVersion": "2.40.0",
+                "timeout": "PT10M",
+                "environmentVariables": [
+                    {
+                        "name": "subnet_name",
+                        "value": "[parameters('AKSClusterSubnetName')]"
+                    },
+                    {
+                        "name": "vnet_id",
+                        "value": "[parameters('AKSVnetId')]"
+                    },
+                    {
+                        "name": "vault_name",
+                        "value": "[variables('keyVaultName')]"
+                    },
+                    {
+                        "name": "check_role_assignment",
+                        "value": "#\\!/bin/bash            \nset -e\nRETRY_COUNT=0\nMAX_RETRIES=30\nSLEEP_DURATION=10\nwhile true; do\n    if az network vnet list --output none; then\n        echo 'Role assignment is effective.'\n    break\n    else\n        RETRY_COUNT=$((RETRY_COUNT+1))\n        if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then\n            echo 'Max retries reached. Role assignment not effective yet.'\n            exit 1\n        fi\n        echo 'Role assignment not yet effective, retrying in '$SLEEP_DURATION' seconds...'\n        sleep $SLEEP_DURATION\n    fi\ndone"
+                    }
+                ],
+                "scriptContent": "echo -e \"$check_role_assignment\" > check_role_assignment.sh; ./check_role_assignment.sh ;ssh-keygen -m PEM -t rsa -b 4096 -f nodePoolKey -N \"\"; az keyvault secret set --vault-name $vault_name --name Den-nodePool-sshKey --file nodePoolKey --encoding ascii; ssh_public_key=$(cat nodePoolKey.pub); az network vnet list --query \"[?resourceGuid=='$vnet_id'].{VNet: name, ResourceGroup: resourceGroup, Location: location, Subnets: subnets[?name=='$subnet_name'].{Name: name, AddressPrefixes: addressPrefixes, AddressPrefix: addressPrefix}}\" --output json | jq --arg ssh_public_key \"$ssh_public_key\" '.[] | select(.Subnets) | {VNet: .VNet, ResourceGroup: .ResourceGroup, Location: .Location, SubnetName: .Subnets[].Name, CIDR: (.Subnets[].AddressPrefixes[0] // .Subnets[].AddressPrefix), SshKey:[{keyData: $ssh_public_key}]}' > $AZ_SCRIPTS_OUTPUT_PATH",
+                "cleanupPreference": "Always",
+                "retentionInterval": "PT1H"
+            }
+        },
+        //Key vault used to store Cluster node secrets
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2023-02-01",
+            "name": "[variables('keyVaultName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('aksDeploymentScriptManagedIdentityName'))]"
+            ],
+            "properties": {
+                "sku": {
+                    "family": "A",
+                    "name": "standard"
+                },
+                "tenantId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('aksDeploymentScriptManagedIdentityName'))).tenantId]",
+                "enabledForDeployment": true,
+                "enabledForTemplateDeployment": true,
+                "enableSoftDelete": true,
+                "softDeleteRetentionInDays": 90,
+                "enableRbacAuthorization": true,
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        // Storage account for the presto templates
+        {
+            "name": "[variables('prestoTemplatesStorageName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2023-01-01",
+            "tags": {
+                "displayName": "[variables('prestoTemplatesStorageDisplayName')]"
+            },
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "isHnsEnabled": true
+            }
+        },
+        {
+            "name": "[concat(variables('prestoTemplatesStorageName'), '/default/' ,variables('prestoTemplatesContainerName'))]",
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2023-01-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts',variables('prestoTemplatesStorageName'))]"
+            ],
+            "properties": {
+                "publicAccess": "None"
+            }
+        },
+        // Deployment script to generate values.yaml and other template files
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('generateValuesTemplateDeploymentScriptName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[ResourceId('Microsoft.Authorization/roleDefinitions',variables('aksDeploymentScriptRoleDefintionId'))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('aksDeploymentScriptManagedIdentityName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers',variables('prestoTemplatesStorageName'),'default',variables('prestoTemplatesContainerName'))]",
+                "[resourceId('Microsoft.Resources/deploymentScripts',variables('utilityDeploymentScriptName'))]"
+            ],
+            "kind": "AzureCLI",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[ResourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('aksDeploymentScriptManagedIdentityName'))]": {
+                    }
+                }
+            },
+            "properties": {
+                "AzCliVersion": "2.40.0",
+                "timeout": "PT5M",
+                "environmentVariables": [
+                    {
+                        "name": "aks_node_count",
+                        "value": "[parameters('AKSNodeNumber')]"
+                    },
+                    {
+                        "name": "image_registry_name",
+                        "value": "[parameters('ImageRepositoryName')]"
+                    },
+                    {
+                        "name": "private_load_balancer",
+                        "value": "[parameters('PrivateLoadBalancer')]"
+                    },
+                    {
+                        "name": "use_role",
+                        "value": "[parameters('UseRoleForAgora')]"
+                    },
+                    {
+                        "name": "pull_secret_value",
+                        "value": "[parameters('pullSecretValue')]"
+                    },
+                    {
+                        "name": "denodo_harbor_user",
+                        "value": "[parameters('DenodoHarborUser')]"
+                    },
+                    {
+                        "name": "denodo_harbor_cli_password",
+                        "value": "[parameters('DenodoHarborCLIPassword')]"
+                    },
+                    {
+                        "name": "denodo_ip",
+                        "value": "[parameters('denodoIP')]"
+                    },
+                    {
+                        "name": "mpphost",
+                        "value": "[parameters('MppHost')]"
+                    },
+                    {
+                        "name": "denodo_user",
+                        "value": "[parameters('DenodoUser')]"
+                    },
+                    {
+                        "name": "denodo_password",
+                        "value": "[parameters('DenodoPassword')]"
+                    },
+                    {
+                        "name": "vm_size",
+                        "value": "[parameters('AKSNodeType')]"
+                    },
+                    {
+                        "name": "storage_name",
+                        "value": "[variables('prestoTemplatesStorageName')]"
+                    },
+                    {
+                        "name": "container_name",
+                        "value": "[variables('prestoTemplatesContainerName')]"
+                    },
+                    {
+                        "name": "values_file",
+                        "value": "# Default values for prestocluster.\n\nimage:\n  # -- Container Registry\n  repository: \"{{IMAGE_REPOSITORY}}\"\n  # --  Kubernetes imagePullPolicy value\n  pullPolicy: IfNotPresent\n  # -- Secret to use when pulling the image from the Container Registry\n  # -- https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/\n  # -- The alternative to creating the pullSecret, is to add the credentials to the Container Registry to the image.pullCredentials section\n  # -- and let the Helm chart handle the creation of the secret.\n  pullSecret: \"{{PULL_SECRET}}\"\n\n  pullCredentials:\n    # -- Whether to use the credentials in this section to create a secret to use when pulling the image from the Denodo Container Registry\n    enabled: '{{PULL_CREDENTIALS_ENABLED}}'\n    # -- Name of the secret to be created.\n    name: \"registry-secret\"\n    # -- Denodo Container Registry\n    registry: \"harbor.open.denodo.com\"\n    # -- Denodo account username\n    username: \"{{DENODO_HARBOR_USER}}\"\n    # -- CLI secret in the Denodo Container Registry\n    pwd: \"{{DENODO_HARBOR_CLI_PASSWORD}}\"\n\n# -- https://kubernetes.io/docs/concepts/security/service-accounts/\nserviceAccount:\n  # -- Whether to create a service account or not. If false, 'default' will be used\n  create: true\n  # -- service account name. If you do not specify it an autogenerated name will be used\n  name: \"\"\n  # -- Annotations for the Presto service account\n  annotations: {}\n\nobjectStorage:\n  aws:\n    securityCredentials:\n      enabled: false\n  azure:\n    managedIdentities:\n      enabled: '{{USE_MANAGED_IDENTITY}}'\n    oauth2ClientCredentials:\n      enabled: false\n    sharedKey:\n      enabled: false\n      account: \"\"\n\npresto:\n  # -- Number of Presto workers in the cluster\n  numWorkers: '{{NUM_WORKERS}}'\n  # -- Number of cores assigned to each worker\n  cpusPerNode: '{{CPUS_PER_NODE}}'\n  # -- Total memory, in GB, assigned to each worker\n  memoryPerNode: '{{MEMORY_PER_NODE}}'\n\n  mppHost: \"{{MPPHOST}}\"\n\n  service:\n    # -- Presto service name\n    name: presto\n    # -- Service type: ClusterIP, NodePort or LoadBalancer\n    type: LoadBalancer\n    # -- Annotations for the Presto service. This is the recommended way to specify an IP address for the Service Type: LoadBalancer\n    annotations: '{{PRESTO_ANNOTATIONS}}'\n    # -- IP address for Presto service. Only applies to Service Type: LoadBalancer\n    # -- Some cloud providers allow you to specify the loadBalancerIP. In those cases, the load-balancer is created\n    # -- with the user-specified loadBalancerIP. If the loadBalancerIP field is not specified, the loadBalancer is\n    # -- set up with an ephemeral IP address. If you specify a loadBalancerIP but your cloud provider does not support\n    # -- the feature, the loadbalancerIP field that you set is ignored.\n    loadBalancerIP: \"\"\n    # -- List of IPs to restrict traffic through the load balancer. Only applies to Service Type: LoadBalancer.\n    # -- This field is ignored if the cloud-provider does not support the feature.\n    loadBalancerSourceRanges: []\n\n\n  coordinator:\n    # -- Presto coordinator deployment name\n    name: presto-coordinator\n    # -- Presto Coordinator HTTPS endpoint port\n    serverHttpsPort: 8443\n    # -- Presto Coordinator HTTP endpoint port\n    serverHttpPort: 8080\n\n    passwordAuth:\n      # -- Username\n      prestoUser: \"presto\"\n      # -- Password for the username\n      prestoPassword: \"pr3st%\"\n\n    # -- Enables the Resource management in Presto\n    resourceGroups: false\n\n    # -- Entries for extra config properties\n    additionalConfig: []\n\n    securityContext:\n      # -- Forces to run as a non-root user to ensure least privilege\n      runAsNonRoot: true\n\n    containerSecurityContext:\n      # -- Ensures that no child process of a container can gain more privileges than its parent\n      allowPrivilegeEscalation: false\n      # -- Drops all capabilities (kernel level calls)\n      capabilities:\n        drop:\n          - ALL\n\n    # -- Resource requests and limits for the Presto Coordinator\n    resources: {}\n      # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n      # If you do want to specify resources, uncomment the following\n      # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n      # limits:\n      #   cpu: 0.8\n      #   memory: 100Gi\n      # requests:\n      #   cpu: 0.7\n      #   memory: 90Gi\n\n    # -- Presto Coordinator node labels for pod scheduling\n    nodeSelector: {}\n\n    # -- Presto Coordinator affinity\n    affinity: {}\n\n    # -- Presto Coordinator tolerations\n    tolerations: []\n\n    # -- Topology constraints for the Presto Coordinator\n    topologySpreadConstraints:\n      # This configuration distributes pods in an absolute even manner (maxSkew),\n      # using the hostname as topology domain (topologyKey),\n      # scheduling pods even if it can't satisfy even distribution of pods (whenUnsatisfiable),\n      # acting on Pods that match this selector (labelSelector).\n      - maxSkew: 1\n        topologyKey: kubernetes.io/hostname\n        whenUnsatisfiable: ScheduleAnyway\n        labelSelector:\n          matchExpressions:\n            - {key: app, operator: In, values: [presto-coordinator, presto-worker]}\n\n    livenessreadiness:\n      enabled: true\n    livenessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n    readinessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n\n    env:\n      # additional environment variables for coordinator\n      # NAME: VALUE\n\n    additionalVolumes: {}\n      # Additional volumes to add to the coordinator. To configure REMOVE the curly braces after 'additionalVolumes:'.\n      #\n      #- name: cache-volume\n      #  emptyDir: {}\n\n    additionalVolumeMounts: {}\n      # Additional volume mounts to add to the coordinator. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n      #\n      #- name: cache-volume\n      #  mountPath: /opt/data/alluxio\n\n  worker:\n    # -- Presto worker deployment name\n    name: presto-worker\n\n    # -- Presto Worker HTTP endpoint port\n    serverHttpPort: 8080\n\n    # -- Entries for extra config properties\n    additionalConfig: []\n\n    securityContext:\n      # -- Force to run as a non-root user to ensure least privilege\n      runAsNonRoot: true\n\n    containerSecurityContext:\n      # -- Ensures that no child process of a container can gain more privileges than its parent\n      allowPrivilegeEscalation: false\n      # -- Drops all capabilities (kernel level calls)\n      capabilities:\n        drop:\n          - ALL\n\n    # -- Resource requests and limits for the Presto Workers\n    resources: {}\n      # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n      # If you do want to specify resources, uncomment the following\n      # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n      # limits:\n      #   cpu: 0.8\n      #   memory: 100Gi\n      # requests:\n      #   cpu: 0.7\n      #   memory: 90Gi\n\n    # -- Presto Workers node labels for pod scheduling\n    nodeSelector: {}\n\n    # -- Presto Workers affinity\n    affinity: {}\n\n    # -- Presto Workers tolerations\n    tolerations: []\n\n    # -- Topology constraints for the Presto Workers\n    topologySpreadConstraints:\n      # This configuration distributes pods in an absolute even manner (maxSkew),\n      # using the hostname as topology domain (topologyKey),\n      # scheduling pods even if it can't satisfy even distribution of pods (whenUnsatisfiable),\n      # acting on Pods that match this selector (labelSelector).\n      - maxSkew: 1\n        topologyKey: kubernetes.io/hostname\n        whenUnsatisfiable: ScheduleAnyway\n        labelSelector:\n          matchExpressions:\n            - {key: app, operator: In, values: [presto-coordinator, presto-worker]}\n\n    livenessreadiness:\n      enabled: true\n    livenessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n    readinessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n\n    env:\n      # additional environment variables for workers\n      # NAME: VALUE\n\n    additionalVolumes: {}\n      # Additional volumes to add to the workers. To configure REMOVE the curly braces after 'additionalVolumes:'.\n      #\n      #- name: cache-volume\n      #  emptyDir: {}\n\n    additionalVolumeMounts: {}\n      # Additional volume mounts to add to the workers. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n      #\n      #- name: cache-volume\n      #  mountPath: /opt/data/alluxio\n\n  # -- Dynamic filtering optimizations significantly improve the performance of queries with selective\n  # -- joins by avoiding reading of data that would be filtered by join condition.\n  enableDynamicFiltering: true\n\n  jvm:\n    # -- Entries for extra JVM config properties\n    additionalJVMConfig: []\n\n  log:\n    # -- Log level for com.facebook.presto\n    facebook: ERROR\n    # -- Log level for org.apache.hadoop\n    hadoop: ERROR\n    # -- Entries for extra log categories\n    additionalLogs: []\n\n  node:\n    # --  Name of the environment\n    environment: \"production\"\n    # --  Location where Presto will store logs and other data\n    dataDir: \"/var/presto/data\"\n\n  # -- Connection details to Denodo. Denodo will use Presto to accelerate queries\n  denodoConnector:\n    # -- Denodo server uri\n    server: \"//{{DENODO_IP}}:9999/admin_denodo_mpp\"\n    # -- i18n configuration of the connection with Denodo\n    i18n: \"us_utc_iso\"\n    # -- Denodo user\n    user: \"{{DENODO_USER}}\"\n    # -- Denodo password, must be compliant with Denodo password policies\n    password: \"{{DENODO_PASSWORD}}\"\n    # -- Maximum number of results that a block can contain. When Denodo obtains enough results to complete a block, it sends this block to Presto and continues processing the next results. Default value is 100000\n    chunkSize: \"100000\"\n    # -- Maximum time, in milliseconds, Denodo waits before returning a new block to Presto. Default value is 90000 ms\n    chunkTimeout: \"90000\"\n    # -- Maximum time, in milliseconds, Presto will wait for a Denodo query to finish. If it is not set default value is 900000 ms\n    queryTimeout: \"900000\"\n    # -- Whether SSL is enabled in Denodo server\n    ssl: false\n    # -- File name of trust store file that contains the SSL certificates. File should be placed in the 'presto' directory.\n    trustStore: \"\"\n    # -- Password of the trust store\n    trustStorePassword: \"\"\n    # -- Name of the infrastructure provider (On-premises, AWS, Azure, Google Cloud, Alibaba, etc.) where the client and Virtual DataPort server is running.\n    infrastructureProvider: \"\"\n    # -- Name of the infrastructure provider region where the client and Virtual DataPort server is running.\n    infrastructureRegion: \"\"\n    # -- Property to enable using ROLE during registration instead of creating a new USER. If you are using AGORA you must set this property to true.\n    useRole: '{{USE_ROLE}}'\n    # -- Denodo role\n    role: \"embedded_mpp_role\"\n\n  # -- Hive catalog configuration: for accessing Hive tables over Parquet files\n  hive:\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- Enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: true\n    # -- Enables pushdown filter\n    pushdownFilterEnabled: true\n    # -- Obtains statistics from metadata for tables/partitions with missing statistics\n    quickStats: true\n    # -- mestastore cache configuration. metastore cache is DISABLED by default (ttl 0s).\n    # -- To enable it, you need to configure a valid value in ttl.\n    cache:\n      metastore:\n        scope: \"ALL\"\n        ttl: \"0s\"\n        interval: \"3d\"\n        maxSize: \"10000000\"\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Iceberg catalog configuration: for accessing Iceberg tables\n  iceberg:\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- Enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: true\n    # -- Enables pushdown filter\n    pushdownFilterEnabled: true\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Delta catalog configuration: for accessing Delta tables\n  delta:\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- Enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: true\n    # -- Enables pushdown filter\n    pushdownFilterEnabled: true\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Additional catalogs, as an example the jmx catalog provides JMX information from all nodes in the cluster.\n  catalog:\n    #jmx: |-\n    #  connector.name=jmx\n    #\n    #glue-hive: |-\n    #  connector.name=hive-hadoop2\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n    #\n    #glue-iceberg: |-\n    #  connector.name=iceberg\n    #  iceberg.catalog.type=HIVE\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n    #\n    #glue-delta: |-\n    #  connector.name=delta\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n\n  # -- Enables autoscale creating a HorizontalPodScaler\n  autoscaling:\n      # If you want to autoscale based on a resource's utilization as a percentage, you must specify\n      # requests for that resource in the 'presto.worker.resources' parameter of this file.\n      # This example creates HorizontalPodAutoscaler object to autoscale the Presto Deployment when\n      # CPU utilization surpasses 80%, and ensures that there is always a minimum of\n      # presto.numWorkers replica and a maximum of 20 replicas.\n    enabled: false\n    maxReplicas: 20\n    targetCPUUtilizationPercentage: 80\n      # -- Entries for scaling up and down configuration\n    behavior: {}\n      #  scaleDown:\n      #    stabilizationWindowSeconds: 300\n      #    policies:\n      #    - type: Percent\n      #      value: 100\n      #      periodSeconds: 15\n      #  scaleUp:\n      #    stabilizationWindowSeconds: 0\n      #    policies:\n      #    - type: Percent\n      #      value: 100\n      #      periodSeconds: 15\n      #    - type: Pods\n      #      value: 4\n      #      periodSeconds: 15\n      #    selectPolicy: Max\n\n  # -- Ingress exposes HTTP(S) routes from outside the cluster to services within the cluster.\n  # -- Traffic routing is controlled by rules that define which inbound connections reach which services.\n  # -- In order for the Ingress resource to work, the cluster must have an ingress controller running, like NGINX Ingress Controller.\n  ingress:\n    enabled: false\n      # -- Presto ingress name\n    name: presto-ingress\n      # -- Annotations for the Presto ingress\n    annotations: {}\n      # -- If the ingressClassName is omitted, a default Ingress class should be defined.\n    className: \"\"\n      # -- Hostname for Ingress\n    host: \"\"\n      # -- URL path which is used for routing. Only requests to this path will be forwarded to the service\n    path: /\n      # -- Supported path types: ImplementationSpecific, Exact, Prefix\n    pathType: ImplementationSpecific\n      # -- Enable/disable TLS\n    tls:\n      enabled: true\n        # -- `name` will only be used, if `create` is set to false to bind an existing secret that contains the key/certificate for TLS\n      secretName: \"\"\n      create: false\n        # -- File name of the certificate file, required if `create` is set to true. File should be placed in the 'presto' directory.\n      certFile: \"\"\n        # -- File name of the private key file, required if `create` is set to true. File should be placed in the 'presto' directory.\n      keyFile: \"\"\n\n\nmetastore:\n  # -- Use the internal Hive Metastore. Default is true.\n  enabled: true\n  # -- JDBC connection string of the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's URL\n  connectionUrl: \"jdbc:postgresql://postgresql:5432/metastore\"\n  # connectionUrl: \"jdbc:mysql://HOST:3306/metastore\"\n  # connectionUrl: \"jdbc:sqlserver://HOST:1433;DatabaseName=metastore\"\n  # connectionUrl: \"jdbc:oracle:thin:@//HOST:1521/ORCLPDB1\"\n\n  # -- JDBC Driver class name to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's driver\n  connectionDriverName: \"org.postgresql.Driver\"\n  # connectionDriverName: \"org.mariadb.jdbc.Driver\"\n  # connectionDriverName: \"com.microsoft.sqlserver.jdbc.SQLServerDriver\"\n  # connectionDriverName: \"oracle.jdbc.OracleDriver\"\n\n  # -- Database to connect with the RDBMS of the Hive Metastore. Required for the internal PostgreSQL's database only\n  connectionDatabase: \"metastore\"\n\n  # -- User to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's user: hive\n  connectionUser: \"hive\"\n\n  # -- Password to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's password: hive\n  connectionPassword: \"hive\"\n\n  # -- Classpath to the JDBC drivers of the Hive Metastore\n  driversPath: \"/opt/hive/jdbc-drivers\"\n\n  maxHeapSize: 2048\n\n  service:\n    # -- Hive Metastore service name\n    name: hive-metastore\n    # -- Hive Metastore port\n    port: 9083\n  deployment:\n    # -- Hive Metastore deployment name\n    name: hive-metastore\n    # -- Hive Metastore port\n    port: 9083\n  livenessreadiness:\n    enabled: true\n  livenessProbe:\n    initialDelaySeconds: 25\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  readinessProbe:\n    initialDelaySeconds: 25\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n\n  env:\n    # additional environment variables for metastore\n    # NAME: VALUE\n\n  additionalVolumes: {}\n    # Additional volumes to add to the metastore. To configure REMOVE the curly braces after 'additionalVolumes:'.\n    #\n    #- name: my-volume\n    #  emptyDir: {}\n\n  additionalVolumeMounts: {}\n    # Additional volume mounts to add to the metastore. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n    #\n    #- name: my-volume\n    #  mountPath: /path/on/host\n\n  # -- Hive Metastore node labels for pod scheduling\n  nodeSelector: {}\n\n  # -- Hive Metastore inter-pod affinity, that allows you to schedule pods based on their relationship to other pods\n  affinity:\n    # Run Hive Metastore on the same machine as PostgreSQL\n    # to improve performance, avoid network latency issues and connection failures\n    podAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        - labelSelector:\n            matchExpressions:\n              - {key: app, operator: In, values: [hive-metastore, postgresql]}\n          topologyKey: kubernetes.io/hostname\n    # ensure it runs on different machines than presto, if possible\n    podAntiAffinity:\n      preferredDuringSchedulingIgnoredDuringExecution:\n        - weight: 100\n          podAffinityTerm:\n            labelSelector:\n              matchExpressions:\n                - {key: app, operator: In, values: [presto-coordinator, presto-worker]}\n            topologyKey: \"kubernetes.io/hostname\"\n\n  # -- Hive Metastore tolerations\n  tolerations: []\n\n  # -- Topology constraints for Hive Metastore\n  topologySpreadConstraints: []\n\n  securityContext:\n    # -- Force to run as a non-root user to ensure least privilege\n    runAsNonRoot: true\n\n  containerSecurityContext:\n    # -- Ensures that no child process of a container can gain more privileges than its parent\n    allowPrivilegeEscalation: false\n    # -- Drops all capabilities (kernel level calls)\n    capabilities:\n      drop:\n        - ALL\n  # -- Resource requests and limits for the Hive Metastore\n  resources: {}\n    # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n    # If you do want to specify resources, uncomment the following\n    # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n    # limits:\n    #   cpu: 0.8\n    #   memory: 100Gi\n    # requests:\n    #   cpu: 0.7\n    #   memory: 90Gi\n\npostgresql:\n  # -- Whether to use an internal PostgreSQL or an external RDBMS for the Hive Metastore. Default is true.\n  enabled: true\n\n  # -- Whether to warn about the need of perform a manual backup of the Embedded PostgreSQL due to the major version upgrade.\n  version15BackupWarning: true\n\n  service:\n    # -- PostgreSQL service name\n    name: postgresql\n    # -- PostgreSQL port\n    port: 5432\n  deployment:\n    # -- PostgreSQL deployment name\n    name: postgresql\n    # -- PostgreSQL port\n    port: 5432\n  livenessreadiness:\n    enabled: true\n  livenessProbe:\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  readinessProbe:\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n\n  env:\n    # additional environment variables for PostgreSQL\n    # NAME: VALUE\n\n  additionalVolumes: {}\n    # Additional volumes to add to the PostgreSQL. To configure REMOVE the curly braces after 'additionalVolumes:'.\n    #\n    #- name: my-volume\n    #  emptyDir: {}\n\n  additionalVolumeMounts: {}\n    # Additional volume mounts to add to the PostgreSQL. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n    #\n    #- name: my-volume\n    #  mountPath: /path/on/host\n\n  pvClaim:\n    # -- Annotations for the Persistent Volume Claim\n    annotations: {}\n      # If you do want to specify annotations, uncomment the following lines,\n      # adjust them as necessary, and REMOVE the curly braces after 'annotations:'.\n\n      # Add the following annotation if you want to preserve Presto metadata after cluster removal\n      # \"helm.sh/resource-policy\": keep\n\n\n    # -- Storage size requested for the PostgreSQL's volume\n    storage: 5Gi\n    # -- Persistent Volume Claim Storage the for PostgreSQL's volume\n    storageClassName: \"{{STORAGE_CLASS_NAME}}\"\n\n  # -- PostgreSQL node labels for pod scheduling\n  nodeSelector: {}\n\n  # -- PostgreSQL inter-pod affinity, that allows you to schedule pods based on their relationship to other pods\n  affinity:\n    # Run PostgreSQL on the same machine as Hive Metastore\n    # to improve performance, avoid network latency issues and connection failures\n    podAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        - labelSelector:\n            matchExpressions:\n              - {key: app, operator: In, values: [hive-metastore, postgresql]}\n          topologyKey: kubernetes.io/hostname\n\n  # -- PostgreSQL tolerations\n  tolerations: []\n\n  # -- Topology constraints for PostgreSQL\n  topologySpreadConstraints: []\n\n  securityContext:\n    # -- Force to run as a non-root user to ensure the least privilege\n    runAsNonRoot: true\n    # -- User ID for the container. Ignored on OpenShift.\n    runAsUser: 1001\n    # -- Group ID for the pod volumes. Ignored on OpenShift\n    fsGroup: 1001\n    fsGroupChangePolicy: OnRootMismatch\n\n  containerSecurityContext:\n    # -- Ensures that no child process of a container can gain more privileges than its parent\n    allowPrivilegeEscalation: false\n    # -- Drops all capabilities (kernel level calls)\n    capabilities:\n      drop:\n        - ALL\n  # -- Resource requests and limits for postgresql\n  resources: {}\n    # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n    # If you do want to specify resources, uncomment the following\n    # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n    # limits:\n    #   cpu: 0.8\n    #   memory: 100Gi\n    # requests:\n    #   cpu: 0.7\n    #   memory: 90Gi\n\ninitCacertContainer:\n  resources: {}\n    # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n    # If you do want to specify resources, uncomment the following\n    # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n    # limits:\n    #   cpu: 0.2\n    #   memory: 1Gi\n    # requests:\n    #   cpu: 0.2\n    #   memory: 1Gi\n"
+                    },
+                    {
+                        "name": "edit_values_script",
+                        "value": "#\\!/bin/bash\n\n# Function to display usage\nusage() {\n  echo \"Usage: $0 [--input-file <input_file>] [--image-registry-name <imageRegistryName>] [--aks-node-count <aksNodeCount>] [--private-load-balancer <privateLoadBalancer>] [--pull-secret-value <pullSecretValue>] [--denodo-harbor-user <DenodoHarborUser>] [--denodo-harbor-cli-password <DenodoHarborCLIPassword>] [--denodo-ip <denodoIP>] [--denodo-user <DenodoUser>] [--denodo-password <DenodoPassword>] [--vm-size <vmSize>] [--storage-class-name <storageClassName>] [--use-role <useRole>] [--mpphost <MppHost>]\"\n  exit 1\n}\n\n# Initialize variables\ninput_file=\"\"\nimage_registry_name=\"\"\naks_node_count=\"\"\nprivate_load_balancer=\"\"\nuse_role=\"\"\npull_secret_value=\"\"\ndenodo_harbor_user=\"\"\ndenodo_harbor_cli_password=\"\"\ndenodo_ip=\"\"\nmpphost=\"\"\ndenodo_user=\"\"\ndenodo_password=\"\"\nvm_size=\"\"\nstorage_class_name=\"\"\n\n# Parse named parameters\nwhile [[ $# -gt 0 ]]; do\n  key=\"$1\"\n  case $key in\n    --input-file)\n      input_file=\"$2\"\n      shift # past argument\n      shift # past value\n      ;;\n    --image-registry-name)\n      image_registry_name=\"$2\"\n      shift\n      shift\n      ;;\n    --aks-node-count)\n      aks_node_count=\"$2\"\n      shift\n      shift\n      ;;\n    --private-load-balancer)\n      private_load_balancer=\"$2\"\n      shift\n      shift\n      ;;\n    --pull-secret-value)\n      pull_secret_value=\"$2\"\n      shift\n      shift\n      ;;\n    --denodo-harbor-user)\n      denodo_harbor_user=\"$2\"\n      shift\n      shift\n      ;;\n    --denodo-harbor-cli-password)\n      denodo_harbor_cli_password=\"$2\"\n      shift\n      shift\n      ;;\n    --denodo-ip)\n      denodo_ip=\"$2\"\n      shift\n      shift\n      ;;\n    --denodo-user)\n      denodo_user=\"$2\"\n      shift\n      shift\n      ;;\n    --denodo-password)\n      denodo_password=\"$2\"\n      shift\n      shift\n      ;;\n    --vm-size)\n      vm_size=\"$2\"\n      shift\n      shift\n      ;;\n    --storage-class-name)\n      storage_class_name=\"$2\"\n      shift\n      shift\n      ;;\n    --use-role)\n      use_role=\"$2\"\n      shift\n      shift\n      ;;\n    --mpphost)\n      mpphost=\"$2\"\n      shift\n      shift\n      ;;\n    *)\n      echo \"Invalid option: $1\" 1>&2\n      usage\n      ;;\n  esac\ndone\n\n# Check if input file is provided\nif [ -z \"$input_file\" ]; then\n  echo \"Input file is required.\"\n  usage\nfi\n\n# Check if input file exists\nif [ ! -f \"$input_file\" ]; then\n  echo \"Input file not found!\"\n  exit 1\nfi\n\n# Function to update image registry in YAML\nupdate_image_registry() {\n  local registry=\"$1\"\n  sed -i \"s|{{IMAGE_REPOSITORY}}|${registry}|\" \"$input_file\"\n}\n\n# Function to update AKS node count in YAML\nupdate_aks_node_count() {\n  local count=\"$1\"\n  if [ -n \"$count\" ]; then\n    local num_workers=$((count - 2))\n    # Ensure numWorkers is at least 1\n    if [ \"$num_workers\" -lt 1 ]; then\n      num_workers=1\n    fi\n    sed -i \"s|'{{NUM_WORKERS}}'|${num_workers}|\" \"$input_file\"\n  fi\n}\n\n# Function to update private load balancer annotation\nupdate_private_load_balancer() {\n  local private_lb=\"$1\"\n  if [ \"$private_lb\" = \"true\" ]; then\n    sed -i \"s|'{{PRESTO_ANNOTATIONS}}'|{service.beta.kubernetes.io/azure-load-balancer-internal: \\\"true\\\"}|\" \"$input_file\"\n  else\n    sed -i \"s|'{{PRESTO_ANNOTATIONS}}'|{}|\" \"$input_file\"\n  fi\n}\n\n# Function to update pullSecret in YAML\nupdate_pull_secret_value() {\n  local secret_value=\"$1\"\n  sed -i \"s|{{PULL_SECRET}}|${secret_value}|\" \"$input_file\"\n}\n\n# Function to update Denodo Harbor User in YAML\nupdate_denodo_harbor_user() {\n  local harbor_user=\"$1\"\n  if [ -n \"$harbor_user\" ]; then\n    sed -i \"s|'{{PULL_CREDENTIALS_ENABLED}}'|true|\" \"$input_file\"\n  else\n    sed -i \"s|'{{PULL_CREDENTIALS_ENABLED}}'|false|\" \"$input_file\"\n  fi\n  sed -i \"s|{{DENODO_HARBOR_USER}}|${harbor_user}|\" \"$input_file\"\n}\n\n# Function to update Denodo Harbor CLI Password in YAML\nupdate_denodo_harbor_cli_password() {\n  local cli_password=\"$1\"\n  sed -i \"s|{{DENODO_HARBOR_CLI_PASSWORD}}|${cli_password}|\" \"$input_file\"\n}\n\n# Function to update Denodo IP in YAML\nupdate_denodo_ip() {\n  local ip=\"$1\"\n  if [ -n \"$ip\" ]; then\n    sed -i \"s|{{DENODO_IP}}|${ip}|\" \"$input_file\"\n  fi\n}\n\n# Function to update Denodo User in YAML\nupdate_denodo_user() {\n  local user=\"$1\"\n  sed -i \"s|{{DENODO_USER}}|${user}|\" \"$input_file\"\n}\n\n# Function to update Denodo Password in YAML\nupdate_denodo_password() {\n  local password=\"$1\"\n  sed -i \"s|{{DENODO_PASSWORD}}|${password}|\" \"$input_file\"\n}\n\n# Function to update Use Role for Agora in YAML\nupdate_use_role() {\n  local use_role=\"$1\"\n  sed -i \"s|{{USE_ROLE}}|${use_role}|\" \"$input_file\"\n}\n\n# Function to update VM Size in YAML\nupdate_vm_size() {\n  local vm_size=\"$1\"\n  if [ -n \"$vm_size\" ]; then\n    local cpu=$(echo \"$vm_size\" | awk -F'[:,)]' '{ for(i=1;i<=NF;i++) { if ($i ~ /CPU/) print $(i+1) } }' | tr -d ' ')\n    local ram=$(echo \"$vm_size\" | awk -F'[:,()]' '{ for(i=1;i<=NF;i++) { if ($i ~ /RAM/) { split($(i+1), a, \" \"); print a[1] } } }' | tr -d ' ')\n    if [ -n \"$cpu\" ] && [ -n \"$ram\" ]; then\n      sed -i \"s|'{{CPUS_PER_NODE}}'|${cpu}|\" \"$input_file\"\n      sed -i \"s|'{{MEMORY_PER_NODE}}'|${ram}|\" \"$input_file\"\n    fi\n  fi\n}\n\n# Function to Storage Class Name\nupdate_storage_class_name() {\n  local storage_class_name=\"$1\"\n  sed -i \"s|{{STORAGE_CLASS_NAME}}|${storage_class_name}|\" \"$input_file\"\n}\n\n# Function to update MPP Host in YAML\nupdate_mpphost() {\n  local mpphost=\"$1\"\n  sed -i \"s|{{MPPHOST}}|${mpphost}|\" \"$input_file\"\n}\n\n# Function to set the Managed identity usage to true in YAML\nupdate_use_mi() {\n  sed -i \"s|{{USE_MANAGED_IDENTITY}}|true|\" \"$input_file\"\n}\n\n# Update image registry if provided\nupdate_image_registry \"$image_registry_name\"\n\n# Update AKS node count if provided\nupdate_aks_node_count \"$aks_node_count\"\n\n# Update private load balancer annotation if requested\nupdate_private_load_balancer \"$private_load_balancer\"\n\n# Update pullSecret if provided\nupdate_pull_secret_value \"$pull_secret_value\"\n\n# Update Denodo Harbor User if provided\nupdate_denodo_harbor_user \"$denodo_harbor_user\"\n\n# Update Denodo Harbor CLI Password if provided\nupdate_denodo_harbor_cli_password \"$denodo_harbor_cli_password\"\n\n# Update Denodo IP if provided\nupdate_denodo_ip \"$denodo_ip\"\n\n# Update Denodo User if provided\nupdate_denodo_user \"$denodo_user\"\n\n# Update Denodo Password if provided\nupdate_denodo_password \"$denodo_password\"\n\n# Update Use Role for Agora if provided\nupdate_use_role \"$use_role\"\n\n# Update VM Size if provided\nupdate_vm_size \"$vm_size\"\n\n# Update Storage Class Name if provided\nupdate_storage_class_name \"$storage_class_name\"\n\n# Update MPP Host if provided\nupdate_mpphost \"$mpphost\""
+                    }
+                ],
+                "scriptContent": "echo -e \"$values_file\" > values.yaml; echo -e \"$edit_values_script\" > edit_template.sh ; ./edit_template.sh --input-file values.yaml --image-registry-name \"$image_registry_name\" --aks-node-count \"$aks_node_count\" --private-load-balancer \"$private_load_balancer\" --pull-secret-value \"$pull_secret_value\" --denodo-harbor-user \"$denodo_harbor_user\" --denodo-harbor-cli-password \"$denodo_harbor_cli_password\" --denodo-ip \"$denodo_ip\" --denodo-user \"$denodo_user\" --denodo-password \"$denodo_password\" --vm-size \"$vm_size\" --use-role \"$use_role\" --mpphost \"$mpphost\" ; az storage fs file upload -s values.yaml -p values.yaml -f $container_name --account-name $storage_name --auth-mode login",
+                "cleanupPreference": "Always",
+                "retentionInterval": "PT1H"
+            }
+        },
+        // Deployment to group NAT Gateway and AKS Cluster in Vnet region
+        {
+            "type": "Microsoft.Resources/deployments",
+            "name": "[concat('aks-deployment-', variables('uniqueDeploymentId'))]",
+            "apiVersion": "2022-09-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deploymentScripts',variables('utilityDeploymentScriptName'))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('aksAgentPoolManagedIdentityName'))]",
+                "[resourceId('Microsoft.Resources/deploymentScripts',variables('aksRoleAssignmentDeploymentScriptName'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "expressionEvaluationOptions": {
+                    "scope": "Inner"
+                },
+                "parameters": {
+                    "uniqueDeploymentId": {
+                        "value": "[substring(uniqueString(resourceGroup().id, deployment().name),0,10)]"
+                    },
+                    "vnetLocation": {
+                        "value": "[reference(variables('utilityDeploymentScriptName')).outputs.Location]"
+                    },
+                    "createNatGateway": {
+                        "value": "[parameters('CreateNatGateway')]"
+                    },
+                    "vnetResourceGroup": {
+                        "value": "[reference(variables('utilityDeploymentScriptName')).outputs.ResourceGroup]"
+                    },
+                    "vnetName": {
+                        "value": "[reference(variables('utilityDeploymentScriptName')).outputs.Vnet]"
+                    },
+                    "vnetCidr": {
+                        "value": "[reference(variables('utilityDeploymentScriptName')).outputs.CIDR]"
+                    },
+                    "agentPoolSshKey": {
+                        "value": "[reference(variables('utilityDeploymentScriptName')).outputs.SshKey]"
+                    },
+                    "natPublicIpPrefixesName": {
+                        "value": "[variables('natPublicIpPrefixesName')]"
+                    },
+                    "natGatewayName": {
+                        "value": "[variables('natGatewayName')]"
+                    },
+                    "natGatewayAssignmentDeploymentScriptName": {
+                        "value": "[variables('natGatewayAssignmentDeploymentScriptName')]"
+                    },
+                    "aksDeploymentScriptManagedIdentityName": {
+                        "value": "[variables('aksDeploymentScriptManagedIdentityName')]"
+                    },
+                    "nodePoolMiClientId": {
+                        "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('aksAgentPoolManagedIdentityName')),'2023-01-31','Full').properties.clientId]"
+                    },
+                    "nodePoolMiPrincipalId": {
+                        "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('aksAgentPoolManagedIdentityName')),'2023-01-31','Full').properties.tenantId]"
+                    },
+                    "AKSClusterSubnetName": {
+                        "value": "[parameters('AKSClusterSubnetName')]"
+                    },
+                    "aksClusterName": {
+                        "value": "[variables('aksClusterName')]"
+                    },
+                    "aksAgentPoolManagedIdentityName": {
+                        "value": "[variables('aksAgentPoolManagedIdentityName')]"
+                    },
+                    "aksManagedIdentityName": {
+                        "value": "[variables('aksManagedIdentityName')]"
+                    },
+                    "AKSNodeNumber": {
+                        "value": "[parameters('AKSNodeNumber')]"
+                    },
+                    "VmSize": {
+                        "value": "[variables('VmSize')]"
+                    }
+                },
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "uniqueDeploymentId": {
+                            "type": "string"
+                        },
+                        "vnetLocation": {
+                            "type": "string"
+                        },
+                        "createNatGateway": {
+                            "type": "bool"
+                        },
+                        "vnetResourceGroup": {
+                            "type": "string"
+                        },
+                        "vnetName": {
+                            "type": "string"
+                        },
+                        "vnetCidr": {
+                            "type": "string"
+                        },
+                        "agentPoolSshKey": {
+                            "type": "array"
+                        },
+                        "natPublicIpPrefixesName": {
+                            "type": "string"
+                        },
+                        "natGatewayName": {
+                            "type": "string"
+                        },
+                        "natGatewayAssignmentDeploymentScriptName": {
+                            "type": "string"
+                        },
+                        "aksDeploymentScriptManagedIdentityName": {
+                            "type": "string"
+                        },
+                        "nodePoolMiClientId": {
+                            "type": "string"
+                        },
+                        "nodePoolMiPrincipalId": {
+                            "type": "string"
+                        },
+                        "AKSClusterSubnetName": {
+                            "type": "string"
+                        },
+                        "aksClusterName": {
+                            "type": "string"
+                        },
+                        "aksAgentPoolManagedIdentityName": {
+                            "type": "string"
+                        },
+                        "aksManagedIdentityName": {
+                            "type": "string"
+                        },
+                        "AKSNodeNumber": {
+                            "type": "int"
+                        },
+                        "VmSize": {
+                            "type": "string"
+                        }
+                    },
+                    "resources": [
+                        //Ip reservation for AKS subnet nat gateway
+                        {
+                            "condition": "[parameters('CreateNatGateway')]",
+                            "type": "Microsoft.Network/publicIPPrefixes",
+                            "apiVersion": "2022-05-01",
+                            "name": "[parameters('natPublicIpPrefixesName')]",
+                            "location": "[parameters('vnetLocation')]",
+                            "sku": {
+                                "name": "Standard",
+                                "tier": "Regional"
+                            },
+                            "properties": {
+                                "prefixLength": 31,
+                                "publicIPAddressVersion": "IPv4"
+                            }
+                        },
+                        //Nat Gateway to allow connection to public reporsitory and Azure services
+                        {
+                            "condition": "[parameters('CreateNatGateway')]",
+                            "type": "Microsoft.Network/natGateways",
+                            "apiVersion": "2022-05-01",
+                            "name": "[parameters('natGatewayName')]",
+                            "location": "[parameters('vnetLocation')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Network/publicIPPrefixes', parameters('natPublicIpPrefixesName'))]"
+                            ],
+                            "sku": {
+                                "name": "Standard"
+                            },
+                            "properties": {
+                                "idleTimeoutInMinutes": 4,
+                                "publicIpPrefixes": [
+                                    {
+                                        "id": "[resourceId('Microsoft.Network/publicIPPrefixes', parameters('natPublicIpPrefixesName'))]"
+                                    }
+                                ]
+                            }
+                        },
+                        //Nat gateway assignment to AKS subnet as default outbound access
+                        {
+                            "condition": "[parameters('CreateNatGateway')]",
+                            "type": "Microsoft.Resources/deploymentScripts",
+                            "apiVersion": "2020-10-01",
+                            "name": "[parameters('natGatewayAssignmentDeploymentScriptName')]",
+                            "location": "[parameters('vnetLocation')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Network/natGateways',parameters('natGatewayName'))]"
+                            ],
+                            "kind": "AzureCLI",
+                            "identity": {
+                                "type": "UserAssigned",
+                                "userAssignedIdentities": {
+                                    "[ResourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('aksDeploymentScriptManagedIdentityName'))]": {
+                                    }
+                                }
+                            },
+                            "properties": {
+                                "AzCliVersion": "2.40.0",
+                                "timeout": "PT5M",
+                                "environmentVariables": [
+                                    {
+                                        "name": "deployment_name",
+                                        "value": "[concat('nat-deployment-', parameters('uniqueDeploymentId'))]"
+                                    },
+                                    {
+                                        "name": "resource_group",
+                                        "value": "[parameters('vnetResourceGroup')]"
+                                    },
+                                    {
+                                        "name": "vnet_name",
+                                        "value": "[parameters('vnetName')]"
+                                    },
+                                    {
+                                        "name": "subnet_name",
+                                        "value": "[parameters('AKSClusterSubnetName')]"
+                                    },
+                                    {
+                                        "name": "natgateway_name",
+                                        "value": "[parameters('natGatewayName')]"
+                                    },
+                                    {
+                                        "name": "subnet_cidr",
+                                        "value": "[parameters('vnetCidr')]"
+                                    },
+                                    {
+                                        "name": "main_resourcegroup",
+                                        "value": "[resourceGroup().name]"
+                                    },
+                                    {
+                                        "name": "template",
+                                        "value": "{\"\\x24schema\":\"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{\"aksClusterVnetName\":{\"type\":\"string\"},\"aksClusterSubnetName\":{\"type\":\"string\"},\"natGatewayName\":{\"type\":\"string\"},\"subnetCidr\":{\"type\":\"string\"},\"mainResourceGroup\":{\"type\":\"string\"}},\"functions\":[],\"variables\":{},\"resources\":[{\"type\":\"Microsoft.Network/virtualnetworks/subnets\",\"apiVersion\":\"2023-04-01\",\"name\":\"[format('{0}/{1}',parameters('aksClusterVnetName'),parameters('aksClusterSubnetName'))]\",\"properties\":{\"addressPrefix\":\"[parameters('subnetCidr')]\",\"natGateway\":{\"id\":\"[concat(subscription().id,'/resourceGroups/',parameters('mainResourceGroup'),'/providers/Microsoft.Network/natGateways/',parameters('natGatewayName'))]\"}}}],\"outputs\":{}}"
+                                    }
+                                ],
+                                "scriptContent": "echo -e $template > deployment.json; az deployment group create --name $deployment_name --resource-group $resource_group --template-file deployment.json --parameters aksClusterVnetName=$vnet_name aksClusterSubnetName=$subnet_name subnetCidr=$subnet_cidr natGatewayName=$natgateway_name mainResourceGroup=$main_resourcegroup",
+                                "cleanupPreference": "Always",
+                                "retentionInterval": "PT1H"
+                            }
+                        },
+                        //AKS Cluster definition
+                        {
+                            "name": "[parameters('aksClusterName')]",
+                            "type": "Microsoft.ContainerService/managedClusters",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Resources/deploymentScripts', parameters('natGatewayAssignmentDeploymentScriptName'))]"
+                            ],
+                            "apiVersion": "2023-01-01",
+                            "location": "[parameters('vnetLocation')]",
+                            "identity": {
+                                "type": "UserAssigned",
+                                "userAssignedIdentities": {
+                                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('aksManagedIdentityName'))]": {}
+                                }
+                            },
+                            "properties": {
+                                "kubernetesVersion": "1.30.9",
+                                "dnsPrefix": "DenMPP",
+                                "publicNetworkAccess": "Disabled",
+                                "apiServerAccessProfile": {
+                                    "enablePrivateCluster": true,
+                                    "enablePrivateClusterPublicFQDN": false
+                                },
+                                // kubernetes network specification
+                                "networkProfile": {
+                                    "networkPlugin": "kubenet",
+                                    "serviceCidr": "10.31.0.0/24",
+                                    "dnsServiceIP": "10.31.0.10",
+                                    "outboundType": "userAssignedNATGateway"
+                                },
+                                //Use Azure RBAC to manage authorization to the Cluster
+                                "aadProfile": {
+                                    "enableAzureRBAC": true,
+                                    "managed": true
+                                },
+                                //Managed identity for the agentpools of the Cluster
+                                "identityProfile": {
+                                    "kubeletidentity": {
+                                        "resourceId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',parameters('aksAgentPoolManagedIdentityName'))]",
+                                        "clientId": "[parameters('nodePoolMiClientId')]",
+                                        "objectId": "[parameters('nodePoolMiPrincipalId')]"
+                                    }
+                                },
+                                "agentPoolProfiles": [
+                                    {
+                                        "name": "agentpool",
+                                        "count": 1,
+                                        "vmSize": "standard_d4lds_v5",
+                                        "osType": "Linux",
+                                        "storageProfile": "ManagedDisks",
+                                        "mode": "System",
+                                        "vnetSubnetID": "[concat('/subscriptions/', subscription().subscriptionId ,'/resourceGroups/', parameters('vnetResourceGroup') ,'/providers/Microsoft.Network/virtualNetworks/', parameters('vnetName') ,'/subnets/' , parameters('AKSClusterSubnetName'))]",
+                                        "nodeTaints": [
+                                            "CriticalAddonsOnly=true:NoSchedule"
+                                        ]
+                                    },
+                                    {
+                                        "name": "userpool",
+                                        "count": "[parameters('AKSNodeNumber')]",
+                                        "vmSize": "[parameters('VmSize')]",
+                                        "osType": "Linux",
+                                        "storageProfile": "ManagedDisks",
+                                        "mode": "User",
+                                        "vnetSubnetID": "[concat('/subscriptions/', subscription().subscriptionId ,'/resourceGroups/', parameters('vnetResourceGroup') ,'/providers/Microsoft.Network/virtualNetworks/', parameters('vnetName') ,'/subnets/' , parameters('AKSClusterSubnetName'))]"
+                                    }
+                                ],
+                                "linuxProfile": {
+                                    "adminUsername": "aksNodeAdmin",
+                                    "ssh": {
+                                        "publicKeys": "[parameters('agentPoolSshKey')]"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "aks-cluster-name": {
+            "type": "string",
+            "value": "[variables('aksClusterName')]"
+        },
+        "aks-cluster-admin-mi-name": {
+            "type": "string",
+            "value": "[variables('aksClusterAdminManagedIdentityName')]"
+        },
+        "aks-cluster-admin-mi-tenantId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('aksClusterAdminManagedIdentityName'))).tenantId]"
+        },
+        "aks-cluster-admin-mi-clientId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('aksClusterAdminManagedIdentityName'))).clientId]"
+        },
+        "secret-creation-command": {
+            "type": "string",
+            "value": "[concat('kubectl create secret generic mpp-credentials --from-literal=METASTORE_DB_PASSWORD=hive --from-literal=AZURE_OAUTH_MSI_TENANT_ID=',reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('aksAgentPoolManagedIdentityName'))).tenantId, ' --from-literal=AZURE_OAUTH_CLIENT_ID=', reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('aksAgentPoolManagedIdentityName'))).clientId)]"
+        },
+        "presto-templates-storage-name": {
+            "type": "string",
+            "value": "[variables('prestoTemplatesStorageName')]"
+        },
+        "presto-templates-download-command": {
+            "type": "string",
+            "value": "[concat('az storage fs file download -f denodo-presto-k8scluster --account-name ', variables('prestoTemplatesStorageName'),' -p values.yaml -d ./values.yaml --account-key ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('prestoTemplatesStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value)]"
+        },
+        "deployment-id": {
+            "type": "string",
+            "value": "[variables('uniqueDeploymentId')]"
+        }
+
+    }
+}
