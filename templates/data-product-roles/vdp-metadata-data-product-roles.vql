@@ -1,0 +1,101 @@
+﻿# #######################################
+# ROLE CREATION
+# #######################################
+CREATE OR REPLACE ROLE business_user 'Identifies business needs and validates whether the data product meets their goals. Provides requirements and feedback during the discovery and design stages. Helps define acceptance criteria and communicates with stakeholders. Often, a business user assumes the role of Product Owner.';
+
+CREATE OR REPLACE ROLE data_consumer 'Uses the data product for reporting, analytics, or decision-making. Their usage and feedback help drive improvements in the product.';
+
+CREATE OR REPLACE ROLE data_governance_manager 'Data Governance Manager in the Denodo Data Product Lifecycle plays a crucial role in ensuring data quality, security, compliance, and governance policies are embedded across the lifecycle stages.';
+
+CREATE OR REPLACE ROLE data_product_developer 'Responsible for the technical implementation of the data product using Denodo. Builds views, integrations, and enforces access and transformation logic.Ã¢â‚¬â€¹';
+
+CREATE OR REPLACE ROLE data_product_owner 'Sets the vision and roadmap for the data product, ensuring it aligns with business objectives and addresses key challenges. Fosters stakeholder collaboration, ensures the data product is accurate, compliant, secure and accessible to authorized users. Makes critical decisions regarding scope, priorities, and changes, balancing business needs with technical feasibility.
+Drives the end-to-end lifecycle of the data product. Acts as a liaison between business and technical teams, ensures alignment with goals, and oversees delivery and monitoring.';
+
+CREATE OR REPLACE ROLE platform_owner 'User that manages and administers the Denodo Platform';
+
+# #######################################
+# TAG CREATION
+# #######################################
+CREATE OR REPLACE TAGS (confidential, customer_data, email_address, employee_data, external_sharing, finance_reporting, healthcare_dataset, hipaa_protected, marketing_analytics, mask_if_not_admin, pii, prod_env, salary, sensitive, ssn);
+
+CHOWNS (CHOWN admin TAG confidential LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG customer_data LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG email_address LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG employee_data LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG external_sharing LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG finance_reporting LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG healthcare_dataset LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG hipaa_protected LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG marketing_analytics LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG mask_if_not_admin LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG pii LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG prod_env LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG salary LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG sensitive LASTMODIFICATIONUSER admin, 
+    CHOWN admin TAG ssn LASTMODIFICATIONUSER admin);
+
+
+# #######################################
+# ROLE PRIVILEGES
+# #######################################
+ALTER ROLE business_user
+GRANT ROLE use_large_language_model,data_catalog_assisted_query,data_catalog_data_preparation,data_catalog_exporter,data_catalog_content_admin
+GRANT CONNECT ON admin;
+
+ALTER ROLE data_consumer
+GRANT ROLE data_catalog_assisted_query,data_catalog_data_preparation,use_large_language_model
+GRANT CONNECT, METADATA, EXECUTE ON admin;
+
+ALTER ROLE data_governance_manager
+GRANT ROLE assign_tags,create_role,create_user,design_studio_allow_login,drop_role,drop_user,impersonator,manage_tags,manage_workspaces,read_all_privileges,use_large_language_model,data_catalog_classifier,data_catalog_editor,data_catalog_manager
+GRANT CONNECT, METADATA, EXECUTE ON admin;
+
+ALTER ROLE data_product_developer
+GRANT ROLE create_database,manage_summaries,manage_tags,manage_policies,metadata_export,manage_workspaces,read_all_privileges,use_large_language_model,assign_tags,data_catalog_assisted_query,data_catalog_classifier,data_catalog_data_preparation,data_catalog_exporter,configure_database
+GRANT CONNECT ON admin;
+
+ALTER ROLE data_product_owner
+GRANT ROLE use_large_language_model,create_database,create_user,drop_role,drop_user,drop_database,manage_policies,monitor_admin,assign_all_privileges,assign_all_roles,assignprivileges,create_role,configure_database,business_user,data_catalog_assisted_query,data_catalog_content_admin,data_catalog_data_preparation,data_catalog_exporter
+GRANT CONNECT ON admin;
+
+ALTER ROLE platform_owner
+GRANT ROLE import_tags,jmxadmin,drop_resource,data_catalog_admin,diagnostic_monitoring_tool_admin,scheduler_admin,use_large_language_model,create_resource,configure_server,configure_resource_manager,create_database,configure_database,create_role,create_user,assign_all_privileges,assign_all_roles,drop_database,drop_role,drop_user,impersonator,monitor_admin,read_all_privileges,assignprivileges,assign_tags,assign_vdb_admin_privileges,manage_listeners,manage_metadata_tables,manage_policies,manage_summaries,manage_tags,manage_workspaces,metadata_export
+GRANT ADMIN ON admin;
+
+
+# #######################################
+# POLICY CREATION
+# #######################################
+CREATE OR REPLACE GLOBAL_SECURITY_POLICIES (hide_from_developers
+        DESCRIPTION = 'This will mask any column being viewed by a data product developer.'
+        ENABLED = TRUE
+        AUDIENCE (
+            ANY ROLES (data_product_developer)
+        )
+        ELEMENTS (
+            ALL VIEWS
+        )
+        RESTRICTION (
+            FILTER = ''
+            MASKING ANY (sensitive) WITH (HIDE) (numbers WITH DEFAULT, datetimes WITH DEFAULT, texts WITH DEFAULT) 
+        ),
+    mask_to_non_admins
+        DESCRIPTION = 'Applies to any data that needs to be masked, unless it''s being viewed by an admin'
+        ENABLED = TRUE
+        AUDIENCE (
+            NOT_IN ROLES (platform_owner)
+        )
+        ELEMENTS (
+            ALL VIEWS
+        )
+        RESTRICTION (
+            FILTER = ''
+            MASKING ANY (mask_if_not_admin) WITH (HIDE) (numbers WITH DEFAULT, datetimes WITH DEFAULT, texts WITH DEFAULT) 
+        ));
+
+CHOWNS (CHOWN admin GLOBAL_SECURITY_POLICY hide_from_developers LASTMODIFICATIONUSER admin, 
+    CHOWN admin GLOBAL_SECURITY_POLICY mask_to_non_admins LASTMODIFICATIONUSER admin);
+
+
+
