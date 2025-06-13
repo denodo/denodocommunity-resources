@@ -74,7 +74,9 @@ In this subproject you can find useful scripts for working with Denodo:
 In this subproject you can find useful templates for working with Denodo:
 
 * [Denodo Embedded MPP Templates](./templates/denodo-embedded-mpp/): templates for deploying the Denodo Embedded MPP in Azure and AWS.
+* [Denodo Data Products Lifecycle](./templates/data-product-roles/): creation scripts of the roles defined in [this knowledge-base article](https://community.denodo.com/kb/en/view/document/Denodo%20Data%20Products%20Lifecycle).
 * [Spring Batch Samples](./templates/spring-batch-samples/): template project using Spring Batch + Denodo Platform.
+
 
 # Join the Denodo Community
 
