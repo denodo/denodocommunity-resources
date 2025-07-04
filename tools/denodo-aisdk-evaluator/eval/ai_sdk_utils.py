@@ -6,10 +6,10 @@ import pandas as pd
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
 import logging
-
+pd.options.mode.chained_assignment = None
 logger = logging.getLogger(__name__)
 
-def call_answer_question_api(question: str, evidence: str, api_url: str = "http://127.0.0.1:8008/answerDataQuestion",  username: str = "admin", password: str = "admin", pbar=None):
+def call_answer_question_api(question: str, evidence: str, api_url: str,  username: str , password: str, pbar=None):
     """
     Call the Q&A API with a single question and evidence.
 
@@ -25,7 +25,6 @@ def call_answer_question_api(question: str, evidence: str, api_url: str = "http:
     dict: JSON response from API or error dict
     """
      
-    url = api_url
     params = {
         "question": question,
         "custom_instructions": evidence,
@@ -35,12 +34,19 @@ def call_answer_question_api(question: str, evidence: str, api_url: str = "http:
     logger.info("Submitting question to API endpoint: '%s'", api_url)
     logger.debug("Full question: '%s', Evidence: '%s'", question, evidence)
     try:
-        response = requests.get(url, params=params, auth=(username, password))
+        response = requests.get(api_url, params=params, auth=(username, password))
         response.raise_for_status()
 
-        result = response.json()
-    except requests.RequestException as err: # import requests
-        logger.error("Error for question '%s': %s", question, err)
+        try:
+            result = response.json()
+        except ValueError as json_err:
+            logger.debug("Invalid JSON response for question '%s': %s", question)
+            result = {"error": f"Invalid JSON response: {json_err}", "response_text": response.text}
+    except requests.RequestException as err:
+        if err.response is not None and err.response.status_code == 500:
+            logger.info("Server returned a 500 error for question '%s': %s", question, err)
+        else:
+            logger.error("Error for question '%s': %s", question, err)
         result = {"error": str(err)}
     
 
@@ -51,7 +57,7 @@ def call_answer_question_api(question: str, evidence: str, api_url: str = "http:
 
 
 
-def call_answer_question_api_multiple(questions, evidences, api_url: str = "http://127.0.0.1:8008/answerDataQuestion", username: str = "admin", password: str = "admin", max_workers: int = 10):
+def call_answer_question_api_multiple(questions, evidences, api_url: str , username: str , password: str , max_workers: int = 10):
     '''
     Call the AI SDK API in parallel.
     Args:
@@ -74,7 +80,7 @@ def call_answer_question_api_multiple(questions, evidences, api_url: str = "http
                     zip(questions, evidences)
                 ))
             except Exception as e:
-                logger.error(f"Error during API calls: {str(e)}")
+                logger.exception("Error during API calls: %s", str(e))
                 responses = [{"error": str(e)}] * len(questions)
     return responses
 
@@ -82,7 +88,7 @@ def call_answer_question_api_multiple(questions, evidences, api_url: str = "http
 
 
 
-def generate_responses(questions, evidences, api_url: str = "http://127.0.0.1:8008/answerDataQuestion", username: str = "admin", password: str = "admin", max_workers = 10):
+def generate_responses(questions, evidences, api_url: str , username: str , password: str , max_workers = 10):
     '''
     Generate responses for a list of questions using the AI SDK API.
     Args:
@@ -102,7 +108,7 @@ def generate_responses(questions, evidences, api_url: str = "http://127.0.0.1:80
             questions, evidences, api_url, username, password, max_workers
         )
     except Exception as e:
-        logger.error(f"Error calling API: {str(e)}")
+        logger.debug(f"Error calling API: {str(e)}")
         return [(question, None, None, None) for question in questions]
 
     results = []
@@ -127,11 +133,9 @@ def generate_responses(questions, evidences, api_url: str = "http://127.0.0.1:80
 
 
 
-def generate_aisdk_responses_as_dataframe(df: pd.DataFrame, question_column: str, expected_column: str = None, 
-                                         difficulty_column: str = None, evidence_column: str = None,
-                                         api_url: str = "http://127.0.0.1:8008/answerDataQuestion",
-
-                                         username: str = "admin", password: str = "admin", max_workers: int = 10, numrows: int = None):
+def generate_aisdk_responses_as_dataframe(df: pd.DataFrame, question_column: str, expected_column: str , 
+                                         difficulty_column: str , evidence_column: str ,
+                                         api_url: str , username: str , password: str, max_workers: int = 10, numrows: int = None):
     
     """
     Generate AI SDK responses and return results as a DataFrame.
@@ -150,12 +154,30 @@ def generate_aisdk_responses_as_dataframe(df: pd.DataFrame, question_column: str
         pd.DataFrame: DataFrame with questions, answers, and metadata
     """
     df = df.head(numrows) if numrows else df
-    questions = df[question_column].tolist()
-    # Use evidence column if provided, otherwise use empty strings
-    evidences = df[evidence_column].tolist() if evidence_column and evidence_column in df.columns else [""] * len(df)
-
-    logger.info("Generating AI SDK responses for %d questions.", len(df))
-    all_results = generate_responses(questions, evidences, api_url, username, password, max_workers)
+    try:
+        questions = df[question_column].tolist()
+        if not questions:
+            logger.error("No questions found in the specified column")
+            return pd.DataFrame()
+            
+        evidences = []
+        if evidence_column and evidence_column in df.columns:
+            evidences = df[evidence_column].fillna("").tolist()
+        else:
+            evidences = [""] * len(df)
+            
+        logger.info("Generating AI SDK responses for %d questions.", len(df))
+        all_results = generate_responses(questions, evidences, api_url, username, password, max_workers)
+        if not all_results:
+            logger.error("No results returned from generate_responses")
+            return pd.DataFrame()
+            
+    except KeyError as e:
+        logger.error("Column not found in dataframe: %s", str(e))
+        return pd.DataFrame()
+    except Exception as e:
+        logger.error("Error generating responses: %s", str(e))
+        return pd.DataFrame()    
     result_df = pd.DataFrame(all_results, columns=[question_column, "Answer", "VQL Generated", "Tables Used", "sql_execution_time", "vector_store_search_time", "llm_time", "total_execution_time"])
     result_df["Tables Used"] = result_df["Tables Used"].astype(object)
 
@@ -216,7 +238,6 @@ def main():
         df_input = pd.read_excel(args.input_file, **excel_kwargs)
         logger.info(f"Successfully loaded {len(df_input)} rows from {args.input_file}")
         
-        # Limit rows if specified by --rows argument
         if args.rows is not None:
             df_input = df_input.head(args.rows)
             logger.info(f"Limited to {args.rows} rows due to --rows parameter")
@@ -228,7 +249,6 @@ def main():
         # Log column information
         logger.info(f"Columns found: {df_input.columns.tolist()}")
         
-        # Check for required columns
         required_columns = [args.question_column]
         missing_columns = [col for col in required_columns if col not in df_input.columns]
         if missing_columns:
@@ -251,6 +271,30 @@ def main():
         logger.error(f"Unexpected error reading Excel file: {str(e)}")
         return 1
     
+    logger.info("Testing AI SDK API connection...")
+    test_question = "Test API connection"
+    test_evidence = ""
+    if not df_input.empty and args.question_column in df_input.columns:
+        test_question = df_input[args.question_column].iloc[0]
+        if args.evidence_column and args.evidence_column in df_input.columns:
+            test_evidence = df_input[args.evidence_column].iloc[0] if pd.notna(df_input[args.evidence_column].iloc[0]) else ""
+    
+    test_response = call_answer_question_api(
+        question=test_question,
+        evidence=test_evidence,
+        api_url=args.api_url,
+        username=args.api_username,
+        password=args.api_password
+    )
+
+    if "error" in test_response:
+        logger.error(f"API connection test failed: {test_response['error']}")
+        logger.error("Please check AI SDK configuration parameters (Host URL, Port, username, password) and ensure the API is running.")
+        logger.error("Also, verify the input Excel file and question/evidence columns. Make sure the Expected VQL is in fully qualified syntax")
+        return 1
+    else:
+        logger.info("API connection test successful.")
+
     # Generate AI responses
     logger.info("Generating AI SDK responses...")
     try:
@@ -278,19 +322,16 @@ def main():
         logger.error(f"Error generating responses: {str(e)}")
         return 1
     
-    # Ensure we have the needed columns
     required_output_columns = [args.question_column, 'Answer', 'VQL Generated', args.expected_column, 'Tables Used', 'index', "sql_execution_time", "vector_store_search_time", "llm_time", "total_execution_time"]
     missing_output_columns = [col for col in required_output_columns if col not in df_responses.columns]
     
     if missing_output_columns:
         logger.warning(f"Some columns are missing in the output: {missing_output_columns}")
     
-    # Ensure difficulty column is copied if it exists
     if args.difficulty_column in df_input.columns and args.difficulty_column not in df_responses.columns:
         df_responses[args.difficulty_column] = df_input[args.difficulty_column]
         logger.info(f"Copied difficulty column from input DataFrame")
     
-    # Save results to Excel
 
     logger.info(f"Saving results to {args.output_excel}")
     try:

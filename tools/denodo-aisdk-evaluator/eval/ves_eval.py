@@ -10,27 +10,27 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from db_utils import execute_vql, add_query_execution_data
 import logging
 
-
 logger = logging.getLogger(__name__)
 
-def clean_abnormal(input):
+def clean_abnormal(values):
     """
     Cleans abnormal values from the input list using mean and standard deviation.
     
     Parameters:
-    input (list): List of numerical values.
+    values (list): List of numerical values.
     
     Returns:
     list: List of cleaned numerical values.
     """
-    input = np.asarray(input)
+    values = np.asarray(values)
     processed_list = []
-    mean = np.mean(input, axis=0)
-    std = np.std(input, axis=0)
-    for x in input:
-        if x < mean + 3 * std and x > mean - 3 * std:
+    mean = np.mean(values, axis=0)
+    std = np.std(values, axis=0)
+    lower_bound = mean - 3 * std
+    upper_bound = mean + 3 * std
+    for x in values:
+        if lower_bound < x < upper_bound:
             processed_list.append(x)
-            
     return processed_list
 
 def normalize_value(val):
@@ -46,7 +46,10 @@ def normalize_value(val):
             return str(int(val))
     
     # Default string conversion
-    return str(val)
+    if isinstance(val, str):
+        return val
+    else:
+        return str(val)
 
 def compare_vql_execution(generated_vql, ground_truth, datacatalog_params):
     """
@@ -141,18 +144,18 @@ def iterated_execute_vql(predicted_vql, ground_truth, datacatalog_params, iterat
     if sql_exec_bool == 1:
         logger.info("Results match, proceeding with time comparison")
         for i in range(iterate_num):
-            logger.debug(f"Iteration {i+1}/{iterate_num}")
+            logger.debug("Iteration %d/%d", i+1, iterate_num)
             # Measure predicted query time
             try:
                 _, predicted_time = execute_vql(predicted_vql)
             except Exception as e:
-                logger.error(f"Error executing predicted SQL in iteration {i+1}: {e}")
+                logger.error("Error executing predicted SQL in iteration %d: %r", i+1, e)
                 continue
             # Measure ground truth query time
             try:
                 _, ground_truth_time = execute_vql(ground_truth)
             except Exception as e:
-                logger.error(f"Error executing ground truth SQL in iteration {i+1}: {e}")
+                logger.error("Error executing ground truth SQL in iteration %d: %r", i+1, e)
                 continue
             diff_list.append(ground_truth_time / predicted_time)
         processed_diff_list = clean_abnormal(diff_list)
@@ -286,8 +289,6 @@ def compute_ves_by_group(exec_results, group_column):
             'all_ves': 0.0,
             'total_count': 0
         }
-    
-    # Group results by difficulty
     simple_results = []
     moderate_results = []
     challenging_results = []
@@ -295,7 +296,6 @@ def compute_ves_by_group(exec_results, group_column):
     for result in exec_results:
         if group_column in result:
             difficulty = result[group_column]
-            # Handle non-string difficulties
             if isinstance(difficulty, str):
                 difficulty = difficulty.lower()
                 if difficulty == "simple":
@@ -343,11 +343,10 @@ def main(args=None):
         parser.add_argument('--iterate-num', type=int, default=3, help='Number of iterations for time comparison (default: 3)')
         
         # Database connection parameters
-        parser.add_argument('--user', type=str, default="admin", required=False, help='Database user for Denodo')
-        parser.add_argument('--password', type=str, default="admin", required=False, help='Database password for Denodo')
+        parser.add_argument('--user', type=str, required=False, help='Database user for Denodo')
+        parser.add_argument('--password', type=str, required=False, help='Database password for Denodo')
         parser.add_argument('--host', type=str, default="localhost", help='Database host for Denodo')
-        parser.add_argument('--port', type=int, default=9996, help='Database port for Denodo')
-        parser.add_argument('--database', type=str, default="spider", help='Database name')
+        parser.add_argument('--port', type=int, default=9090, help='Database port for Denodo')
         
         # Keep db-config as alternative option for compatibility
         parser.add_argument('--db-config', '-d', default=None, help='Database configuration JSON file (alternative to individual parameters)')
@@ -383,7 +382,6 @@ def main(args=None):
     if 'index' in df.columns:
         original_indexes = df['index'].tolist()
     else:
-        # If there's no explicit index column, use the DataFrame index
         original_indexes = df.index.tolist()
     # Set up database parameters
     if args.db_config:
@@ -392,6 +390,7 @@ def main(args=None):
             with open(args.db_config, 'r') as f:
                 db_params = json.load(f)
         except Exception as e:
+            logger.error(f"Error reading database config file '{args.db_config}': {e}")
             sys.exit(1)
     else:
         # Use individual connection parameters
@@ -400,7 +399,6 @@ def main(args=None):
             "password": args.password,
             "host": args.host,
             "port": args.port,
-            "databaseName": args.database
         }
     
     db_params_list = [db_params] * len(vql_pairs)
@@ -423,7 +421,6 @@ def main(args=None):
         idx = result['sql_idx']
         if idx < len(df):
             df.loc[idx, 'reward'] = result['reward']
-            # Add Question ID using original indexes
             if idx < len(original_indexes):
                 df.loc[idx, 'Question ID'] = original_indexes[idx]
     
@@ -439,7 +436,6 @@ def main(args=None):
         if idx < len(df):
             result['same_row_count'] = df.loc[idx, 'same_row_count'] if 'same_row_count' in df.columns else 0
             result['same_column_count'] = df.loc[idx, 'same_column_count'] if 'same_column_count' in df.columns else 0
-            # Add the Question ID to results for use in visualizations
             if 'Question ID' in df.columns:
                 result['Question ID'] = df.loc[idx, 'Question ID']
     
@@ -457,7 +453,6 @@ def main(args=None):
         # Calculate match percentages by difficulty
         match_percentages = {}
         for difficulty in agg_results['group_scores'].keys():
-            # Get results for this difficulty
             difficulty_results = [r for r in results if r.get(args.difficulty_col, '').lower() == difficulty.lower()]
             matching_count = sum(1 for r in difficulty_results if r.get('reward', 0) > 0)
             total_count = len(difficulty_results)
@@ -552,8 +547,8 @@ def main(args=None):
             chart = workbook.add_chart({'type': 'column'})
             chart.add_series({
                 'name': 'VES Score',
-                'categories': ['Summary', 1, 0, len(summary_with_desc), 0],  # Adjust for description row
-                'values': ['Summary', 1, 1, len(summary_with_desc), 1],      # Adjust for description row
+                'categories': ['Summary', 1, 0, len(summary_with_desc), 0],  
+                'values': ['Summary', 1, 1, len(summary_with_desc), 1],      
                 'data_labels': {'value': True}
             })
             chart.set_title({'name': 'VES Scores by Difficulty'})
@@ -579,7 +574,6 @@ def main(args=None):
             
             # Apply formats to both sheets
             for worksheet in [summary_worksheet, writer.sheets['Details']]:
-                # Format header row (row 0)
                 for col_num in range(len(df.columns)):
                     worksheet.set_row(0, None, header_format)
                 

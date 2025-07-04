@@ -1,6 +1,5 @@
 import sys
 import argparse
-
 import multiprocessing as mp
 import pandas as pd
 from tqdm import tqdm
@@ -9,9 +8,10 @@ from db_utils import execute_vql, add_query_execution_data
 import logging
 import numpy as np
 from  collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed # Added import
+
 
 logger = logging.getLogger(__name__)
-
 
 def normalize_value(val):
     """Normalize values for consistent comparison"""
@@ -26,8 +26,6 @@ def normalize_value(val):
     
     # Default string conversion
     return str(val)
-
-
 
 def calculate_row_match(predicted_row, ground_truth_row):
     """
@@ -45,15 +43,12 @@ def calculate_row_match(predicted_row, ground_truth_row):
     element_in_pred_only = 0
     element_in_truth_only = 0
     matches_list = []
-
-   
     for pred_val in predicted_row:
         if pred_val in ground_truth_row:
             matches += 1
             matches_list.append(pred_val)
         else:
             element_in_pred_only += 1
-
     for truth_val in ground_truth_row:
         if truth_val not in predicted_row:
             element_in_truth_only += 1
@@ -82,14 +77,11 @@ def f1_score(predicted_res, ground_truth_res):
         predicted_res = []
     if ground_truth_res is None:
         ground_truth_res = []
-
     if isinstance(predicted_res, pd.DataFrame):
         predicted_res = predicted_res.astype(str)
-       
         pred_as_tuples = list(predicted_res.itertuples(index=False, name=None))
     else:
         pred_as_tuples = predicted_res
-
     if isinstance(ground_truth_res, pd.DataFrame):
         ground_truth_res = ground_truth_res.astype(str)
         gt_as_tuples = list(ground_truth_res.itertuples(index=False, name=None))
@@ -98,7 +90,6 @@ def f1_score(predicted_res, ground_truth_res):
 
     predicted = list(dict.fromkeys(pred_as_tuples))
     ground_truth = list(dict.fromkeys(gt_as_tuples))
-
     match_scores = []
     pred_only_scores = []
     truth_only_scores = []
@@ -134,24 +125,18 @@ def f1_score(predicted_res, ground_truth_res):
     tp = sum(match_scores)
     fp = sum(pred_only_scores)
     fn = sum(truth_only_scores)
-
     precision = tp / (tp + fp) if tp + fp > 0 else 0
     recall = tp / (tp + fn) if tp + fn > 0 else 0
     f1 = 2 * precision * recall / (precision + recall) if precision + recall > 0 else 0
-
     row_scores = []
     for gt_row, pred_row in zip(ground_truth, predicted):
         correct = len(set(gt_row) & set(pred_row))
-       
         score = correct / len(gt_row) if len(gt_row) > 0 else 0
         row_scores.append(score)
-
     ground_truth_len = len(ground_truth_res) if not isinstance(ground_truth_res, pd.DataFrame) else len(ground_truth_res.index)
     set_precision = sum(row_scores) / ground_truth_len if ground_truth_len > 0 else 0
 
-   
     return f1, precision*100, set_precision *100, all_matches, all_set_matches
-
 
 
 def percent_overlapp(ground_truth_res, predicted_res):
@@ -169,16 +154,13 @@ def percent_overlapp(ground_truth_res, predicted_res):
     pred_counts = Counter(pred_elements)
     total_gt_elements = len(gt_elements)
     if total_gt_elements == 0:
-      
         return 0.0
-
     total_matches = 0
     all_unique_elements = gt_counts.keys() | pred_counts.keys()
 
     for element in all_unique_elements:
         match_count = min(gt_counts[element], pred_counts[element])
         total_matches += match_count
-
     percent_overlap = total_matches / total_gt_elements
 
     return percent_overlap*100
@@ -203,29 +185,27 @@ def execute_model(predicted_vql, ground_truth_vql, db_params, idx, meta_time_out
     try:
         logger.info(f"Executing model for index {idx}")
         # Execute predicted query
+        # Ensure VQL is a string, even if it was NaN (becomes "nan" or empty if pre-cleaned)
+        str_predicted_vql = str(predicted_vql)
         predicted_res, test_exec_time = func_timeout(
             meta_time_out,
             execute_vql,
-            args=(predicted_vql, True),  
+            args=(str_predicted_vql, True),  
         )
-        
-        # Get row and column counts for predicted result
         test_row_counts = len(predicted_res) if predicted_res is not None else 0
         test_column_counts = len(predicted_res.columns) if predicted_res is not None else 0
 
-        # Execute ground-truth query
+        # Ensure VQL is a string
+        str_ground_truth_vql = str(ground_truth_vql)
         ground_truth_res, truth_exec_time = func_timeout(
             meta_time_out,
             execute_vql,
-            args=(ground_truth_vql, True),  
+            args=(str_ground_truth_vql, True),  
         )
-        
-        # Get row and column counts for ground truth result
         truth_row_counts = len(ground_truth_res) if ground_truth_res is not None else 0
         truth_column_counts = len(ground_truth_res.columns) if ground_truth_res is not None else 0
-
-        # Compute enhanced F1 score with the new function
-        f1_val, percent_match, set_precision, all_matches, all_set_matches = f1_score(ground_truth_res, predicted_res)
+        # Compute enhanced F1 score with the new function - corrected argument order
+        f1_val, percent_match, set_precision, all_matches, all_set_matches = f1_score(predicted_res, ground_truth_res)
         
         # Also compute original F1 score
         precision = percent_overlapp(ground_truth_res, predicted_res)  
@@ -277,32 +257,39 @@ def run_sqls_parallel(vql_pairs, db_params_list, num_cpus=6, meta_time_out=30.0)
     db_params_list: if each query has different credentials, pass them in a parallel list
                     or reuse the same DB params if identical. 
     """
-   
-    pool = mp.Pool(processes=num_cpus)
-    pbar = tqdm(total=len(vql_pairs), desc='Calculating F1 Scores')
     
-    # Clear existing results
-   
-    global exec_result
-    exec_result = []
+    collected_results = [] # Local list to store results from futures
+
+    with ThreadPoolExecutor(max_workers=num_cpus) as executor:
+        future_to_idx = {}
+        for i, (predicted_vql, ground_truth_vql) in enumerate(vql_pairs):
+            
+            future = executor.submit(
+                execute_model,
+                predicted_vql, 
+                ground_truth_vql, 
+                db_params_list,
+                i, 
+                meta_time_out
+            )
+            future_to_idx[future] = i
+        
+        with tqdm(total=len(vql_pairs), desc='Calculating F1 Scores') as pbar:
+            for future in as_completed(future_to_idx):
+                original_idx = future_to_idx[future]
+                try:
+                    result = future.result()
+                    collected_results.append(result)
+                except Exception as exc:
+                    logger.error(f"Query at original index {original_idx} generated an exception: {exc}")
+                    pass 
+                finally:
+                    pbar.update(1)
     
-    # Create a callback that updates the progress bar
-    def update_pbar(result):
-        exec_result.append(result)
-        pbar.update(1)
-
-    for i, (predicted_vql, ground_truth_vql) in (enumerate(vql_pairs)):
-        pool.apply_async(
-            execute_model,
-            args=(predicted_vql, ground_truth_vql, db_params_list[i], i, meta_time_out),
-            callback=update_pbar,
-        )
-
-    pool.close()
-    pool.join()
-    pbar.close()
-
-    return exec_result
+    # Sort results by the original SQL index to maintain order
+    collected_results.sort(key=lambda x: x.get("sql_idx", -1))
+    
+    return collected_results
 
 
 def compute_f1_by_group(exec_results, group_column):
@@ -320,16 +307,12 @@ def compute_f1_by_group(exec_results, group_column):
             'all_percent_match': 0.0
         }
     
-
     f1_key = 'res'
     percent_match_key = 'percent_match'  
-    
     # Predefined categories
     categories = ["simple", "moderate", "challenging"]
    
-   
     grouped_results = {category: [] for category in categories}
-    
     # Group results by difficulty
     for result in exec_results:
         if group_column in result:
@@ -457,31 +440,20 @@ def compute_time_stats_by_group(exec_results, group_column, time_column='total_e
         
 
 def main(args=None):
-    if args is None:
-        
+    if args is None: 
         parser = argparse.ArgumentParser(description='Calculate F1 scores for VQL queries.')
         parser.add_argument('--input', '-i', required=True, help='Input Excel file with VQL queries')
         parser.add_argument('--output', '-o', default=None, help='Output Excel file (default: results.xlsx)')
         parser.add_argument('--num-cpus', '-n', type=int, default=2, help='Number of CPUs for parallel processing')
         parser.add_argument('--timeout', '-t', type=float, default=30.0, help='Query execution timeout (seconds)')
-        
-        # Database connection parameters
-        parser.add_argument('--user', type=str, default="admin", required=False, help='Database user for Denodo')
-        parser.add_argument('--password', type=str, default="admin", required=False, help='Database password for Denodo')
+        parser.add_argument('--user', type=str, default="username", required=False, help='Database user for Denodo')
+        parser.add_argument('--password', type=str, default="password", required=False, help='Database password for Denodo')
         parser.add_argument('--host', type=str, default="localhost", help='Database host for Denodo')
-        parser.add_argument('--port', type=int, default=9996, help='Database port for Denodo')
-        parser.add_argument('--database', type=str, default="spider", help='Database name')
-        
-        # Keep db-config as alternative option for compatibility
+        parser.add_argument('--port', type=int, default=9090, help='Database port for Denodo')
         parser.add_argument('--db-config', '-d', default=None, help='Database configuration JSON file (alternative to individual parameters)')
-        
-        # Column name parameters
-        parser.add_argument('--ground-truth-col', '-g', default='ground_truth_vql', 
-                            help='Column name containing ground truth VQL (default: ground_truth_vql)')
-        parser.add_argument('--generated-col', '-p', default='generated_vql', 
-                            help='Column name containing generated VQL (default: generated_vql)')
-        parser.add_argument('--difficulty-col', '-c', default='difficulty',
-                            help='Column name containing difficulty level (default: difficulty)')
+        parser.add_argument('--ground-truth-col', '-g', default='ground_truth_vql', help='Column name containing ground truth VQL (default: ground_truth_vql)')
+        parser.add_argument('--generated-col', '-p', default='generated_vql', help='Column name containing generated VQL (default: generated_vql)')
+        parser.add_argument('--difficulty-col', '-c', default='difficulty',help='Column name containing difficulty level (default: difficulty)')
         
         args = parser.parse_args()
     
@@ -520,7 +492,6 @@ def main(args=None):
         "password": args.password,
         "host": args.host,
         "port": args.port,
-        "databaseName": args.database
     }
     df = add_query_execution_data(df, db_params, args.ground_truth_col, args.generated_col)
 
@@ -591,7 +562,7 @@ def main(args=None):
         'Count': [agg_results['total_count']]
     })
     agg_df = pd.concat([agg_df, overall_row], ignore_index=True)
- #  description rows
+    #  description rows
     column_descriptions = {
         'Question ID': 'Original index of the query from the input file',
         'f1score': 'F1 score (harmonic mean of precision and recall) for result set comparison. Converts each row into a set (ignoring duplicate values and order within a row). It then uses a best-matching (greedy) approach: for each ground-truth row it finds the prediction row with maximum overlap',

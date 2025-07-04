@@ -3,9 +3,13 @@ import pandas as pd
 from f1_eval import main as f1_main
 from ves_eval import main as ves_main
 import logging
-from ai_sdk_utils import generate_aisdk_responses_as_dataframe
+from ai_sdk_utils import generate_aisdk_responses_as_dataframe, generate_responses
 import numpy as np
-from db_utils import initialize_data_catalog
+from db_utils import initialize_data_catalog, execute_vql 
+import tempfile
+import os
+import traceback
+from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 
@@ -16,12 +20,10 @@ def merge_evaluations(f1_output=None, ves_output=None, combined_output=None,
     Merge the outputs of F1 and VES evaluations into a single Excel file.
     """
     try:
-        # If DataFrames are provided, use them directly, otherwise read from Excel files
         if all([f1_details_df is not None, ves_details_df is not None, 
                 f1_summary_df is not None, ves_summary_df is not None]):
             logger.info("Using provided DataFrames for merging")
         else:
-            # Read the original Excel files
             if not all([f1_output, ves_output]):
                 raise ValueError("Either provide all four DataFrames or both Excel file paths")
                 
@@ -31,25 +33,21 @@ def merge_evaluations(f1_output=None, ves_output=None, combined_output=None,
             f1_summary_df = pd.read_excel(f1_output, sheet_name="Summary")
             ves_summary_df = pd.read_excel(ves_output, sheet_name="Summary")
         
-        # Log column names for debugging
         logger.info(f"F1 details columns: {f1_details_df.columns.tolist()}")
         logger.info(f"VES details columns: {ves_details_df.columns.tolist()}")
         
         def is_description_row(df, from_raw_df=False):
-            # If we know this came from a raw DataFrame with no descriptions, skip the check
             if from_raw_df:
                 return False
                 
             if len(df) == 0:
                 return False
-            # Check if the first row contains mostly strings that are longer than column names
             first_row = df.iloc[0]
             str_lengths = [len(str(x)) for x in first_row.values if isinstance(x, str)]
             if str_lengths and sum(str_lengths)/len(str_lengths) > 20:
                 return True
             return False
         
-        # Skip description rows if present
         if is_description_row(f1_details_df):
             f1_details_df = f1_details_df.iloc[1:].reset_index(drop=True)
         if is_description_row(ves_details_df, from_raw_df=True):
@@ -59,11 +57,9 @@ def merge_evaluations(f1_output=None, ves_output=None, combined_output=None,
         if is_description_row(ves_summary_df):
             ves_summary_df = ves_summary_df.iloc[1:].reset_index(drop=True)
         
-        # Make sure Question ID is numeric for proper merging
         f1_details_df['Question ID'] = pd.to_numeric(f1_details_df['Question ID'], errors='coerce')
         ves_details_df['Question ID'] = pd.to_numeric(ves_details_df['Question ID'], errors='coerce')
 
-        # Rename incorrect column name in VES details DataFrame
         ves_details_df = ves_details_df.rename(columns={"difficulty": "Difficulty"})
         
         # Create column mappings for renaming
@@ -87,40 +83,29 @@ def merge_evaluations(f1_output=None, ves_output=None, combined_output=None,
             'total_execution_time': 'total_execution_time'
         }
         
-        # Rename columns in both DataFrames
         f1_renamed = f1_details_df.rename(columns=f1_column_map)
         ves_renamed = ves_details_df.rename(columns=ves_column_map)
         
-        # Select only the columns we need
         f1_cols = ['Question ID'] + list(f1_column_map.values())
         f1_cols = [col for col in f1_cols if col in f1_renamed.columns]
         
         ves_cols = ['Question ID'] + list(ves_column_map.values())
         ves_cols = [col for col in ves_cols if col in ves_renamed.columns]
         
-        # Subset to only necessary columns
         f1_subset = f1_renamed[f1_cols]
-        # Remove 'Have Same Column Count' if it exists
         if 'Have Same Column Count' in f1_subset.columns:
             f1_subset = f1_subset.drop(columns=['Have Same Column Count'])
         ves_subset = ves_renamed[ves_cols]
         
-        # Merge the DataFrames
         merged_details = pd.merge(f1_subset, ves_subset, on='Question ID', how='outer')
-        
-        # Check if 'Have Same Row Count' exists, and add it with zeros if not
         if 'Have Same Row Count' not in merged_details.columns:
             logger.warning("Column 'Have Same Row Count' not found, adding with default values")
             merged_details['Have Same Row Count'] = 0
-        
-        # Ensure numeric columns are numeric
         numeric_cols = ['Percent Overlap', 'Have Same Row Count', 
                         'VES Score', 'Bird Standard F1', 'Results Match', 'Subsetting Percentage']
         for col in numeric_cols:
             if col in merged_details.columns:
                 merged_details[col] = pd.to_numeric(merged_details[col], errors='coerce').fillna(0)
-        
-        # Log VES Score column values for debugging
         logger.info(f"VES Score column in merged_details: {merged_details['VES Score'].tolist()[:5]} (first 5 values)")
         
         all_difficulties = set()
@@ -150,11 +135,10 @@ def merge_evaluations(f1_output=None, ves_output=None, combined_output=None,
                 for difficulty, value in match_by_difficulty.items():
                     percent_correct_queries_dict[difficulty] = value
             
-            # Calculate overall
             overall_match = ves_details_df['Results Match'].mean() * 100
             percent_correct_queries_dict["Overall"] = overall_match
         else:
-            logger.error("'Results Match' column not found in VES details")
+            logger.debug("'Results Match' column not found in VES details")
             for difficulty in difficulties:
                 percent_correct_queries_dict[difficulty] = 0
             percent_correct_queries_dict["Overall"] = 0
@@ -181,11 +165,41 @@ def merge_evaluations(f1_output=None, ves_output=None, combined_output=None,
             results_list = merged_details.to_dict('records')
             time_stats = compute_time_stats_by_group(results_list, 'Difficulty', 'total_execution_time')
         
-        # Create arrays with consistent lengths
         difficulties_array = difficulties
-        percent_correct_queries_array = [percent_correct_queries_dict.get(diff, 0) for diff in difficulties]
-        percent_subset_array = [percent_subset_dict.get(diff, 0) for diff in difficulties]
-        count_array = [count_dict.get(diff, 0) for diff in difficulties]  
+        percent_correct_queries_array = [percent_correct_queries_dict.get(diff, 0) for diff in difficulties_array]
+        
+        calculated_percent_subset_array = []
+        if 'Subsetting Percentage' in merged_details.columns and not merged_details.empty:
+            # The 'Subsetting Percentage' column should already be numeric from earlier processing (around line 108)
+            for diff_level in difficulties_array:
+                if diff_level == "Overall":
+                    mean_val = merged_details['Subsetting Percentage'].mean()
+                    calculated_percent_subset_array.append(float(mean_val) if pd.notna(mean_val) else 0.0)
+                else:
+                    # Average for the specific difficulty level
+                    if 'Difficulty' in merged_details.columns:
+                        subset_for_diff = merged_details[merged_details['Difficulty'] == diff_level]
+                        if not subset_for_diff.empty:
+                            mean_val = subset_for_diff['Subsetting Percentage'].mean()
+                            calculated_percent_subset_array.append(float(mean_val) if pd.notna(mean_val) else 0.0)
+                        else:
+                            calculated_percent_subset_array.append(0.0) 
+                    else:
+                        # 'Difficulty' column missing, cannot calculate for specific non-overall levels
+                        logger.warning(f"Cannot calculate 'Percent Subset' for difficulty '{diff_level}': 'Difficulty' column missing in merged_details.")
+                        calculated_percent_subset_array.append(0.0)
+        else:
+            # Fallback if 'Subsetting Percentage' column is missing or merged_details is empty
+            logger.warning(
+                "Could not calculate 'Percent Subset' for summary: "
+                "'Subsetting Percentage' column missing in merged_details or merged_details is empty. "
+                "All 'Percent Subset' values in summary will be 0."
+            )
+            calculated_percent_subset_array = [0.0 for _ in difficulties_array]
+            
+        percent_subset_array = calculated_percent_subset_array
+
+        count_array = [count_dict.get(diff, 0) for diff in difficulties_array]  # count_dict is from f1_summary_df
         
         # Add time statistics to summary DataFrame
         summary_data = {
@@ -295,7 +309,7 @@ def create_excel_with_visualizations(merged_details, merged_summary, output_file
                 'italic': True,
                 'border': 1,
                 'bg_color': '#D9E1F2',
-                'valign': 'top'  # Removed text_wrap from headers
+                'valign': 'top'  
             })
 
             description_format = workbook.add_format({
@@ -325,14 +339,12 @@ def create_excel_with_visualizations(merged_details, merged_summary, output_file
                     else:
                         details_worksheet.write(2, col_num, detail_descriptions[column], description_format)
                     
-                    # Set column width based on description length
                     width = max(15, min(30, len(detail_descriptions[column]) // 10))
                     details_worksheet.set_column(col_num, col_num, width)
             
             # Write data starting from row 3
             for row_idx, row in merged_details.iterrows():
                 for col_idx, value in enumerate(row):
-                    # Handle NaN and Infinity values
                     if pd.isna(value) or (isinstance(value, float) and (np.isinf(value) or np.isnan(value))):
                         details_worksheet.write_string(row_idx + 3, col_idx, "N/A")
                     else:
@@ -361,7 +373,6 @@ def create_excel_with_visualizations(merged_details, merged_summary, output_file
                     else:
                         summary_worksheet.write(row_idx + 3, col_idx, value)
             
-
             percent_format = workbook.add_format({'num_format': '0"%"', 'align': 'center'})
             
             # Define formats for different percentage ranges
@@ -405,10 +416,8 @@ def create_summary_column_chart_with_offset(workbook, summary_worksheet, merged_
     try:
         logger.info("Creating summary column charts with row offset")
         
-        # Create chart for Percent Correct Queries (should be column 1)
         correct_chart = workbook.add_chart({'type': 'column'})
         
-        # Add the Percent Correct Queries series - using row_offset correctly
         correct_chart.add_series({
             'name': 'Percent Correct Queries',
             'categories': ['Summary', row_offset, 0, len(merged_summary) + row_offset - 1, 0],
@@ -458,14 +467,9 @@ def create_time_stats_chart(workbook, summary_worksheet, merged_summary):
     try:
         logger.info("Creating time statistics chart by difficulty level")
         
-        # Create a column chart for grouped bars
         chart = workbook.add_chart({'type': 'column'})
-        
-        # Standard row offset for summary data (accounting for headers and descriptions)
         row_offset = 3
         num_rows = len(merged_summary)
-        
-        # Create a worksheet for the chart data to ensure proper formatting
         time_data_sheet = workbook.add_worksheet('TimeStatsData')
         time_data_sheet.hide()
         
@@ -498,7 +502,6 @@ def create_time_stats_chart(workbook, summary_worksheet, merged_summary):
             'data_labels': {'value': True, 'num_format': '0.00'}
         })
         
-        # Set chart title and axes labels
         chart.set_title({'name': 'Execution Time Statistics by Difficulty'})
         chart.set_x_axis({
             'name': 'Difficulty Level',
@@ -522,7 +525,6 @@ def create_time_stats_chart(workbook, summary_worksheet, merged_summary):
         logger.error(f"Exception details: {str(e)}")
         import traceback
         logger.error(traceback.format_exc())
-        # Continue without the chart rather than failing
 
 def create_pie_charts_with_offset(workbook, summary_worksheet, details_data, row_offset=3):
     """Create pie charts for visualizing query results with proper row offset"""
@@ -540,7 +542,7 @@ def create_pie_charts_with_offset(workbook, summary_worksheet, details_data, row
             logger.debug(f"VES Score column after conversion: {details_data['VES Score'].tolist()[:5]}...")
         except Exception as e:
             logger.error(f"Error converting VES Score to numeric: {e}")
-            details_data['VES Score'] = 0  # Fallback
+            details_data['VES Score'] = 0  
         
         # Count correct queries (those with VES Score > 0)
         correct_queries = sum(details_data['VES Score'] > 0)
@@ -589,11 +591,10 @@ def create_pie_charts_with_offset(workbook, summary_worksheet, details_data, row
         # Set chart size and position 
         simple_pie_chart.set_size({'width': 400, 'height': 150})
         logger.info("Inserting pie chart into worksheet")
-        summary_worksheet.insert_chart('H1', simple_pie_chart)  # Positioned lower to account for descriptions
+        summary_worksheet.insert_chart('H1', simple_pie_chart)  
         logger.info("Pie chart created successfully")
     except Exception as e:
         logger.error(f"Error creating pie charts: {e}")
-        # Continue without the chart rather than failing the entire process
         logger.warning("Continuing without pie chart")
 
 def add_super_header_row(details_worksheet, workbook):
@@ -601,7 +602,6 @@ def add_super_header_row(details_worksheet, workbook):
     Adds an informational super header row above the column headers in the Details worksheet.
     Merges columns into logical groups with appropriate headers.
     """
-    # Create format for the super header row
     ai_sdk_format = workbook.add_format({
         'bold': True,
         'font_size': 11,
@@ -621,7 +621,6 @@ def add_super_header_row(details_worksheet, workbook):
         'border': 1
     })
     
-    # Create format for BIRD Bench metrics header
     bird_super_header_format = workbook.add_format({
         'bold': True,
         'font_size': 11,
@@ -650,7 +649,6 @@ def add_super_header_row(details_worksheet, workbook):
         (10, 13): ('Timing Metrics', time_metric_format)  
     }
     
-    # Create merged ranges for each group in row 0
     for (start_col, end_col), (header_text, format_obj) in column_groups.items():
         details_worksheet.merge_range(0, start_col, 0, end_col, header_text, format_obj)
     
@@ -684,7 +682,6 @@ def compute_time_stats_by_group(exec_results, group_column, time_column='total_e
             'all_time_std': 0.0
         }
     
-    # Define difficulty mapping (numeric to string labels)
     difficulty_map = {
         1: "simple",
         2: "moderate", 
@@ -732,22 +729,23 @@ def compute_time_stats_by_group(exec_results, group_column, time_column='total_e
     
     for category, results in grouped_results.items():
         if results:
-            # Extract execution times for this category
-            times = [res.get(time_column, 0) for res in results]
+            times = []
+            for res in results:
+                exec_time = res.get(time_column, 0)
+                if pd.isna(exec_time):
+                    exec_time = 0
+                times.append(exec_time)
             
-            # Calculate statistics
             time_mean[category] = np.mean(times)
             time_median[category] = np.median(times)
             time_variance[category] = np.var(times)
             time_std[category] = np.std(times)
     
-    # Calculate overall statistics
     all_time_mean = np.mean(all_times) if all_times else 0
     all_time_median = np.median(all_times) if all_times else 0
     all_time_variance = np.var(all_times) if all_times else 0
     all_time_std = np.std(all_times) if all_times else 0
     
-    # Add overall statistics with proper label
     time_mean["Overall"] = all_time_mean
     time_median["Overall"] = all_time_median
     time_variance["Overall"] = all_time_variance
@@ -764,122 +762,263 @@ def compute_time_stats_by_group(exec_results, group_column, time_column='total_e
         'all_time_std': all_time_std
     }
 
+def run_initialization_check(actual_api_url: str, actual_username: str, actual_password: str, path_to_excel: str, question_column:str):
+    """
+    Runs an initialization check by calling generate_aisdk_responses_as_dataframe for one question
+    and processes the output. Also performs a VQL execution check to test DB connectivity.
+    Returns True if AI SDK provides a VQL query and DB connection is successful, False otherwise.
+    """
+    sdk_operational = False
+    db_connection_ok = False
+    
+    df_excel_test_row = pd.read_excel(path_to_excel).head(1)
+
+    if df_excel_test_row.empty:
+        logger.error("Initialization check: Input Excel file is empty or has no rows for test.")
+        return False
+
+    try:
+        test_question_text = df_excel_test_row[question_column].iloc[0]
+        if pd.isna(test_question_text):
+            logger.error(f"Initialization check: Question in column '{question_column}' for the first row is empty.")
+            return False
+        test_question_text = [test_question_text]
+    except KeyError:
+        logger.error(f"Initialization check: Question column '{question_column}' not found in the Excel file.")
+        return False
+    except IndexError:
+        logger.error("Initialization check: Excel file seems empty after trying to access the first row's question.")
+        return False
+
+    logger.info("Starting initialization check for AI SDK (generate_aisdk_responses_as_dataframe)...")
+    
+    final_seven_value_tuple = (test_question_text, None, None, None, None, None, None)
+    sdk_generated_vql = None
+
+    try:
+        df_sdk_output = generate_aisdk_responses_as_dataframe(
+            df=df_excel_test_row,
+            question_column=question_column,
+            expected_column=None, 
+            difficulty_column=None,
+            evidence_column=None, 
+            api_url=actual_api_url,
+            username=actual_username,
+            password=actual_password,
+            max_workers=1,
+            numrows=1 
+        )
+
+        if df_sdk_output is not None :
+            first_row = df_sdk_output
+            sdk_generated_vql = first_row['VQL Generated'][0]
+            
+            current_question = first_row[question_column][0]
+            answer = first_row['Answer'][0]
+            tables_used = first_row['Tables Used'][0]
+            sql_exec_time = first_row['sql_execution_time'][0]
+            vector_time = first_row['vector_store_search_time'][0]
+            llm_time = first_row['llm_time'][0]
+
+            final_seven_value_tuple = (
+                current_question, answer, sdk_generated_vql, tables_used,
+                sql_exec_time, vector_time, llm_time
+            )
+            
+            if pd.notna(sdk_generated_vql) and isinstance(sdk_generated_vql, str) and sdk_generated_vql.strip():
+                logger.info(f"Initialization check: AI SDK call successful. VQL Generated: '{sdk_generated_vql}'")
+                sdk_operational = True
+            else:
+                logger.warning("Initialization check: AI SDK call successful but 'VQL Generated' is missing, empty, or not a string.")
+        else:
+            logger.error("Initialization check: AI SDK call (generate_aisdk_responses_as_dataframe) returned no results or an empty DataFrame.")
+
+    except Exception as e:
+        logger.error(f"Initialization check: Exception during AI SDK call: {str(e)}", exc_info=True)
+
+    logger.info("Attempting VQL execution check for database connection with a static query...")
+    static_test_vql_query = "SELECT 1 AS connection_test_status"
+    db_connection_params = {
+        "user": actual_username,
+        "password": actual_password
+    }
+    try:
+        result = execute_vql(
+            vql=static_test_vql_query,
+            db_params=db_connection_params,
+            return_time=False, 
+        )
+        df_test_vql = result[0] 
+
+        if df_test_vql.empty: 
+            logger.error(f"VQL execution check with static query completed, but the result was unexpected or test failed. Result: \n{df_test_vql.to_string()}")             
+        else:
+            logger.info("VQL execution check with static query successful. Database connection confirmed.")
+            db_connection_ok = True
+           
+    except Exception as e:
+        logger.error(f"Exception during VQL execution check with static query: {str(e)}", exc_info=True)
+
+    overall_success = sdk_operational and db_connection_ok
+
+    logger.info(f"Initialization check completed. AI SDK Operational (VQL valid): {sdk_operational}, DB Connection OK: {db_connection_ok}.")
+    logger.info(f"AI SDK 7-value tuple from check (for context): {final_seven_value_tuple}")
+    
+    if not overall_success:
+        logger.critical("One or more initialization checks failed. Main evaluation will be aborted.")
+        
+    return overall_success
+
 
 def main():
     parser = argparse.ArgumentParser(description='Run AI SDK generation followed by combined F1 and VES evaluations')
     parser.add_argument('--input', '-i', required=True, help='Input Excel file with source data')
     parser.add_argument('--output', '-o', default='combined_results.xlsx', help='Output Excel file for merged results')
     parser.add_argument('--f1-output', default=None, help='F1 evaluation output file')
-
     parser.add_argument('--ves-output', default=None, help='VES evaluation output file')
     parser.add_argument('--timeout', '-t', type=float, default=30.0, help='Query execution timeout (seconds)')
-
-    # AI SDK parameters
     parser.add_argument('--output-original', default='original_results.xlsx', help='Output Excel file from AI SDK')
     parser.add_argument('--question-column', type=str, default='Question', help='Column name containing questions')
     parser.add_argument('--expected-column', type=str, default='Solution', help='Column name containing expected answer/VQL')
     parser.add_argument('--difficulty-col', type=str, default='difficulty', help='Column name containing difficulty level')    
     parser.add_argument('--api-url', type=str, default="http://127.0.0.1:8008/answerDataQuestion", help="AI SDK API endpoint URL")
-    parser.add_argument('--api-username', type=str, default="admin", help="AI SDK API username")
-    parser.add_argument('--api-password', type=str, default="admin", help="AI SDK API password")
     parser.add_argument('--max-workers', type=int, default=10, help="Max parallel workers for AI SDK calls")
-    
     parser.add_argument('--iterate-num', type=int, default=10, help='Number of iterations for VES time comparison')
-    
     parser.add_argument('--user', type=str, default="admin", help='Database user')
     parser.add_argument('--password', type=str, default="admin", help='Database password')
-    parser.add_argument('--host', type=str, default="localhost", help='Database host')
-    parser.add_argument('--port', type=int, default=9996, help='Database port')
-    parser.add_argument('--database', type=str, default="minibird", help='Database name')
     parser.add_argument('--db-config', '-d', default=None, help='Database configuration JSON file')
-    parser.add_argument('--question_rows', type=int, default=None, help='Limit number of questions to send to the API')    
-    parser.add_argument('--data-catalog-url', type=str, default=None, help='Base URL for Data Catalog')
-    parser.add_argument('--data-catalog-execution-url', type=str, default=None, help='Execution URL for Data Catalog')
-    parser.add_argument('--data-catalog-server-id', type=int, default=None, help='Server ID for Data Catalog')
-    parser.add_argument('--data-catalog-verify-ssl', type=bool, default=None, help='Whether to verify SSL certificates')
+    parser.add_argument('--question-rows', type=int, default=None, help='Limit number of questions to send to the API')    
     parser.add_argument('--evidence-column', type=str, default=None, help='Column name containing evidence/context for questions')
-
     args = parser.parse_args()
     
     logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    
-    # Initialize Data Catalog with credentials before doing any API calls
+    load_dotenv('project_config.env')
+
+    host = os.getenv('DATA_CATALOG_HOST')
+    port = os.getenv('DATA_CATALOG_PORT')
+
     initialize_data_catalog(
         user=args.user,
-        password=args.password,
-        url=args.data_catalog_url,
-        execution_url=args.data_catalog_execution_url,
-        server_id=args.data_catalog_server_id,
-        verify_ssl=args.data_catalog_verify_ssl
+        password=args.password
     )
     
-    df_input = pd.read_excel(args.input)
-    if args.question_rows is not None:
-        df_input = df_input.head(args.question_rows)
-        print(f"Limited to {args.question_rows} questions due to --question_rows parameter")
+    df_input_full = pd.read_excel(args.input)
+
+    if df_input_full.empty:
+        logger.info(f"Input Excel file '{args.input}' is empty. Cannot proceed.")
+        return
+
+    # --- 1-row test for AI SDK response structure ---
+    logger.critical("Performing 1-row test call to AI SDK for response structure check...")
+    df_input_test = df_input_full.head(1)
     
-    df_original = generate_aisdk_responses_as_dataframe(
-        df_input,
-        question_column=args.question_column,
-        expected_column=args.expected_column,
-        difficulty_column=args.difficulty_col,
-        evidence_column=args.evidence_column, 
-        api_url=args.api_url,
-        username=args.api_username,
-        password=args.api_password,
-        max_workers=args.max_workers,
-        numrows=args.question_rows
-
-    )
-    # Save the original responses to Excel
-    df_original.to_excel(args.output_original, index=False)
-    print(f"Original Excel generated and saved to {args.output_original}")
-
-    # Run F1 evaluation
-    print("\n=== Running F1 Evaluation ===")
-    f1_args = argparse.Namespace(
-        input=args.output_original,
-        output=args.f1_output,
-        num_cpus=args.max_workers,
-        timeout=args.timeout,
-        user=args.user,
-        password=args.password,
-        host=args.host,
-        port=args.port,
-        database=args.database,
-        db_config=args.db_config,
-        ground_truth_col=args.expected_column,
-        generated_col="VQL Generated",
-        difficulty_col=args.difficulty_col   
-    )
-    f1_summary_df,f1_details_df = f1_main(f1_args)  
-
+    if df_input_test.empty:
+        logger.error("Could not get a row from the input file for the AI SDK test call.")
+        return
     
-    # Run VES evaluation
-    print("\n=== Running VES Evaluation ===")
-    ves_args = argparse.Namespace(
-        input=args.output_original,
-        output=args.ves_output,
-        num_cpus=args.max_workers,
-        timeout=args.timeout,
-        iterate_num=args.iterate_num,
-        user=args.user,
-        password=args.password,
-        host=args.host,
-        port=args.port,
-        database=args.database,
-        db_config=args.db_config,
-        ground_truth_col=args.expected_column,
-        generated_col="VQL Generated",
-        difficulty_col=args.difficulty_col  
+    initialization_successful = run_initialization_check(
+        actual_api_url=args.api_url,
+        actual_username=args.user,
+        actual_password=args.password,
+        path_to_excel=args.input,
+        question_column=args.question_column
     )
-    ves_summary_df, ves_details_df = ves_main(ves_args)
-    merge_evaluations(args.f1_output, args.ves_output, args.output, f1_details_df=f1_details_df, ves_details_df=ves_details_df, f1_summary_df=f1_summary_df, ves_summary_df=ves_summary_df)
 
-    print("\n=== Evaluation Complete ===")
-    print(f"F1 results: {args.f1_output}")
-    print(f"VES results: {args.ves_output}")
-    print(f"Combined results: {args.output}")
+    if not initialization_successful:
+        logger.critical("Initialization checks failed. AI SDK or Database connection might be down or misconfigured. Aborting main evaluation.")
+        return
+    
+    main_sdk_output_temp_path = None
+
+
+    try:
+        logger.critical('--- Initialization Succesful, Running Full Evaluation ---')
+
+        # --- Main AI SDK generation ---
+        df_input_for_main_run = df_input_full
+        if args.question_rows is not None:
+            df_input_for_main_run = df_input_full.head(args.question_rows)
+            logger.error(f"Limiting main AI SDK generation to {len(df_input_for_main_run)} questions based on --question_rows={args.question_rows}.")
+        else:
+            logger.error(f"Processing all {len(df_input_for_main_run)} questions for main AI SDK generation.")
+        
+        if df_input_for_main_run.empty:
+            logger.warning("No questions to process for main AI SDK generation after applying --question_rows limit. Subsequent evaluations might be empty.")
+ 
+            df_original = pd.DataFrame() 
+        else:
+            df_original = generate_aisdk_responses_as_dataframe(
+                df_input_for_main_run,
+                question_column=args.question_column,
+                expected_column=args.expected_column,
+                difficulty_column=args.difficulty_col,
+                evidence_column=args.evidence_column, 
+                api_url=args.api_url,
+                username=args.user,
+                password=args.password,
+                max_workers=args.max_workers,
+                numrows=args.question_rows 
+            )
+
+        # Create a temporary file to save df_original
+        sdk_output_fd, main_sdk_output_temp_path = tempfile.mkstemp(suffix=".xlsx")
+        os.close(sdk_output_fd) 
+        df_original.to_excel(main_sdk_output_temp_path, index=False)
+        logger.info(f"Main AI SDK responses generated and saved to temporary file: {main_sdk_output_temp_path}")
+
+        # Run F1 evaluation
+        logger.info("\n=== Running F1 Evaluation ===")
+        f1_args = argparse.Namespace(
+            input=main_sdk_output_temp_path, 
+            output=args.f1_output,
+            num_cpus=args.max_workers, timeout=args.timeout, user=args.user, password=args.password,
+            host=host, port=port, db_config=args.db_config,
+            ground_truth_col=args.expected_column, generated_col="VQL Generated",
+            difficulty_col=args.difficulty_col   
+        )
+        f1_summary_df,f1_details_df = f1_main(f1_args)  
+        
+        # Run VES evaluation
+        logger.info("\n=== Running VES Evaluation ===")
+        ves_args = argparse.Namespace(
+            input=main_sdk_output_temp_path, 
+            output=args.ves_output,
+            num_cpus=args.max_workers,
+            timeout=args.timeout,
+            iterate_num=args.iterate_num,
+            user=args.user,
+            password=args.password,
+            host=host, 
+            port=port,
+            db_config=args.db_config,
+            ground_truth_col=args.expected_column,
+            generated_col="VQL Generated",
+            difficulty_col=args.difficulty_col  
+        )
+        ves_summary_df, ves_details_df = ves_main(ves_args)
+        
+        merge_evaluations(args.f1_output, args.ves_output, args.output, 
+                          f1_details_df=f1_details_df, ves_details_df=ves_details_df, 
+                          f1_summary_df=f1_summary_df, ves_summary_df=ves_summary_df)
+
+        logger.info("\n=== Evaluation Complete ===")
+        logger.info(f"F1 results: {args.f1_output}")
+        logger.info(f"VES results: {args.ves_output}")
+        logger.info(f"Combined results: {args.output}")
+
+    except Exception as e:
+        logger.error(f"An error occurred in the main processing: {e}")
+        logger.error(traceback.format_exc())
+    finally:
+        if main_sdk_output_temp_path and os.path.exists(main_sdk_output_temp_path):
+            try:
+                os.remove(main_sdk_output_temp_path)
+                logger.info(f"Successfully deleted temporary main SDK output file: {main_sdk_output_temp_path}")
+            except OSError as e:
+                logger.error(f"Error deleting temporary main SDK output file {main_sdk_output_temp_path}: {e}")
+            except Exception as e: 
+                logger.error(f"An unexpected error occurred while trying to delete {main_sdk_output_temp_path}: {e}")
+
 
 
 if __name__ == "__main__":

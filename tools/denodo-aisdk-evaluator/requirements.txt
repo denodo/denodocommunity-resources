@@ -5,3 +5,4 @@ func_timeout
 requests
 openpyxl
 xlsxwriter
+dotenv
