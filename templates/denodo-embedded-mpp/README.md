@@ -5,8 +5,8 @@ The **Denodo Embedded MPP Cloud Templates** project includes sample templates fo
 ## Deploying Denodo MPP in AWS Using CloudFormation
 
 Cloud Formation templates (for AWS resource creation): 
-* [MppClusterOnlyStack](./MppClusterOnlyStack-20250502.template.json)
-* [MppClusterOnlyStack-with-network](./MppClusterOnlyStack-with-network-20250502.template.json)
+* [MppClusterOnlyStack](./MppClusterOnlyStack.template.json)
+* [MppClusterOnlyStack-with-network](./MppClusterOnlyStack-with-network.template.json)
 
 These templates allow you to select different configuration parameters and it will automatically provision all the cloud resources needed for deploying Denodo Embedded MPP in AWS. 
 
@@ -15,7 +15,7 @@ We encourage you to follow the step-by-step instructions included in the [Deploy
 ## Deploying Denodo MPP in Azure Using ARM Templates
 
 ARM Template (for Azure resource creation): 
-* [AzureEmbeddedMpp](./AzureEmbeddedMpp-20250502.json)
+* [AzureEmbeddedMpp](./AzureEmbeddedMpp.json)
 
 This template allows you to select different configuration parameters and it will automatically provision all the cloud resources needed for deploying Denodo Embedded MPP in Azure. 
 
