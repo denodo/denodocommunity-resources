@@ -99,7 +99,7 @@ fi
 
 # version
 if [[ "$1" = "--version" ]]; then
-   echo "denodo-support v1.1"
+   echo "denodo-support v1.3.1"
    echo "Copyrights (c) Denodo Technologies "
    echo "Terms of Use: https://www.denodo.com/en/terms-use"
    exit 0
