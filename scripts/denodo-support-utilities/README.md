@@ -43,8 +43,8 @@ Follow these steps to install the Denodo Support CLI:
 2. Move the file to your server.
 3. Uncompress the zip file by executing:
 ```bash
-$ unzip Denodo.Support.Utilities.v1.3.0.zip
-Archive:  Denodo.Support.Utilities.v1.3.0.zip
+$ unzip Denodo.Support.Utilities.v1.3.1.zip
+Archive:  Denodo.Support.Utilities.v1.3.1.zip
    creating: denodo-support-utils/
    creating: denodo-support-utils/bin/
   inflating: denodo-support-utils/bin/denodo-support
@@ -58,7 +58,7 @@ Archive:  Denodo.Support.Utilities.v1.3.0.zip
 ```
 4. Remove the zip file:
 ```bash
-$ rm Denodo.Support.Utilities.v1.3.0.zip
+$ rm Denodo.Support.Utilities.v1.3.1.zip
 ```
 5. Go to the denodo-support-utils/bin folder and confirm the installation (example in Linux):
 ```bash
@@ -66,7 +66,7 @@ $ cd denodo-support-utils/bin/
 $ chmod +x denodo-support
 $ ./denodo-support --version
 
-denodo-support v1.1
+denodo-support v1.3.1
 Copyrights - Denodo Technologies
 Terms of Use: https://www.denodo.com/en/terms-use
 ```
@@ -146,7 +146,7 @@ OPTIONS
 ```bash
 $ ./denodo-support --version
 
-denodo-support v1.1
+denodo-support v1.3.1
 Copyrights (c) Denodo Technologies
 Terms of Use: https://www.denodo.com/en/terms-use
 ```
