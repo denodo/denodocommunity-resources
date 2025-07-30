@@ -43,8 +43,8 @@ Follow these steps to install the Denodo Support CLI:
 2. Move the file to your server.
 3. Uncompress the zip file by executing:
 ```bash
-$ unzip Denodo.Support.Utilities.v1.3.1.zip
-Archive:  Denodo.Support.Utilities.v1.3.1.zip
+$ unzip Denodo.Support.Utilities.v1.3.2.zip
+Archive:  Denodo.Support.Utilities.v1.3.2.zip
    creating: denodo-support-utils/
    creating: denodo-support-utils/bin/
   inflating: denodo-support-utils/bin/denodo-support
@@ -58,7 +58,7 @@ Archive:  Denodo.Support.Utilities.v1.3.1.zip
 ```
 4. Remove the zip file:
 ```bash
-$ rm Denodo.Support.Utilities.v1.3.1.zip
+$ rm Denodo.Support.Utilities.v1.3.2.zip
 ```
 5. Go to the denodo-support-utils/bin folder and confirm the installation (example in Linux):
 ```bash
@@ -66,7 +66,7 @@ $ cd denodo-support-utils/bin/
 $ chmod +x denodo-support
 $ ./denodo-support --version
 
-denodo-support v1.3.1
+denodo-support v1.3.2
 Copyrights - Denodo Technologies
 Terms of Use: https://www.denodo.com/en/terms-use
 ```
@@ -146,7 +146,7 @@ OPTIONS
 ```bash
 $ ./denodo-support --version
 
-denodo-support v1.3.1
+denodo-support v1.3.2
 Copyrights (c) Denodo Technologies
 Terms of Use: https://www.denodo.com/en/terms-use
 ```
@@ -239,11 +239,13 @@ Press any key to continue . . .
 
 ### Options for Listing the Available Denodo Platform Items
 
-`-t <item type> [-v <denodo version>] [-u <denodo client id>] [-s <denodo secret>]` ONLY FOR LINUX SCRIPT. List the latest items by item type and Denodo version. 
+`-t <item type> [-x <extra filter>] [-v <denodo version>] [-u <denodo client id>] [-s <denodo secret>]` ONLY FOR LINUX SCRIPT. List the latest items by item type and Denodo version. 
 
 * `item type` can be `installer`, `update`, `beta-update`, `hotfix`, `denodoconnect-enterprise`, `denodoconnect-open` or `driver`
 
-* `denodo version` can be 6.0, 7.0, 8.0 or 9 (this parameter is optional, the default value is 9).
+* `extra filter` if used, it has to be the vale `version` (this parameter is <u>optional</u>, to return extra information of the item, like the item version)
+  
+* `denodo version` can be 6.0, 7.0, 8.0 or 9 (this parameter is <u>optional</u>, the default value is 9).
 
 * `denodo client id` (this parameter is <u>optional</u>, to pass the denodo client id as argument if it was not configured using the `--configure` option).
 
@@ -275,20 +277,22 @@ denodo-install-solutionmanager-9-ga-win64
 -- Get the list of Denodo 8.0 updates
 
 
-$ ./denodo-support -t update -v 8.0
+$ ./denodo-support -t update -v 8.0 -x version
 
 Authenticating... OK!
-Getting the update list...
-NAME
-===============================
-denodo-v80-update-20230611
-denodo-v80-update-20230926
+Getting the update list of Denodo 8.0...
+ITEMS
+====================
+denodo-solutionmanager-v80-update-20210209   {VERSION=20210217}
+denodo-solutionmanager-v80-update-20210715   {VERSION=20210715}
+denodo-v80-update-20200807   {VERSION=20200807}
+denodo-v80-update-20210209   {VERSION=20210217}
 [...]
 ```
 
 ### Options for Downloading a Denodo Platform Item
 
-`-t <item type> [-v <denodo version>] -n <item name> [-d <download folder>] [-u <denodo client id>] [-s <denodo secret>]` ONLY FOR LINUX SCRIPT. It downloads the item name to the folder specified in the download folder parameter.
+`-t <item type> [-v <denodo version>] -n <item name> [-x <extra filter>] [-d <download folder>] [-u <denodo client id>] [-s <denodo secret>]` ONLY FOR LINUX SCRIPT. It downloads the item name to the folder specified in the download folder parameter.
 
 * `item type` can be `installer`, `update`, `beta-update`, `hotfix`, `denodoconnect-enterprise`, `denodoconnect-open` or `driver`
 
@@ -296,6 +300,8 @@ denodo-v80-update-20230926
 
 * `item name` is the name of the item selected for download (if the name has spaces, it has to be surrounded by double quotes).
 
+* `extra filter` is the specific version of the selected item for download (it is optional, by default the script downloads the latest version of the item)
+  
 * `download folder` is the download destination folder (it is optional, by default the script downloads the item to the current directory).
 
 * `denodo client id` (this parameter is <u>optional</u>, to pass the denodo client id as argument if it was not configured using the `--configure` option).
@@ -346,4 +352,25 @@ Saving to: ‘/home/denodo-v60-hotfix-20180814.zip’
 /home/denodo-v60-hotfix-2018081 100%[===========>]   3.71M  4.53MB/s   in 0.8s
 
 ‘/home/denodo/denodo-v60-hotfix-20181122.zip’ saved [3895481/3895481]
+```
+```bash
+-- Download the version 0.8.1 of the Denodo AI SDK component of the Denodo Platform 9
+$ ./denodo-support -t denodoconnect-enterprise -n "Denodo AI SDK" -x 0.8.1
+
+Authenticating... OK!
+Getting the download URL of item Denodo AI SDK and version 0.8.1... OK!
+
+IMPORTANT! READ THIS:
+=====================
+This package includes the Denodo AI SDK image, configuration templates and data needed to execute an example Chatbot included in the image.
+=====================
+
+Download is starting:
+HTTP request sent, awaiting response... 200 OK
+Length: 299715876 (286M) [application/octet-stream]
+Saving to: ‘./Denodo AI SDK.zip’
+
+./Denodo AI SDK.zip  100%[===========>] 285.83M  39.1MB/s    in 7.4s
+
+‘./Denodo AI SDK.zip’ saved [299715876/299715876]
 ```
