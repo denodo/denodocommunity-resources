@@ -35,24 +35,28 @@ print_usage() {
   echo ""
   echo ""
   echo "PARAMS FOR LISTING AVAILABLE ITEMS"
-  echo " -t <item type> [-v <denodo version>] [-u <denodo client id>] [-s <denodo secret>]"
-  echo "        List latest items. "
+  echo " -t <item type> [-x <extra filter>] [-v <denodo version>] [-u <denodo client id>] [-s <denodo secret>]"
+  echo "        List latest items (use -x for returning extra information, like the item version). "
   echo ""
   echo "        item type      - installer, update, beta-update, hotfix, "
   echo "                         denodoconnect-enterprise, denodoconnect-open "
   echo "                         or driver"
+  echo "        extra filter    - return extra information. Currently it only supports: version"
+  echo "                          (optional)"
   echo "        denodo version - 6.0, 7.0, 8.0 or 9 (optional, default value: 9)"
   echo ""
   echo ""
   echo "PARAMS FOR DOWNLOADING AN ITEM"
-  echo " -t <item type> [-v <denodo version>] -n <item name> [-d <download folder>] [-u <denodo client id>] [-s <denodo secret>]"
+  echo " -t <item type>  -n <item name> [-x <extra filter>] [-d <download folder>] [-v <denodo version>]  [-u <denodo client id>] [-s <denodo secret>]"
   echo "        Download the <item name> to the folder specified in <download folder>."
   echo ""
   echo "        item type       - installer, update, beta-update, hotfix, "
   echo "                          denodoconnect-enterprise, denodoconnect-open "
   echo "                          or driver."
-  echo "        denodo version  - 6.0, 7.0, 8.0 or 9 (optional, default value: 9)"
   echo "        item name       - the name of the item selected for download"
+  echo "        extra filter    - the specific version of the selected item"
+  echo "                          (optional, default value: the latest version of the item)"
+  echo "        denodo version  - 6.0, 7.0, 8.0 or 9 (optional, default value: 9)"
   echo "        download folder - download destination folder "
   echo "                          (optional, default value: current directory)"
   echo ""
@@ -64,6 +68,9 @@ print_usage() {
   echo "   ./denodo-support.sh -t installer"
   echo "                          (lists the installers of Denodo 9)"
   echo ""
+  echo "   ./denodo-support.sh -t denodoconnect-enterprise -x version"
+  echo "                          (lists all the versions of the DenodoConnect Enterprise components of Denodo 9)"
+  echo ""
   echo "   ./denodo-support.sh -t update -v 8.0"
   echo "                          (lists the updates of Denodo 8.0)"
   echo ""
@@ -72,6 +79,9 @@ print_usage() {
   echo ""
   echo "   ./denodo-support.sh -t update -v 7.0 -n denodo-update-v70-20201911"
   echo "                          (downloads that update of Denodo 7.0)"
+  echo ""
+  echo "   ./denodo-support.sh -t denodoconnect-enterprise -n \"Denodo AI SDK\" -x 0.8.1"
+  echo "                          (downloads the version 0.8.1 of the Denodo AI SDK component of Denodo 9)"
   echo ""
   echo "   ./denodo-support.sh -t hotfix -v 6.0 -n denodo-v60-hotfix-20181122 -d /home/"
   echo "                          (downloads that Denodo 6.0 hotfix 20181122 into /home/ folder)"
@@ -99,7 +109,7 @@ fi
 
 # version
 if [[ "$1" = "--version" ]]; then
-   echo "denodo-support v1.3.1"
+   echo "denodo-support v1.3.2"
    echo "Copyrights (c) Denodo Technologies "
    echo "Terms of Use: https://www.denodo.com/en/terms-use"
    exit 0
@@ -162,8 +172,9 @@ cpu_flag=''
 item_type_flag=''
 item_name_flag=''
 test_port_flag=''
+item_extra_flag=''
 
-while getopts 'cd:eh:ij:n:p:s:t:u:v:w:' flag; do
+while getopts 'cd:eh:ij:n:p:s:t:u:v:w:x:' flag; do
   case "${flag}" in
     c) cpu_flag='true' ;;
     d) PATH_NM="${OPTARG}" ;;
@@ -181,6 +192,8 @@ while getopts 'cd:eh:ij:n:p:s:t:u:v:w:' flag; do
     u) DEF_CLIENT_ID="${OPTARG}" ;;
     v) DND_VERSION="${OPTARG}" ;;
     w) PORT_TIMEOUT="${OPTARG}" ;;
+    x) item_extra_flag='true'
+	   ITEM_XT="${OPTARG}" ;;
     *) print_usage
        exit 1 ;;
   esac
@@ -304,14 +317,26 @@ if [[ "$item_type_flag" = "true" ]]; then
         fi
       fi
 
-      echo -n "Getting the download URL of item $ITEM_NM... "
-      OUTPUT_JSON=$(curl -s "$DENODO_ITEMS_ENDPOINT?itemType=$TYPEID&productId=$PRID" -H "Authorization: Bearer $ACCESS_TOKEN")
-      DOWNLOAD_URL=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" '.[]|select(.name==$param)|.downloadUrl' | sed -e 's/^"//' -e 's/"$//')
-      DOWNLOAD_FILE_NAME=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" '.[]|select(.name==$param)|.name' | sed -e 's/^"//' -e 's/"$//')
-
+      if [[ "$item_extra_flag" = "true" ]]; then
+		echo -n "Getting the download URL of item $ITEM_NM and version $ITEM_XT... "
+	  else
+		echo -n "Getting the download URL of item $ITEM_NM... "		
+	  fi
+	  
+	  OUTPUT_JSON=$(curl -s "$DENODO_ITEMS_ENDPOINT?itemType=$TYPEID&productId=$PRID" -H "Authorization: Bearer $ACCESS_TOKEN")
+	   
+	  if [[ "$item_extra_flag" = "true" ]]; then
+		DOWNLOAD_URL=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" --arg param2 "$ITEM_XT" '[[.[]|select(.name==$param)][]|select(.versionName==$param2)][0].downloadUrl' | sed -e 's/^"//' -e 's/"$//')
+		DOWNLOAD_FILE_NAME=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" --arg param2 "$ITEM_XT" '[[.[]|select(.name==$param)][]|select(.versionName==$param2)][0].name' | sed -e 's/^"//' -e 's/"$//')
+		DESCRIPTION=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" --arg param2 "$ITEM_XT" '[[.[]|select(.name==$param)][]|select(.versionName==$param2)][0].description' | sed -e 's/^"//' -e 's/"$//' | sed -e 's/<[^>]*>//g')
+	  else
+		DOWNLOAD_URL=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" '[.[]|select(.name==$param)][0]|.downloadUrl' | sed -e 's/^"//' -e 's/"$//')
+		DOWNLOAD_FILE_NAME=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" '[.[]|select(.name==$param)][0]|.name' | sed -e 's/^"//' -e 's/"$//')
+		DESCRIPTION=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" '[.[]|select(.name==$param)][0]|.description' | sed -e 's/^"//' -e 's/"$//' | sed -e 's/<[^>]*>//g')
+	  fi
+	  
       if [[ "$DOWNLOAD_URL" == https* ]]; then
         echo "OK!"
-        DESCRIPTION=$(echo "$OUTPUT_JSON" | jq --arg param "$ITEM_ID" '.[]|select(.name==$param)|.description' | sed -e 's/^"//' -e 's/"$//' | sed -e 's/<[^>]*>//g')
         echo ""
         echo "IMPORTANT! READ THIS:"
         echo "====================="
@@ -329,8 +354,13 @@ if [[ "$item_type_flag" = "true" ]]; then
     else
       # list items
       echo "Getting the $TYPE list of Denodo $DND_VERSION ..."
-      OUTPUT_JSON=$(curl -s "$DENODO_ITEMS_ENDPOINT?itemType=$TYPEID&productId=$PRID" -H "Authorization: Bearer $ACCESS_TOKEN")
-      echo "$OUTPUT_JSON" | jq -r '["NAME"], ["==============================="], (sort_by(.name)[] | [.name]) | @tsv'
+	  if [[ "$item_extra_flag" = "true" ]]; then
+		OUTPUT_JSON=$(curl -s "$DENODO_ITEMS_ENDPOINT?itemType=$TYPEID&productId=$PRID" -H "Authorization: Bearer $ACCESS_TOKEN")
+		echo "$OUTPUT_JSON" | jq -r '["ITEMS               "], ["===================="], (sort_by(.name)[] | ["\(.name)   {VERSION=\(.versionName)}"]) | @tsv'
+	  else
+		OUTPUT_JSON=$(curl -s "$DENODO_ITEMS_ENDPOINT?itemType=$TYPEID&productId=$PRID" -H "Authorization: Bearer $ACCESS_TOKEN")
+		echo "$OUTPUT_JSON" | jq -r '["NAME"], ["==============================="], (unique_by(.name) | sort_by(.name)[] | [.name]) | @tsv'
+	  fi
       exit 0
     fi
   else
