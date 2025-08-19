@@ -32,9 +32,10 @@ def call_answer_question_api(question: str, evidence: str, api_url: str,  userna
         "disclaimer": "false"
     }
     logger.info("Submitting question to API endpoint: '%s'", api_url)
+    logger.debug("Using API credentials: user=%s", username)
     logger.debug("Full question: '%s', Evidence: '%s'", question, evidence)
     try:
-        response = requests.get(api_url, params=params, auth=(username, password))
+        response = requests.get(api_url, params=params, auth=requests.auth.HTTPBasicAuth(username, password))
         response.raise_for_status()
 
         try:
@@ -132,7 +133,6 @@ def generate_responses(questions, evidences, api_url: str , username: str , pass
     return results
 
 
-
 def generate_aisdk_responses_as_dataframe(df: pd.DataFrame, question_column: str, expected_column: str , 
                                          difficulty_column: str , evidence_column: str ,
                                          api_url: str , username: str , password: str, max_workers: int = 10, numrows: int = None):
@@ -184,15 +184,8 @@ def generate_aisdk_responses_as_dataframe(df: pd.DataFrame, question_column: str
     result_df['index'] = range(1, len(result_df) + 1)
 
     
-    if expected_column and expected_column in df.columns:
-
-        df["cleaned_question"] = df[question_column].fillna("").astype(str).str.strip().str.lower()
-        expected_map = df.drop_duplicates("cleaned_question").set_index("cleaned_question")[expected_column].to_dict()
-        
-        # Then ensure strings in the result dataframe
-        result_df["cleaned_question"] = result_df[question_column].fillna("").astype(str).str.strip().str.lower()
-        result_df[expected_column] = result_df["cleaned_question"].map(expected_map)
-        result_df.drop(columns=["cleaned_question"], inplace=True)
+    if expected_column in df.columns:
+        result_df[expected_column] = df[expected_column].values
         
         # Reorder columns
         cols = ['index',question_column, "Answer", "VQL Generated", expected_column, "Tables Used", "sql_execution_time", "vector_store_search_time", "llm_time", "total_execution_time"]
@@ -207,7 +200,7 @@ def generate_aisdk_responses_as_dataframe(df: pd.DataFrame, question_column: str
 
 def main():
     # Configure logging
-    logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s [%(levelname)s] %(name)s - %(message)s')   
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(name)s - %(message)s')   
     logger = logging.getLogger(__name__)
     parser = argparse.ArgumentParser(description="Generate VQL queries with AI SDK and save results to Excel")
     

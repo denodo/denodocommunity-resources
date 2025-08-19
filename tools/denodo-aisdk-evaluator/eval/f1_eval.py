@@ -180,7 +180,22 @@ def execute_model(predicted_vql, ground_truth_vql, db_params, idx, meta_time_out
     Returns:
     dict: Result with SQL index, F1 score and additional metrics
     """
-    result = {"sql_idx": idx, "res": 0.0, 'percent_match': 0.0, 'original_f1': 0.0}
+    result = {
+        "sql_idx": idx, 
+        "res": 0.0, 
+        'percent_match': 0.0, 
+        'original_f1': 0.0,
+        'precision': 0.0,
+        'set_precision': 0.0,
+        'all_matches': [],
+        'all_set_matches': [],
+        'test_exec_time': 0.0,
+        'test_row_counts': 0,
+        'test_column_counts': 0,
+        'truth_exec_time': 0.0,
+        'truth_row_counts': 0,
+        'truth_column_counts': 0,
+    }
     
     try:
         logger.info(f"Executing model for index {idx}")
@@ -190,7 +205,8 @@ def execute_model(predicted_vql, ground_truth_vql, db_params, idx, meta_time_out
         predicted_res, test_exec_time = func_timeout(
             meta_time_out,
             execute_vql,
-            args=(str_predicted_vql, True),  
+            args=(str_predicted_vql, db_params),
+            kwargs={'return_time': True}
         )
         test_row_counts = len(predicted_res) if predicted_res is not None else 0
         test_column_counts = len(predicted_res.columns) if predicted_res is not None else 0
@@ -200,7 +216,8 @@ def execute_model(predicted_vql, ground_truth_vql, db_params, idx, meta_time_out
         ground_truth_res, truth_exec_time = func_timeout(
             meta_time_out,
             execute_vql,
-            args=(str_ground_truth_vql, True),  
+            args=(str_ground_truth_vql, db_params),
+            kwargs={'return_time': True}
         )
         truth_row_counts = len(ground_truth_res) if ground_truth_res is not None else 0
         truth_column_counts = len(ground_truth_res.columns) if ground_truth_res is not None else 0
@@ -233,11 +250,40 @@ def execute_model(predicted_vql, ground_truth_vql, db_params, idx, meta_time_out
     except FunctionTimedOut:
         # If timed out, we set F1=0
         logger.error(f"Function timed out for index {idx}")
+        result = {
+            "sql_idx": idx, 
+            "res": 0.0, 
+            'percent_match': 0.0,
+            'precision': 0.0,
+            'set_precision': 0.0,
+            'all_matches': [],
+            'all_set_matches': [],
+            'test_exec_time': 0.0,
+            'test_row_counts': 0,
+            'test_column_counts': 0,
+            'truth_exec_time': 0.0,
+            'truth_row_counts': 0,
+            'truth_column_counts': 0,
+        }
    
     except Exception as e:
         # On error, set F1=0
-       
         logger.error(f"Error executing model for index {idx}: {e}")
+        result = {
+            "sql_idx": idx, 
+            "res": 0.0, 
+            'percent_match': 0.0,
+            'precision': 0.0,
+            'set_precision': 0.0,
+            'all_matches': [],
+            'all_set_matches': [],
+            'test_exec_time': 0.0,
+            'test_row_counts': 0,
+            'test_column_counts': 0,
+            'truth_exec_time': 0.0,
+            'truth_row_counts': 0,
+            'truth_column_counts': 0,
+        }
 
     return result
 
