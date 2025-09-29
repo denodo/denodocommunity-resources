@@ -735,7 +735,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPGetSubnetsCIDRLambda/ServiceRole/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPGetSubnetsCIDRLambda/ServiceRole/Resource"
    }
   },
   "DenMPPGetSubnetsCIDRLambdaBB8E8F35": {
@@ -758,7 +758,7 @@
     "DenMPPGetSubnetsCIDRLambdaServiceRole01621C2D"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPGetSubnetsCIDRLambda/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPGetSubnetsCIDRLambda/Resource"
    }
   },
   "DenMPPGetSubnetsCIDRResource": {
@@ -777,7 +777,7 @@
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete",
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPGetSubnetsCIDRResource/Default"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPGetSubnetsCIDRResource/Default"
    }
   },
   "DenMPPVpc": {
@@ -804,7 +804,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPVpc"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPVpc"
    }
   },
   "DenMPPPublicSubnet1SubnetD5F1406C": {
@@ -827,7 +827,7 @@
     "Tags": [
      {
       "Key": "Name",
-      "Value": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet1"
+      "Value": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet1"
      }
     ],
     "VpcId": {
@@ -842,7 +842,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet1/Subnet"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet1/Subnet"
    }
   },
   "DenMPPPublicSubnet1RouteTableC0E7C2E3": {
@@ -851,7 +851,7 @@
     "Tags": [
      {
       "Key": "Name",
-      "Value": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet1"
+      "Value": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet1"
      }
     ],
     "VpcId": {
@@ -866,7 +866,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet1/RouteTable"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet1/RouteTable"
    }
   },
   "DenMPPPublicSubnet1RouteTableAssociationD846949A": {
@@ -884,7 +884,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet1/RouteTableAssociation"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet1/RouteTableAssociation"
    }
   },
   "DenMPPPublicSubnet1EIPC49DC504": {
@@ -894,7 +894,7 @@
     "Tags": [
      {
       "Key": "Name",
-      "Value": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet1"
+      "Value": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet1"
      }
     ]
    },
@@ -903,7 +903,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet1/EIP"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet1/EIP"
    }
   },
   "DenMPPPublicSubnet1NATGateway179A1102": {
@@ -921,7 +921,7 @@
     "Tags": [
      {
       "Key": "Name",
-      "Value": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet1"
+      "Value": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet1"
      }
     ]
    },
@@ -932,7 +932,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet1/NATGateway"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet1/NATGateway"
    }
   },
   "DenMPPPublicSubnet1DefaultRoute9D5E2185": {
@@ -955,7 +955,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet1/DefaultRoute"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet1/DefaultRoute"
    }
   },
   "DenMPPPublicSubnet2Subnet3745A750": {
@@ -978,7 +978,7 @@
     "Tags": [
      {
       "Key": "Name",
-      "Value": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet2"
+      "Value": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet2"
      }
     ],
     "VpcId": {
@@ -993,7 +993,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet2/Subnet"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet2/Subnet"
    }
   },
   "DenMPPPublicSubnet2RouteTable5499C825": {
@@ -1002,7 +1002,7 @@
     "Tags": [
      {
       "Key": "Name",
-      "Value": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet2"
+      "Value": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet2"
      }
     ],
     "VpcId": {
@@ -1017,7 +1017,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet2/RouteTable"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet2/RouteTable"
    }
   },
   "DenMPPPublicSubnet2RouteTableAssociation4BCE6610": {
@@ -1035,7 +1035,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet2/RouteTableAssociation"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet2/RouteTableAssociation"
    }
   },
   "DenMPPPublicSubnet2DefaultRoute5A9F332D": {
@@ -1058,13 +1058,13 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicSubnet2/DefaultRoute"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicSubnet2/DefaultRoute"
    }
   },
   "DenMPPPublicIGW": {
    "Type": "AWS::EC2::InternetGateway",
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicIGW"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicIGW"
    }
   },
   "DenMPPPublicIgwAttachment": {
@@ -1089,7 +1089,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPublicIgwAttachment"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPublicIgwAttachment"
    }
   },
   "DenMPPPrivateSubnet1Subnet3F4388E4": {
@@ -1112,7 +1112,7 @@
     "Tags": [
      {
       "Key": "Name",
-      "Value": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet1"
+      "Value": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet1"
      }
     ],
     "VpcId": {
@@ -1132,7 +1132,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet1/Subnet"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet1/Subnet"
    }
   },
   "DenMPPPrivateSubnet1RouteTableD169E86D": {
@@ -1141,7 +1141,7 @@
     "Tags": [
      {
       "Key": "Name",
-      "Value": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet1"
+      "Value": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet1"
      }
     ],
     "VpcId": {
@@ -1161,7 +1161,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet1/RouteTable"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet1/RouteTable"
    }
   },
   "DenMPPPrivateSubnet1RouteTableAssociation4A35AEBC": {
@@ -1184,7 +1184,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet1/RouteTableAssociation"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet1/RouteTableAssociation"
    }
   },
   "DenMPPPrivateSubnet1DefaultRoute5A55E4EF": {
@@ -1211,7 +1211,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet1/DefaultRoute"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet1/DefaultRoute"
    }
   },
   "DenMPPPrivateSubnet2Subnet603990B7": {
@@ -1234,7 +1234,7 @@
     "Tags": [
      {
       "Key": "Name",
-      "Value": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet2"
+      "Value": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet2"
      }
     ],
     "VpcId": {
@@ -1253,7 +1253,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet2/Subnet"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet2/Subnet"
    }
   },
   "DenMPPPrivateSubnet2RouteTable7CCCC9D0": {
@@ -1262,7 +1262,7 @@
     "Tags": [
      {
       "Key": "Name",
-      "Value": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet2"
+      "Value": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet2"
      }
     ],
     "VpcId": {
@@ -1281,7 +1281,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet2/RouteTable"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet2/RouteTable"
    }
   },
   "DenMPPPrivateSubnet2RouteTableAssociation22DB48A5": {
@@ -1303,7 +1303,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet2/RouteTableAssociation"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet2/RouteTableAssociation"
    }
   },
   "DenMPPPrivateSubnet2DefaultRoute40B875F5": {
@@ -1329,7 +1329,7 @@
     "DenMPPVpc"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPPrivateSubnet2/DefaultRoute"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPPrivateSubnet2/DefaultRoute"
    }
   },
   "DenMPPS3BucketValuesYamlA76E47CE": {
@@ -1354,7 +1354,7 @@
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete",
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPS3BucketValuesYaml/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPS3BucketValuesYaml/Resource"
    },
    "Condition": "DenMPPCreateValuesYamlCondition"
   },
@@ -1392,7 +1392,7 @@
     "DenMPPS3BucketValuesYamlA76E47CE"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPGenerateValuesYamlLambda/ServiceRole/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPGenerateValuesYamlLambda/ServiceRole/Resource"
    },
    "Condition": "DenMPPCreateValuesYamlCondition"
   },
@@ -1417,7 +1417,7 @@
     "DenMPPS3BucketValuesYamlA76E47CE"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPGenerateValuesYamlLambda/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPGenerateValuesYamlLambda/Resource"
    },
    "Condition": "DenMPPCreateValuesYamlCondition"
   },
@@ -1460,7 +1460,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPAllowS3DenBucketAccessPolicy/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPAllowS3DenBucketAccessPolicy/Resource"
    },
    "Condition": "DenMPPCreateValuesYamlCondition"
   },
@@ -1524,7 +1524,7 @@
     "PubSubnetId2": {
      "Ref": "DenMPPPublicSubnet2Subnet3745A750"
     },
-    "BaseValuesYaml": "# Default values for prestocluster.\n\nimage:\n  # -- Container Registry\n  repository: \"{{IMAGE_REPOSITORY}}\"\n  # --  Kubernetes imagePullPolicy value\n  pullPolicy: IfNotPresent\n  # -- Secret to use when pulling the image from the Container Registry\n  # -- https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/\n  # -- The alternative to creating the pullSecret, is to add the credentials to the Container Registry to the image.pullCredentials section\n  # -- and let the Helm chart handle the creation of the secret.\n  pullSecret: \"{{PULL_SECRET}}\"\n\n  pullCredentials:\n    # -- Whether to use the credentials in this section to create a secret to use when pulling the image from the Denodo Container Registry\n    enabled: '{{PULL_CREDENTIALS_ENABLED}}'\n    # -- Name of the secret to be created.\n    name: \"registry-secret\"\n    # -- Denodo Container Registry\n    registry: \"harbor.open.denodo.com\"\n    # -- Denodo account username\n    username: \"{{DENODO_HARBOR_USER}}\"\n    # -- CLI secret in the Denodo Container Registry\n    pwd: \"{{DENODO_HARBOR_CLI_PASSWORD}}\"\n\n# -- https://kubernetes.io/docs/concepts/security/service-accounts/\nserviceAccount:\n  # -- Whether to create a service account or not. If false, 'default' will be used\n  create: true\n  # -- service account name. If you do not specify it an autogenerated name will be used\n  name: \"\"\n  # -- Annotations for the Presto service account\n  annotations: {}\n\nobjectStorage:\n  aws:\n    securityCredentials:\n      enabled: false\n  azure:\n    managedIdentities:\n      enabled: '{{USE_MANAGED_IDENTITY}}'\n    oauth2ClientCredentials:\n      enabled: false\n    sharedKey:\n      enabled: false\n      account: \"\"\n      blobStorage: false\n\npresto:\n  # -- Number of Presto workers in the cluster\n  numWorkers: '{{NUM_WORKERS}}'\n  # -- Number of cores assigned to each worker\n  cpusPerNode: '{{CPUS_PER_NODE}}'\n  # -- Total memory, in GB, assigned to each worker\n  memoryPerNode: '{{MEMORY_PER_NODE}}'\n\n  mppHost: \"{{MPPHOST}}\"\n\n  service:\n    # -- Presto service name\n    name: presto\n    # -- Service type: ClusterIP, NodePort or LoadBalancer\n    type: LoadBalancer\n    # -- Annotations for the Presto service. This is the recommended way to specify an IP address for the Service Type: LoadBalancer\n    annotations: '{{PRESTO_ANNOTATIONS}}'\n    # -- IP address for Presto service. Only applies to Service Type: LoadBalancer\n    # -- Some cloud providers allow you to specify the loadBalancerIP. In those cases, the load-balancer is created\n    # -- with the user-specified loadBalancerIP. If the loadBalancerIP field is not specified, the loadBalancer is\n    # -- set up with an ephemeral IP address. If you specify a loadBalancerIP but your cloud provider does not support\n    # -- the feature, the loadbalancerIP field that you set is ignored.\n    loadBalancerIP: \"\"\n    # -- List of IPs to restrict traffic through the load balancer. Only applies to Service Type: LoadBalancer.\n    # -- This field is ignored if the cloud-provider does not support the feature.\n    loadBalancerSourceRanges: []\n    # -- The port of the HTTP endpoint that the service listens to on the host, for the `NodePort` type.\n    # -- If not set, Kubernetes will allocate a port automatically. Ranges between 30000 and 32767 must be used\n    # -- to avoid conflicts with reserved ports and ports used by nodes.\n    httpnodePort: \"\"\n    # -- The port of the HTTPS endpoint that the service listens to on the host, for the `NodePort` type.\n    # -- If not set, Kubernetes will allocate a port automatically. Ranges between 30000 and 32767 must be used\n    # -- to avoid conflicts with reserved ports and ports used by nodes.\n    httpsnodePort: \"\"\n\n\n  coordinator:\n    # -- Presto coordinator deployment name\n    name: presto-coordinator\n    # -- Presto Coordinator HTTPS endpoint port\n    serverHttpsPort: 8443\n    # -- Presto Coordinator HTTP endpoint port\n    serverHttpPort: 8080\n\n    passwordAuth:\n      # -- Username\n      prestoUser: \"presto\"\n      # -- Password for the username\n      prestoPassword: \"pr3st%\"\n\n    # -- Enables the Resource management in Presto\n    resourceGroups: false\n\n    # -- Entries for extra config properties\n    additionalConfig: []\n\n    securityContext:\n      # -- Forces to run as a non-root user to ensure least privilege\n      runAsNonRoot: true\n\n    containerSecurityContext:\n      # -- Ensures that no child process of a container can gain more privileges than its parent\n      allowPrivilegeEscalation: false\n      # -- Drops all capabilities (kernel level calls)\n      capabilities:\n        drop:\n          - ALL\n\n    # -- Resource requests and limits for the Presto Coordinator\n    resources: {}\n      # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n      # If you do want to specify resources, uncomment the following\n      # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n      # limits:\n      #   cpu: 0.8\n      #   memory: 100Gi\n      # requests:\n      #   cpu: 0.7\n      #   memory: 90Gi\n\n    # -- Presto Coordinator node labels for pod scheduling\n    nodeSelector: {}\n\n    # -- Presto Coordinator affinity\n    affinity: {}\n\n    # -- Presto Coordinator tolerations\n    tolerations: []\n\n    # -- Topology constraints for the Presto Coordinator\n    topologySpreadConstraints:\n      # This configuration distributes pods in an absolute even manner (maxSkew),\n      # using the hostname as topology domain (topologyKey),\n      # scheduling pods even if it can't satisfy even distribution of pods (whenUnsatisfiable),\n      # acting on Pods that match this selector (labelSelector).\n      - maxSkew: 1\n        topologyKey: kubernetes.io/hostname\n        whenUnsatisfiable: ScheduleAnyway\n        labelSelector:\n          matchExpressions:\n            - {key: app, operator: In, values: [presto-coordinator, presto-worker]}\n\n    livenessreadiness:\n      enabled: true\n    livenessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n    readinessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n\n    env:\n      # additional environment variables for coordinator\n      # NAME: VALUE\n\n    additionalVolumes: {}\n      # Additional volumes to add to the coordinator. To configure REMOVE the curly braces after 'additionalVolumes:'.\n      #\n      #- name: cache-volume\n      #  emptyDir: {}\n\n    additionalVolumeMounts: {}\n      # Additional volume mounts to add to the coordinator. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n      #\n      #- name: cache-volume\n      #  mountPath: /opt/data/alluxio\n\n  worker:\n    # -- Presto worker deployment name\n    name: presto-worker\n\n    # -- Presto Worker HTTP endpoint port\n    serverHttpPort: 8080\n\n    # -- Entries for extra config properties\n    additionalConfig: []\n\n    securityContext:\n      # -- Force to run as a non-root user to ensure least privilege\n      runAsNonRoot: true\n\n    containerSecurityContext:\n      # -- Ensures that no child process of a container can gain more privileges than its parent\n      allowPrivilegeEscalation: false\n      # -- Drops all capabilities (kernel level calls)\n      capabilities:\n        drop:\n          - ALL\n\n    # -- Resource requests and limits for the Presto Workers\n    resources: {}\n      # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n      # If you do want to specify resources, uncomment the following\n      # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n      # limits:\n      #   cpu: 0.8\n      #   memory: 100Gi\n      # requests:\n      #   cpu: 0.7\n      #   memory: 90Gi\n\n    # -- Presto Workers node labels for pod scheduling\n    nodeSelector: {}\n\n    # -- Presto Workers affinity\n    affinity: {}\n\n    # -- Presto Workers tolerations\n    tolerations: []\n\n    # -- Topology constraints for the Presto Workers\n    topologySpreadConstraints:\n      # This configuration distributes pods in an absolute even manner (maxSkew),\n      # using the hostname as topology domain (topologyKey),\n      # scheduling pods even if it can't satisfy even distribution of pods (whenUnsatisfiable),\n      # acting on Pods that match this selector (labelSelector).\n      - maxSkew: 1\n        topologyKey: kubernetes.io/hostname\n        whenUnsatisfiable: ScheduleAnyway\n        labelSelector:\n          matchExpressions:\n            - {key: app, operator: In, values: [presto-coordinator, presto-worker]}\n\n    livenessreadiness:\n      enabled: true\n    livenessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n    readinessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n\n    # It is strongly recommended to enable Graceful shutdown when using autoscaling for minimizing disruptions during scale-down operations.\n    # If enabled workers will no longer receive new tasks, and will wait the configured Grace Period to allow time for the completion of tasks in progress.\n    gracefulShutdown:\n      enabled: false\n      gracePeriodSeconds: 120\n    # When gracefulShutdown is enabled, the user must set the presto.worker.terminationGracePeriodSeconds to a value of at least two times the configured 'gracePeriodSeconds'\n    terminationGracePeriodSeconds: 30\n\n    env:\n      # additional environment variables for workers\n      # NAME: VALUE\n\n    additionalVolumes: {}\n      # Additional volumes to add to the workers. To configure REMOVE the curly braces after 'additionalVolumes:'.\n      #\n      #- name: cache-volume\n      #  emptyDir: {}\n\n    additionalVolumeMounts: {}\n      # Additional volume mounts to add to the workers. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n      #\n      #- name: cache-volume\n      #  mountPath: /opt/data/alluxio\n\n  # -- Dynamic filtering optimizations significantly improve the performance of queries with selective\n  # -- joins by avoiding reading of data that would be filtered by join condition.\n  enableDynamicFiltering: true\n\n  jvm:\n    # -- Entries for extra JVM config properties\n    additionalJVMConfig: []\n\n  log:\n    # -- Log level for com.facebook.presto\n    facebook: ERROR\n    # -- Log level for org.apache.hadoop\n    hadoop: ERROR\n    # -- Entries for extra log categories\n    additionalLogs: []\n\n  node:\n    # --  Name of the environment\n    environment: \"production\"\n    # --  Location where Presto will store logs and other data\n    dataDir: \"/var/presto/data\"\n\n  # -- Connection details to Denodo. Denodo will use Presto to accelerate queries\n  denodoConnector:\n    # -- Denodo server uri\n    server: \"//{{DENODO_IP}}:9999/admin_denodo_mpp\"\n    # -- i18n configuration of the connection with Denodo\n    i18n: \"us_utc_iso\"\n    # -- Denodo user\n    user: \"{{DENODO_USER}}\"\n    # -- Denodo password, must be compliant with Denodo password policies\n    password: \"{{DENODO_PASSWORD}}\"\n    # -- Maximum number of results that a block can contain. When Denodo obtains enough results to complete a block, it sends this block to Presto and continues processing the next results. Default value is 100000\n    chunkSize: \"100000\"\n    # -- Maximum time, in milliseconds, Denodo waits before returning a new block to Presto. Default value is 90000 ms\n    chunkTimeout: \"90000\"\n    # -- Maximum time, in milliseconds, Presto will wait for a Denodo query to finish. If it is not set default value is 900000 ms\n    queryTimeout: \"900000\"\n    # -- Whether SSL is enabled in Denodo server\n    ssl: false\n    # -- File name of trust store file that contains the SSL certificates. File should be placed in the 'presto' directory.\n    trustStore: \"\"\n    # -- Password of the trust store\n    trustStorePassword: \"\"\n    # -- Name of the infrastructure provider (On-premises, AWS, Azure, Google Cloud, Alibaba, etc.) where the client and Virtual DataPort server is running.\n    infrastructureProvider: \"\"\n    # -- Name of the infrastructure provider region where the client and Virtual DataPort server is running.\n    infrastructureRegion: \"\"\n    # -- Property to enable using ROLE during registration instead of creating a new USER. If you are using AGORA you must set this property to true.\n    useRole: '{{USE_ROLE}}'\n    # -- Denodo role\n    role: \"embedded_mpp_role\"\n\n  # -- Hive catalog configuration: for accessing Hive tables over Parquet files\n  hive:\n    glue:\n      # -- Whether to use the AWS Glue Data Catalog as an external Metastore for the Embedded MPP\n      enabled: false\n      # -- AWS region of the Glue Catalog. Required when not running in EC2, or when the catalog is in a different region.\n      region: \"\"\n      # -- The ID of the Glue Catalog in which the metadata database resides.\n      catalog: \"\"\n\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- Enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: true\n    # -- Enables pushdown filter\n    pushdownFilterEnabled: true\n    # -- Obtains statistics from metadata for tables/partitions with missing statistics\n    quickStats: true\n    # -- mestastore cache configuration. metastore cache is DISABLED by default (ttl 0s).\n    # -- To enable it, you need to configure a valid value in ttl.\n    cache:\n      metastore:\n        scope: \"ALL\"\n        ttl: \"0s\"\n        interval: \"3d\"\n        maxSize: \"10000000\"\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Iceberg catalog configuration: for accessing Iceberg tables\n  iceberg:\n    glue:\n      # -- Whether to use the AWS Glue Data Catalog as an external Metastore for the Embedded MPP\n      enabled: false\n      # -- AWS region of the Glue Catalog. Required when not running in EC2, or when the catalog is in a different region.\n      region: \"\"\n      # -- The ID of the Glue Catalog in which the metadata database resides.\n      catalog: \"\"\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- Enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: true\n    # -- Enables pushdown filter\n    pushdownFilterEnabled: true\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Delta catalog configuration: for accessing Delta tables\n  delta:\n    glue:\n      # -- Whether to use the AWS Glue Data Catalog as an external Metastore for the Embedded MPP\n      enabled: false\n      # -- AWS region of the Glue Catalog. Required when not running in EC2, or when the catalog is in a different region.\n      region: \"\"\n      # -- The ID of the Glue Catalog in which the metadata database resides.\n      catalog: \"\"\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- Enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: true\n    # -- Enables pushdown filter\n    pushdownFilterEnabled: true\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Additional catalogs, as an example the jmx catalog provides JMX information from all nodes in the cluster.\n  catalog:\n    #jmx: |-\n    #  connector.name=jmx\n    #\n    #glue-hive: |-\n    #  connector.name=hive-hadoop2\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n    #\n    #glue-iceberg: |-\n    #  connector.name=iceberg\n    #  iceberg.catalog.type=HIVE\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n    #\n    #glue-delta: |-\n    #  connector.name=delta\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n\n  # -- Enables autoscale creating a HorizontalPodScaler\n  autoscaling:\n      # If you want to autoscale based on a resource's utilization as a percentage, you must specify\n      # requests for that resource in the 'presto.worker.resources' parameter of this file.\n      # This example creates HorizontalPodAutoscaler object to autoscale the Presto Deployment when\n      # CPU utilization surpasses 80%, and ensures that there is always a minimum of\n      # presto.numWorkers replica and a maximum of 20 replicas.\n    enabled: false\n    maxReplicas: 20\n    targetCPUUtilizationPercentage: 80\n      # -- Entries for scaling up and down configuration\n    behavior: {}\n      #  scaleDown:\n      #    stabilizationWindowSeconds: 300\n      #    policies:\n      #    - type: Percent\n      #      value: 100\n      #      periodSeconds: 15\n      #  scaleUp:\n      #    stabilizationWindowSeconds: 0\n      #    policies:\n      #    - type: Percent\n      #      value: 100\n      #      periodSeconds: 15\n      #    - type: Pods\n      #      value: 4\n      #      periodSeconds: 15\n      #    selectPolicy: Max\n\n  # -- Ingress exposes HTTP(S) routes from outside the cluster to services within the cluster.\n  # -- Traffic routing is controlled by rules that define which inbound connections reach which services.\n  # -- In order for the Ingress resource to work, the cluster must have an ingress controller running, like NGINX Ingress Controller.\n  ingress:\n    enabled: false\n    # -- Presto ingress name\n    name: presto-ingress\n    # -- Annotations for the Presto ingress\n    annotations: {}\n    # -- If the ingressClassName is omitted, a default Ingress class should be defined.\n    className: \"\"\n    # -- Hostname for Ingress\n    host: \"\"\n    # -- URL path which is used for routing. Only requests to this path will be forwarded to the service\n    path: /\n    # -- Supported path types: ImplementationSpecific, Exact, Prefix\n    pathType: ImplementationSpecific\n    # -- Enable/disable TLS\n    tls:\n      enabled: true\n      # -- `name` will only be used, if `create` is set to false to bind an existing secret that contains the key/certificate for TLS\n      secretName: \"\"\n      create: false\n      # -- File name of the certificate file, required if `create` is set to true. File should be placed in the 'presto' directory.\n      certFile: \"\"\n      # -- File name of the private key file, required if `create` is set to true. File should be placed in the 'presto' directory.\n      keyFile: \"\"\n\n\nmetastore:\n  # -- Use the internal Hive Metastore. Default is true.\n  enabled: true\n  # -- JDBC connection string of the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's URL\n  connectionUrl: \"jdbc:postgresql://postgresql:5432/metastore\"\n  # connectionUrl: \"jdbc:mysql://HOST:3306/metastore\"\n  # connectionUrl: \"jdbc:sqlserver://HOST:1433;DatabaseName=metastore\"\n  # connectionUrl: \"jdbc:oracle:thin:@//HOST:1521/ORCLPDB1\"\n\n  # -- JDBC Driver class name to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's driver\n  connectionDriverName: \"org.postgresql.Driver\"\n  # connectionDriverName: \"org.mariadb.jdbc.Driver\"\n  # connectionDriverName: \"com.microsoft.sqlserver.jdbc.SQLServerDriver\"\n  # connectionDriverName: \"oracle.jdbc.OracleDriver\"\n\n  # -- Database to connect with the RDBMS of the Hive Metastore. Required for the internal PostgreSQL's database only\n  connectionDatabase: \"metastore\"\n\n  # -- User to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's user: hive\n  connectionUser: \"hive\"\n\n  # -- Password to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's password: hive\n  connectionPassword: \"hive\"\n\n  # -- Classpath to the JDBC drivers of the Hive Metastore\n  driversPath: \"/opt/hive/jdbc-drivers\"\n\n  maxHeapSize: 2048\n\n  service:\n    # -- Hive Metastore service name\n    name: hive-metastore\n    # -- Hive Metastore port\n    port: 9083\n  deployment:\n    # -- Hive Metastore deployment name\n    name: hive-metastore\n    # -- Hive Metastore port\n    port: 9083\n  livenessreadiness:\n    enabled: true\n  livenessProbe:\n    initialDelaySeconds: 25\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  readinessProbe:\n    initialDelaySeconds: 25\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n\n  env:\n    # additional environment variables for metastore\n    # NAME: VALUE\n\n  additionalVolumes: {}\n    # Additional volumes to add to the metastore. To configure REMOVE the curly braces after 'additionalVolumes:'.\n    #\n    #- name: my-volume\n    #  emptyDir: {}\n\n  additionalVolumeMounts: {}\n    # Additional volume mounts to add to the metastore. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n    #\n    #- name: my-volume\n    #  mountPath: /path/on/host\n\n  # -- Hive Metastore node labels for pod scheduling\n  nodeSelector: {}\n\n  # -- Hive Metastore inter-pod affinity, that allows you to schedule pods based on their relationship to other pods\n  affinity:\n    # Run Hive Metastore on the same machine as PostgreSQL\n    # to improve performance, avoid network latency issues and connection failures\n    podAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        - labelSelector:\n            matchExpressions:\n              - {key: app, operator: In, values: [hive-metastore, postgresql]}\n          topologyKey: kubernetes.io/hostname\n    # ensure it runs on different machines than presto, if possible\n    podAntiAffinity:\n      preferredDuringSchedulingIgnoredDuringExecution:\n        - weight: 100\n          podAffinityTerm:\n            labelSelector:\n              matchExpressions:\n                - {key: app, operator: In, values: [presto-coordinator, presto-worker]}\n            topologyKey: \"kubernetes.io/hostname\"\n\n  # -- Hive Metastore tolerations\n  tolerations: []\n\n  # -- Topology constraints for Hive Metastore\n  topologySpreadConstraints: []\n\n  securityContext:\n    # -- Force to run as a non-root user to ensure least privilege\n    runAsNonRoot: true\n\n  containerSecurityContext:\n    # -- Ensures that no child process of a container can gain more privileges than its parent\n    allowPrivilegeEscalation: false\n    # -- Drops all capabilities (kernel level calls)\n    capabilities:\n      drop:\n        - ALL\n  # -- Resource requests and limits for the Hive Metastore\n  resources: {}\n    # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n    # If you do want to specify resources, uncomment the following\n    # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n    # limits:\n    #   cpu: 0.8\n    #   memory: 100Gi\n    # requests:\n    #   cpu: 0.7\n    #   memory: 90Gi\n\npostgresql:\n  # -- Whether to use an internal PostgreSQL or an external RDBMS for the Hive Metastore. Default is true.\n  enabled: true\n\n  # -- Whether to warn about the need of perform a manual backup of the Embedded PostgreSQL due to the major version upgrade.\n  version15BackupWarning: true\n\n  service:\n    # -- PostgreSQL service name\n    name: postgresql\n    # -- PostgreSQL port\n    port: 5432\n  deployment:\n    # -- PostgreSQL deployment name\n    name: postgresql\n    # -- PostgreSQL port\n    port: 5432\n  livenessreadiness:\n    enabled: true\n  livenessProbe:\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  readinessProbe:\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n\n  env:\n    # additional environment variables for PostgreSQL\n    # NAME: VALUE\n\n  additionalVolumes: {}\n    # Additional volumes to add to the PostgreSQL. To configure REMOVE the curly braces after 'additionalVolumes:'.\n    #\n    #- name: my-volume\n    #  emptyDir: {}\n\n  additionalVolumeMounts: {}\n    # Additional volume mounts to add to the PostgreSQL. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n    #\n    #- name: my-volume\n    #  mountPath: /path/on/host\n\n  pvClaim:\n    # -- Annotations for the Persistent Volume Claim\n    annotations: {}\n      # If you do want to specify annotations, uncomment the following lines,\n      # adjust them as necessary, and REMOVE the curly braces after 'annotations:'.\n\n      # Add the following annotation if you want to preserve Presto metadata after cluster removal\n      # \"helm.sh/resource-policy\": keep\n\n\n    # -- Storage size requested for the PostgreSQL's volume\n    storage: 5Gi\n    # -- Persistent Volume Claim Storage the for PostgreSQL's volume\n    storageClassName: \"{{STORAGE_CLASS_NAME}}\"\n\n  # -- PostgreSQL node labels for pod scheduling\n  nodeSelector: {}\n\n  # -- PostgreSQL inter-pod affinity, that allows you to schedule pods based on their relationship to other pods\n  affinity:\n    # Run PostgreSQL on the same machine as Hive Metastore\n    # to improve performance, avoid network latency issues and connection failures\n    podAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        - labelSelector:\n            matchExpressions:\n              - {key: app, operator: In, values: [hive-metastore, postgresql]}\n          topologyKey: kubernetes.io/hostname\n\n  # -- PostgreSQL tolerations\n  tolerations: []\n\n  # -- Topology constraints for PostgreSQL\n  topologySpreadConstraints: []\n\n  securityContext:\n    # -- Force to run as a non-root user to ensure the least privilege\n    runAsNonRoot: true\n    # -- User ID for the container. Ignored on OpenShift.\n    runAsUser: 1001\n    # -- Group ID for the pod volumes. Ignored on OpenShift\n    fsGroup: 1001\n    fsGroupChangePolicy: OnRootMismatch\n\n  containerSecurityContext:\n    # -- Ensures that no child process of a container can gain more privileges than its parent\n    allowPrivilegeEscalation: false\n    # -- Drops all capabilities (kernel level calls)\n    capabilities:\n      drop:\n        - ALL\n  # -- Resource requests and limits for postgresql\n  resources: {}\n    # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n    # If you do want to specify resources, uncomment the following\n    # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n    # limits:\n    #   cpu: 0.8\n    #   memory: 100Gi\n    # requests:\n    #   cpu: 0.7\n    #   memory: 90Gi\n\ninitCacertContainer:\n  resources: {}\n    # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n    # If you do want to specify resources, uncomment the following\n    # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n    # limits:\n    #   cpu: 0.2\n    #   memory: 1Gi\n    # requests:\n    #   cpu: 0.2\n    #   memory: 1Gi\n"
+    "BaseValuesYaml": "# Default values for prestocluster.\n\nimage:\n  # -- Container Registry\n  repository: \"{{IMAGE_REPOSITORY}}\"\n  # --  Kubernetes imagePullPolicy value\n  pullPolicy: IfNotPresent\n  # -- Secret to use when pulling the image from the Container Registry\n  # -- https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/\n  # -- The alternative to creating the pullSecret, is to add the credentials to the Container Registry to the image.pullCredentials section\n  # -- and let the Helm chart handle the creation of the secret.\n  pullSecret: \"{{PULL_SECRET}}\"\n\n  pullCredentials:\n    # -- Whether to use the credentials in this section to create a secret to use when pulling the image from the Denodo Container Registry\n    enabled: '{{PULL_CREDENTIALS_ENABLED}}'\n    # -- Name of the secret to be created.\n    name: \"registry-secret\"\n    # -- Denodo Container Registry\n    registry: \"harbor.open.denodo.com\"\n    # -- Denodo account username\n    username: \"{{DENODO_HARBOR_USER}}\"\n    # -- CLI secret in the Denodo Container Registry\n    pwd: \"{{DENODO_HARBOR_CLI_PASSWORD}}\"\n\n# -- https://kubernetes.io/docs/concepts/security/service-accounts/\nserviceAccount:\n  # -- Whether to create a service account or not. If false, 'default' will be used\n  create: true\n  # -- service account name. If you do not specify it an autogenerated name will be used\n  name: \"\"\n  # -- Annotations for the Presto service account\n  annotations: {}\n\nobjectStorage:\n  aws:\n    securityCredentials:\n      enabled: false\n  azure:\n    managedIdentities:\n      enabled: '{{USE_MANAGED_IDENTITY}}'\n    oauth2ClientCredentials:\n      enabled: false\n    sharedKey:\n      enabled: false\n      account: \"\"\n      blobStorage: false\n\npresto:\n  # -- Number of Presto workers in the cluster\n  numWorkers: '{{NUM_WORKERS}}'\n  # -- Number of cores assigned to each worker\n  cpusPerNode: '{{CPUS_PER_NODE}}'\n  # -- Deprecated, the MPP now leverages Java container awareness:\n  #  -- If memory limits are explicitly set (configured in the presto.coordinator.resources and presto.workers.resources sections in values.yaml), the JVM�s heap size will allocate the 80% of those limits.\n  #  -- If no memory limits are explicitly set, the JVM�s heap size will allocate the 80% of the physical RAM available on the underlying Kubernetes node.\n  # -- Total memory, in GB, assigned to each worker\n  memoryPerNode: '{{MEMORY_PER_NODE}}'\n\n  mppHost: \"{{MPPHOST}}\"\n\n  service:\n    # -- Presto service name\n    name: presto\n    # -- Service type: ClusterIP, NodePort or LoadBalancer\n    type: LoadBalancer\n    # -- Annotations for the Presto service. This is the recommended way to specify an IP address for the Service Type: LoadBalancer\n    annotations: '{{PRESTO_ANNOTATIONS}}'\n    # -- IP address for Presto service. Only applies to Service Type: LoadBalancer\n    # -- Some cloud providers allow you to specify the loadBalancerIP. In those cases, the load-balancer is created\n    # -- with the user-specified loadBalancerIP. If the loadBalancerIP field is not specified, the loadBalancer is\n    # -- set up with an ephemeral IP address. If you specify a loadBalancerIP but your cloud provider does not support\n    # -- the feature, the loadbalancerIP field that you set is ignored.\n    loadBalancerIP: \"\"\n    # -- List of IPs to restrict traffic through the load balancer. Only applies to Service Type: LoadBalancer.\n    # -- This field is ignored if the cloud-provider does not support the feature.\n    loadBalancerSourceRanges: []\n    # -- The port of the HTTP endpoint that the service listens to on the host, for the `NodePort` type.\n    # -- If not set, Kubernetes will allocate a port automatically. Ranges between 30000 and 32767 must be used\n    # -- to avoid conflicts with reserved ports and ports used by nodes.\n    httpnodePort: \"\"\n    # -- The port of the HTTPS endpoint that the service listens to on the host, for the `NodePort` type.\n    # -- If not set, Kubernetes will allocate a port automatically. Ranges between 30000 and 32767 must be used\n    # -- to avoid conflicts with reserved ports and ports used by nodes.\n    httpsnodePort: \"\"\n\n\n  coordinator:\n    # -- Presto coordinator deployment name\n    name: presto-coordinator\n    # -- Presto Coordinator HTTPS endpoint port\n    serverHttpsPort: 8443\n    # -- Presto Coordinator HTTP endpoint port\n    serverHttpPort: 8080\n\n    passwordAuth:\n      # -- Username\n      prestoUser: \"presto\"\n      # -- Password for the username\n      prestoPassword: \"pr3st%\"\n\n    # -- Enables the Resource management in Presto\n    resourceGroups: false\n\n    # -- Entries for extra config properties\n    additionalConfig: []\n\n    securityContext:\n      # -- Forces to run as a non-root user to ensure least privilege\n      runAsNonRoot: true\n\n    containerSecurityContext:\n      # -- Ensures that no child process of a container can gain more privileges than its parent\n      allowPrivilegeEscalation: false\n      # -- Drops all capabilities (kernel level calls)\n      capabilities:\n        drop:\n          - ALL\n\n    # -- Resource requests and limits for the Presto Coordinator\n    resources: {}\n      # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n      # If you do want to specify resources, uncomment the following\n      # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n      # limits:\n      #   cpu: 0.8\n      #   memory: 100Gi\n      # requests:\n      #   cpu: 0.7\n      #   memory: 90Gi\n\n    # -- Presto Coordinator node labels for pod scheduling\n    nodeSelector: {}\n\n    # -- Presto Coordinator affinity\n    affinity: {}\n\n    # -- Presto Coordinator tolerations\n    tolerations: []\n\n    # -- Topology constraints for the Presto Coordinator\n    topologySpreadConstraints:\n      # This configuration distributes pods in an absolute even manner (maxSkew),\n      # using the hostname as topology domain (topologyKey),\n      # scheduling pods even if it can't satisfy even distribution of pods (whenUnsatisfiable),\n      # acting on Pods that match this selector (labelSelector).\n      - maxSkew: 1\n        topologyKey: kubernetes.io/hostname\n        whenUnsatisfiable: ScheduleAnyway\n        labelSelector:\n          matchExpressions:\n            - {key: app, operator: In, values: [presto-coordinator, \n                    presto-worker]}\n\n    livenessreadiness:\n      enabled: true\n    livenessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n    readinessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n\n    env:\n      # additional environment variables for coordinator\n      # NAME: VALUE\n\n    additionalVolumes: {}\n      # Additional volumes to add to the coordinator. To configure REMOVE the curly braces after 'additionalVolumes:'.\n      #\n      #- name: cache-volume\n      #  emptyDir: {}\n\n    additionalVolumeMounts: {}\n      # Additional volume mounts to add to the coordinator. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n      #\n      #- name: cache-volume\n      #  mountPath: /opt/data/alluxio\n\n  worker:\n    # -- Presto worker deployment name\n    name: presto-worker\n\n    # -- Presto Worker HTTP endpoint port\n    serverHttpPort: 8080\n\n    # -- Entries for extra config properties\n    additionalConfig: []\n\n    securityContext:\n      # -- Force to run as a non-root user to ensure least privilege\n      runAsNonRoot: true\n\n    containerSecurityContext:\n      # -- Ensures that no child process of a container can gain more privileges than its parent\n      allowPrivilegeEscalation: false\n      # -- Drops all capabilities (kernel level calls)\n      capabilities:\n        drop:\n          - ALL\n\n    # -- Resource requests and limits for the Presto Workers\n    resources: {}\n      # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n      # If you do want to specify resources, uncomment the following\n      # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n      # limits:\n      #   cpu: 0.8\n      #   memory: 100Gi\n      # requests:\n      #   cpu: 0.7\n      #   memory: 90Gi\n\n    # -- Presto Workers node labels for pod scheduling\n    nodeSelector: {}\n\n    # -- Presto Workers affinity\n    affinity: {}\n\n    # -- Presto Workers tolerations\n    tolerations: []\n\n    # -- Topology constraints for the Presto Workers\n    topologySpreadConstraints:\n      # This configuration distributes pods in an absolute even manner (maxSkew),\n      # using the hostname as topology domain (topologyKey),\n      # scheduling pods even if it can't satisfy even distribution of pods (whenUnsatisfiable),\n      # acting on Pods that match this selector (labelSelector).\n      - maxSkew: 1\n        topologyKey: kubernetes.io/hostname\n        whenUnsatisfiable: ScheduleAnyway\n        labelSelector:\n          matchExpressions:\n            - {key: app, operator: In, values: [presto-coordinator, \n                    presto-worker]}\n\n    livenessreadiness:\n      enabled: true\n    livenessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n    readinessProbe:\n      initialDelaySeconds: 20\n      periodSeconds: 10\n      timeoutSeconds: 5\n      failureThreshold: 6\n      successThreshold: 1\n\n    # It is strongly recommended to enable Graceful shutdown when using autoscaling for minimizing disruptions during scale-down operations.\n    # If enabled workers will no longer receive new tasks, and will wait the configured Grace Period to allow time for the completion of tasks in progress.\n    gracefulShutdown:\n      enabled: false\n      gracePeriodSeconds: 120\n    # When gracefulShutdown is enabled, the user must set the presto.worker.terminationGracePeriodSeconds to a value of at least two times the configured 'gracePeriodSeconds'\n    terminationGracePeriodSeconds: 30\n\n    env:\n      # additional environment variables for workers\n      # NAME: VALUE\n\n    additionalVolumes: {}\n      # Additional volumes to add to the workers. To configure REMOVE the curly braces after 'additionalVolumes:'.\n      #\n      #- name: cache-volume\n      #  emptyDir: {}\n\n    additionalVolumeMounts: {}\n      # Additional volume mounts to add to the workers. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n      #\n      #- name: cache-volume\n      #  mountPath: /opt/data/alluxio\n\n  # -- Dynamic filtering optimizations significantly improve the performance of queries with selective\n  # -- joins by avoiding reading of data that would be filtered by join condition.\n  enableDynamicFiltering: true\n\n  jvm:\n    # -- Entries for extra JVM config properties\n    additionalJVMConfig: []\n\n  log:\n    # -- Log level for com.facebook.presto\n    facebook: ERROR\n    # -- Log level for org.apache.hadoop\n    hadoop: ERROR\n    # -- Entries for extra log categories\n    additionalLogs: []\n\n  node:\n    # --  Name of the environment\n    environment: \"production\"\n    # --  Location where Presto will store logs and other data\n    dataDir: \"/var/presto/data\"\n\n  # -- Connection details to Denodo. Denodo will use Presto to accelerate queries\n  denodoConnector:\n    # -- Denodo server uri\n    server: \"//{{DENODO_IP}}:9999/admin_denodo_mpp\"\n    # -- i18n configuration of the connection with Denodo\n    i18n: \"us_utc_iso\"\n    # -- Denodo user\n    user: \"{{DENODO_USER}}\"\n    # -- Denodo password, must be compliant with Denodo password policies\n    password: \"{{DENODO_PASSWORD}}\"\n    # -- Maximum number of results that a block can contain. When Denodo obtains enough results to complete a block, it sends this block to Presto and continues processing the next results. Default value is 100000\n    chunkSize: \"100000\"\n    # -- Maximum time, in milliseconds, Denodo waits before returning a new block to Presto. Default value is 90000 ms\n    chunkTimeout: \"90000\"\n    # -- Maximum time, in milliseconds, Presto will wait for a Denodo query to finish. If it is not set default value is 900000 ms\n    queryTimeout: \"900000\"\n    # -- Whether SSL is enabled in Denodo server\n    ssl: false\n    # -- File name of trust store file that contains the SSL certificates. File should be placed in the 'presto' directory.\n    trustStore: \"\"\n    # -- Password of the trust store\n    trustStorePassword: \"\"\n    # -- Name of the infrastructure provider (On-premises, AWS, Azure, Google Cloud, Alibaba, etc.) where the client and Virtual DataPort server is running.\n    infrastructureProvider: \"\"\n    # -- Name of the infrastructure provider region where the client and Virtual DataPort server is running.\n    infrastructureRegion: \"\"\n    # -- Property to enable using ROLE during registration instead of creating a new USER. If you are using AGORA you must set this property to true.\n    useRole: '{{USE_ROLE}}'\n    # -- Denodo role\n    role: \"embedded_mpp_role\"\n\n  # -- Hive catalog configuration: for accessing Hive tables over Parquet files\n  hive:\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- Enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: true\n    # -- Enables pushdown filter\n    pushdownFilterEnabled: true\n    # -- Obtains statistics from metadata for tables/partitions with missing statistics\n    quickStats: true\n    # -- mestastore cache configuration. metastore cache is DISABLED by default (ttl 0s).\n    # -- To enable it, you need to configure a valid value in ttl.\n    cache:\n      metastore:\n        scope: \"ALL\"\n        ttl: \"0s\"\n        interval: \"3d\"\n        maxSize: \"10000000\"\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Iceberg catalog configuration: for accessing Iceberg tables\n  iceberg:\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- Enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: true\n    # -- Enables pushdown filter\n    pushdownFilterEnabled: true\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Delta catalog configuration: for accessing Delta tables\n  delta:\n    # -- Timeout for Hive metastore requests\n    hiveMetastoreTimeout: 20s\n    # -- S3 storage endpoint server used to connect to an S3-compatible storage system instead of AWS\n    s3Endpoint: \"\"\n    # -- Enable S3 path style access to connect to an S3-compatible storage system instead of AWS\n    s3PathStyleAccess: false\n    # -- File should be placed in 'presto/secrets' and in 'hive-metastore/secrets' directories.\n    gcsKeyFile: \"\"\n    # -- Enables vectorized readings in parquet\n    parquetBatchReadOptimizationEnabled: true\n    # -- Enables pushdown filter\n    pushdownFilterEnabled: true\n    # -- Entries for extra config properties for catalog\n    additionalConfig: []\n\n  # -- Additional catalogs, as an example the jmx catalog provides JMX information from all nodes in the cluster.\n  catalog:\n    #jmx: |-\n    #  connector.name=jmx\n    #\n    #glue-hive: |-\n    #  connector.name=hive-hadoop2\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n    #\n    #glue-iceberg: |-\n    #  connector.name=iceberg\n    #  iceberg.catalog.type=HIVE\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n    #\n    #glue-delta: |-\n    #  connector.name=delta\n    #  hive.metastore=glue\n    #  hive.metastore.glue.region=\n    #  hive.metastore.glue.catalogid=\n    #  hive.metastore.glue.aws-access-key=\n    #  hive.metastore.glue.aws-secret-key=\n    #  hive.config.resources=core-site.xml\n    #  hive.parquet.use-column-names=true\n\n  # -- Enables autoscale creating a HorizontalPodScaler\n  autoscaling:\n      # If you want to autoscale based on a resource's utilization as a percentage, you must specify\n      # requests for that resource in the 'presto.worker.resources' parameter of this file.\n      # This example creates HorizontalPodAutoscaler object to autoscale the Presto Deployment when\n      # CPU utilization surpasses 80%, and ensures that there is always a minimum of\n      # presto.numWorkers replica and a maximum of 20 replicas.\n    enabled: false\n    maxReplicas: 20\n    targetCPUUtilizationPercentage: 80\n      # -- Entries for scaling up and down configuration\n    behavior: {}\n      #  scaleDown:\n      #    stabilizationWindowSeconds: 300\n      #    policies:\n      #    - type: Percent\n      #      value: 100\n      #      periodSeconds: 15\n      #  scaleUp:\n      #    stabilizationWindowSeconds: 0\n      #    policies:\n      #    - type: Percent\n      #      value: 100\n      #      periodSeconds: 15\n      #    - type: Pods\n      #      value: 4\n      #      periodSeconds: 15\n      #    selectPolicy: Max\n\n  # -- Ingress exposes HTTP(S) routes from outside the cluster to services within the cluster.\n  # -- Traffic routing is controlled by rules that define which inbound connections reach which services.\n  # -- In order for the Ingress resource to work, the cluster must have an ingress controller running, like NGINX Ingress Controller.\n  ingress:\n    enabled: false\n    # -- Presto ingress name\n    name: presto-ingress\n    # -- Annotations for the Presto ingress\n    annotations: {}\n    # -- If the ingressClassName is omitted, a default Ingress class should be defined.\n    className: \"\"\n    # -- Hostname for Ingress\n    host: \"\"\n    # -- URL path which is used for routing. Only requests to this path will be forwarded to the service\n    path: /\n    # -- Supported path types: ImplementationSpecific, Exact, Prefix\n    pathType: ImplementationSpecific\n    # -- Enable/disable TLS\n    tls:\n      enabled: true\n      # -- `name` will only be used, if `create` is set to false to bind an existing secret that contains the key/certificate for TLS\n      secretName: \"\"\n      create: false\n      # -- File name of the certificate file, required if `create` is set to true. File should be placed in the 'presto' directory.\n      certFile: \"\"\n      # -- File name of the private key file, required if `create` is set to true. File should be placed in the 'presto' directory.\n      keyFile: \"\"\n\n\nmetastore:\n  # -- Use the internal Hive Metastore. Default is true.\n  enabled: true\n  # -- JDBC connection string of the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's URL\n  connectionUrl: \"jdbc:postgresql://postgresql:5432/metastore\"\n  # connectionUrl: \"jdbc:mysql://HOST:3306/metastore\"\n  # connectionUrl: \"jdbc:sqlserver://HOST:1433;DatabaseName=metastore\"\n  # connectionUrl: \"jdbc:oracle:thin:@//HOST:1521/ORCLPDB1\"\n\n  # -- JDBC Driver class name to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's driver\n  connectionDriverName: \"org.postgresql.Driver\"\n  # connectionDriverName: \"org.mariadb.jdbc.Driver\"\n  # connectionDriverName: \"com.microsoft.sqlserver.jdbc.SQLServerDriver\"\n  # connectionDriverName: \"oracle.jdbc.OracleDriver\"\n\n  # -- Database to connect with the RDBMS of the Hive Metastore. Required for the internal PostgreSQL's database only\n  connectionDatabase: \"metastore\"\n\n  # -- User to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's user: hive\n  connectionUser: \"hive\"\n\n  # -- Password to connect with the RDBMS of the Hive Metastore. Default is the internal PostgreSQL's password: hive\n  connectionPassword: \"hive\"\n\n  # -- Classpath to the JDBC drivers of the Hive Metastore\n  driversPath: \"/opt/hive/jdbc-drivers\"\n\n  maxHeapSize: 2048\n\n  service:\n    # -- Hive Metastore service name\n    name: hive-metastore\n    # -- Hive Metastore port\n    port: 9083\n  deployment:\n    # -- Hive Metastore deployment name\n    name: hive-metastore\n    # -- Hive Metastore port\n    port: 9083\n  livenessreadiness:\n    enabled: true\n  livenessProbe:\n    initialDelaySeconds: 25\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  readinessProbe:\n    initialDelaySeconds: 25\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n\n  env:\n    # additional environment variables for metastore\n    # NAME: VALUE\n\n  additionalVolumes: {}\n    # Additional volumes to add to the metastore. To configure REMOVE the curly braces after 'additionalVolumes:'.\n    #\n    #- name: my-volume\n    #  emptyDir: {}\n\n  additionalVolumeMounts: {}\n    # Additional volume mounts to add to the metastore. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n    #\n    #- name: my-volume\n    #  mountPath: /path/on/host\n\n  # -- Hive Metastore node labels for pod scheduling\n  nodeSelector: {}\n\n  # -- Hive Metastore inter-pod affinity, that allows you to schedule pods based on their relationship to other pods\n  affinity:\n    # Run Hive Metastore on the same machine as PostgreSQL\n    # to improve performance, avoid network latency issues and connection failures\n    podAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        - labelSelector:\n            matchExpressions:\n              - {key: app, operator: In, values: [hive-metastore, postgresql]}\n          topologyKey: kubernetes.io/hostname\n    # ensure it runs on different machines than presto, if possible\n    podAntiAffinity:\n      preferredDuringSchedulingIgnoredDuringExecution:\n        - weight: 100\n          podAffinityTerm:\n            labelSelector:\n              matchExpressions:\n                - {key: app, operator: In, values: [presto-coordinator, \n                        presto-worker]}\n            topologyKey: \"kubernetes.io/hostname\"\n\n  # -- Hive Metastore tolerations\n  tolerations: []\n\n  # -- Topology constraints for Hive Metastore\n  topologySpreadConstraints: []\n\n  securityContext:\n    # -- Force to run as a non-root user to ensure least privilege\n    runAsNonRoot: true\n\n  containerSecurityContext:\n    # -- Ensures that no child process of a container can gain more privileges than its parent\n    allowPrivilegeEscalation: false\n    # -- Drops all capabilities (kernel level calls)\n    capabilities:\n      drop:\n        - ALL\n  # -- Resource requests and limits for the Hive Metastore\n  resources: {}\n    # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n    # If you do want to specify resources, uncomment the following\n    # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n    # limits:\n    #   cpu: 0.8\n    #   memory: 100Gi\n    # requests:\n    #   cpu: 0.7\n    #   memory: 90Gi\n\npostgresql:\n  # -- Whether to use an internal PostgreSQL or an external RDBMS for the Hive Metastore. Default is true.\n  enabled: true\n\n  # -- Whether to warn about the need of perform a manual backup of the Embedded PostgreSQL due to the major version upgrade.\n  version15BackupWarning: true\n\n  service:\n    # -- PostgreSQL service name\n    name: postgresql\n    # -- PostgreSQL port\n    port: 5432\n  deployment:\n    # -- PostgreSQL deployment name\n    name: postgresql\n    # -- PostgreSQL port\n    port: 5432\n  livenessreadiness:\n    enabled: true\n  livenessProbe:\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  readinessProbe:\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n\n  env:\n    # additional environment variables for PostgreSQL\n    # NAME: VALUE\n\n  additionalVolumes: {}\n    # Additional volumes to add to the PostgreSQL. To configure REMOVE the curly braces after 'additionalVolumes:'.\n    #\n    #- name: my-volume\n    #  emptyDir: {}\n\n  additionalVolumeMounts: {}\n    # Additional volume mounts to add to the PostgreSQL. To configure REMOVE the curly braces after 'additionalVolumeMounts:'.\n    #\n    #- name: my-volume\n    #  mountPath: /path/on/host\n\n  pvClaim:\n    # -- Annotations for the Persistent Volume Claim\n    annotations: {}\n      # If you do want to specify annotations, uncomment the following lines,\n      # adjust them as necessary, and REMOVE the curly braces after 'annotations:'.\n\n      # Add the following annotation if you want to preserve Presto metadata after cluster removal\n      # \"helm.sh/resource-policy\": keep\n\n\n    # -- Storage size requested for the PostgreSQL's volume\n    storage: 5Gi\n    # -- Persistent Volume Claim Storage the for PostgreSQL's volume\n    storageClassName: \"{{STORAGE_CLASS_NAME}}\"\n\n  # -- PostgreSQL node labels for pod scheduling\n  nodeSelector: {}\n\n  # -- PostgreSQL inter-pod affinity, that allows you to schedule pods based on their relationship to other pods\n  affinity:\n    # Run PostgreSQL on the same machine as Hive Metastore\n    # to improve performance, avoid network latency issues and connection failures\n    podAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        - labelSelector:\n            matchExpressions:\n              - {key: app, operator: In, values: [hive-metastore, postgresql]}\n          topologyKey: kubernetes.io/hostname\n\n  # -- PostgreSQL tolerations\n  tolerations: []\n\n  # -- Topology constraints for PostgreSQL\n  topologySpreadConstraints: []\n\n  securityContext:\n    # -- Force to run as a non-root user to ensure the least privilege\n    runAsNonRoot: true\n    # -- User ID for the container. Ignored on OpenShift.\n    runAsUser: 1001\n    # -- Group ID for the pod volumes. Ignored on OpenShift\n    fsGroup: 1001\n    fsGroupChangePolicy: OnRootMismatch\n\n  containerSecurityContext:\n    # -- Ensures that no child process of a container can gain more privileges than its parent\n    allowPrivilegeEscalation: false\n    # -- Drops all capabilities (kernel level calls)\n    capabilities:\n      drop:\n        - ALL\n  # -- Resource requests and limits for postgresql\n  resources: {}\n    # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n    # If you do want to specify resources, uncomment the following\n    # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n    # limits:\n    #   cpu: 0.8\n    #   memory: 100Gi\n    # requests:\n    #   cpu: 0.7\n    #   memory: 90Gi\n\ninitCacertContainer:\n  resources: {}\n    # Resources are not configured by default, as we leave this setting as a conscious choice for the user.\n    # If you do want to specify resources, uncomment the following\n    # lines, adjust them as necessary, and REMOVE the curly braces after 'resources:'.\n    # limits:\n    #   cpu: 0.2\n    #   memory: 1Gi\n    # requests:\n    #   cpu: 0.2\n    #   memory: 1Gi\n"
    },
    "DependsOn": [
     "DenMPPGenerateValuesYamlLambda1827A339",
@@ -1533,7 +1533,7 @@
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete",
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPGenerateValuesYamlResource/Default"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPGenerateValuesYamlResource/Default"
    },
    "Condition": "DenMPPCreateValuesYamlCondition"
   },
@@ -1592,7 +1592,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPEksClusterRole/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPEksClusterRole/Resource"
    }
   },
   "DenMPPClusterDenMPPEksNodegroupRole17D86F44": {
@@ -1710,7 +1710,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPEksNodegroupRole/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPEksNodegroupRole/Resource"
    },
    "Condition": "NotDenMPPCreatePodIdentityAssociationCondition"
   },
@@ -1781,7 +1781,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPEksNodegroupRolePodIdentity/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPEksNodegroupRolePodIdentity/Resource"
    },
    "Condition": "DenMPPCreatePodIdentityAssociationCondition"
   },
@@ -1880,7 +1880,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPPodIdentityRole/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPPodIdentityRole/Resource"
    },
    "Condition": "DenMPPCreatePodIdentityAssociationCondition"
   },
@@ -1919,17 +1919,16 @@
       "Arn"
      ]
     },
-    "Version": "1.31"
+    "Version": "1.33"
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPPrestoCluster"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPPrestoCluster"
    }
   },
   "DenMPPClusterDenMPPaddonEbsCsi1CCDBA6B": {
    "Type": "AWS::EKS::Addon",
    "Properties": {
     "AddonName": "aws-ebs-csi-driver",
-    "AddonVersion": "v1.38.1-eksbuild.1",
     "ClusterName": {
      "Fn::Join": [
       "",
@@ -1948,7 +1947,7 @@
     "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPaddonEbsCsi"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPaddonEbsCsi"
    },
    "Condition": "NotDenMPPCreatePodIdentityAssociationCondition"
   },
@@ -1956,7 +1955,6 @@
    "Type": "AWS::EKS::Addon",
    "Properties": {
     "AddonName": "vpc-cni",
-    "AddonVersion": "v1.18.5-eksbuild.1",
     "ClusterName": {
      "Fn::Join": [
       "",
@@ -1975,14 +1973,13 @@
     "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPaddonVpcCni"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPaddonVpcCni"
    }
   },
   "DenMPPClusterDenMPPaddonCorednsDD47DB3E": {
    "Type": "AWS::EKS::Addon",
    "Properties": {
     "AddonName": "coredns",
-    "AddonVersion": "v1.11.3-eksbuild.1",
     "ClusterName": {
      "Fn::Join": [
       "",
@@ -2001,14 +1998,13 @@
     "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPaddonCoredns"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPaddonCoredns"
    }
   },
   "DenMPPClusterDenMPPaddonKubeProxyA128A3C6": {
    "Type": "AWS::EKS::Addon",
    "Properties": {
     "AddonName": "kube-proxy",
-    "AddonVersion": "v1.29.7-eksbuild.9",
     "ClusterName": {
      "Fn::Join": [
       "",
@@ -2027,14 +2023,13 @@
     "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPaddonKubeProxy"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPaddonKubeProxy"
    }
   },
   "DenMPPClusterDenMPPaddonPodIdentityAgent52B3D29D": {
    "Type": "AWS::EKS::Addon",
    "Properties": {
     "AddonName": "eks-pod-identity-agent",
-    "AddonVersion": "v1.3.2-eksbuild.2",
     "ClusterName": {
      "Fn::Join": [
       "",
@@ -2053,7 +2048,7 @@
     "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPaddonPodIdentityAgent"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPaddonPodIdentityAgent"
    }
   },
   "DenMPPClusterDenMPPLaunchTemplateEC2PodIdentity76D3783A": {
@@ -2067,14 +2062,14 @@
     }
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPLaunchTemplateEC2PodIdentity"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPLaunchTemplateEC2PodIdentity"
    },
    "Condition": "DenMPPCreatePodIdentityAssociationCondition"
   },
   "DenMPPClusterDenMPPNodeGroupPodIdentity5AA56618": {
    "Type": "AWS::EKS::Nodegroup",
    "Properties": {
-    "AmiType": "AL2_x86_64",
+    "AmiType": "AL2023_x86_64_STANDARD",
     "ClusterName": {
      "Fn::Join": [
       "",
@@ -2146,14 +2141,14 @@
     "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPNodeGroupPodIdentity"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPNodeGroupPodIdentity"
    },
    "Condition": "DenMPPCreatePodIdentityAssociationCondition"
   },
   "DenMPPClusterDenMPPMyNodeGroup92822708": {
    "Type": "AWS::EKS::Nodegroup",
    "Properties": {
-    "AmiType": "AL2_x86_64",
+    "AmiType": "AL2023_x86_64_STANDARD",
     "ClusterName": {
      "Fn::Join": [
       "",
@@ -2219,7 +2214,7 @@
     "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPMyNodeGroup"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPMyNodeGroup"
    },
    "Condition": "NotDenMPPCreatePodIdentityAssociationCondition"
   },
@@ -2270,7 +2265,7 @@
     "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPEksEc2Role/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPEksEc2Role/Resource"
    },
    "Condition": "DenMPPCreateEc2RoleCondition"
   },
@@ -2311,7 +2306,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPAllowEKSAccessPolicy/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPAllowEKSAccessPolicy/Resource"
    }
   },
   "DenMPPClusterEksEc2RoleInstanceProfileF45B33B9": {
@@ -2324,7 +2319,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/EksEc2RoleInstanceProfile/Resource"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/EksEc2RoleInstanceProfile/Resource"
    }
   },
   "DenMPPClusterDenMPPEksEc2RoleAccessEntry6890E56B": {
@@ -2360,7 +2355,7 @@
     "DenMPPClusterDenMPPEksEc2Role308E2BC9"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPEksEc2RoleAccessEntry"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPEksEc2RoleAccessEntry"
    },
    "Condition": "DenMPPCreateEc2RoleCondition"
   },
@@ -2392,7 +2387,7 @@
     "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPEksPrestoPodIdentityAssociation"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPEksPrestoPodIdentityAssociation"
    },
    "Condition": "DenMPPCreatePodIdentityAssociationCondition"
   },
@@ -2424,7 +2419,7 @@
     "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPEksNLBPodIdentityAssociation"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPEksNLBPodIdentityAssociation"
    },
    "Condition": "DenMPPCreatePodIdentityAssociationCondition"
   },
@@ -2432,7 +2427,6 @@
    "Type": "AWS::EKS::Addon",
    "Properties": {
     "AddonName": "aws-ebs-csi-driver",
-    "AddonVersion": "v1.38.1-eksbuild.1",
     "ClusterName": {
      "Fn::Join": [
       "",
@@ -2464,17 +2458,17 @@
     "DenMPPClusterDenMPPPrestoClusterFAD1D6ED"
    ],
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/DenMPPCluster/DenMPPaddonEbsCsiPodIdentity"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/DenMPPCluster/DenMPPaddonEbsCsiPodIdentity"
    },
    "Condition": "DenMPPCreatePodIdentityAssociationCondition"
   },
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/11Q0WrDMAz8lr67Hk0f9tyZbhRGZ9LS16E4yuolkYstr4SQfx+J26XsSafTcZwuk6vntcwWcA1LU9bLxhayPzCYWqiKNHhokdELuIbPvoG2KEH2r5EMW0ej5I4HYaGVfe4aHOlpatdY001GCe0oMJBB7V1lk/AfNQg0mexVRSethI5FY80hFoQ8imeUu8h4hCKZJH7mNiE4Y+GecbvT49gDvwHjFbo/h5SA0RM+3k5a3bYNM5hzi8RCe/sDjHOGd4hkzkdsLw0wDiKsZf8STZ2uCQ0C6zD9o5oYxiZVRZuyTMH2rsQv7+JlYo3BELbE/lZZuSuR2HL38M4wiByDi96gUDGwa+e1okesHJX23sBH5EvkQeiOz46e1nKVyWzxHaxd+khsW5R5mr+/l1K2EQIAAA=="
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/11Q0WrDMAz8lr673pbC3jvTjcLoTFr6OhRHWb0kcrHllRDy7yNxu5Q96XQ6jtNlMnt6lo8LuISlKetlYwvZ7xlMLVRFGjy0yOgFXMJn30BblCD710iGraNRcsODsNDKPncNjvQ0tWus6SajhLYUGMig9q6ySfiPGgSaTPaqoqNWQseisWYfC0IexTPKXWQ8QJFMEj9z6xCcsXDLuNnqceyA34DxAt2fQ0rA6Anvb0etrtuaGcypRWKhvf0BxjnDO0QypwO25wYYBxFWsn+Jpk7XhAaBdZj+UU0MY5OqonVZpmA7V+KXd/E8scZgCBtif62s3JZIbLm7e2cYRI7BRW9QqBjYtfNa0T1Wjkp7a+Aj8jnyIHTHJ0cPK/mUyWzxHaxd+khsW5R5mr9Hz+BZEQIAAA=="
    },
    "Metadata": {
-    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250703/CDKMetadata/Default"
+    "aws:cdk:path": "MppClusterOnlyStack-with-network-20250827/CDKMetadata/Default"
    },
    "Condition": "CDKMetadataAvailable"
   }
