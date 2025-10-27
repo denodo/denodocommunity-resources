@@ -1,0 +1,144 @@
+prometheus-pushgateway:
+  enabled: false
+
+prometheus-node-exporter:
+  enabled: false
+
+kube-state-metrics:
+  enabled: true
+
+server:
+  service:
+    type: LoadBalancer
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+      service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+      service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+  persistentVolume:
+    enabled: true
+    size: 100Gi
+    storageClass: gp2
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 8196Mi
+    requests:
+      cpu: 2000m
+      memory: 8196Mi
+  nodeSelector:
+    eks.amazonaws.com/nodegroup: <your-nodegroup>
+  extraFlags:
+    - web.enable-lifecycle
+
+alertmanager:
+            
+  persistence:
+    enabled: true
+    size: 20Gi
+    storageClass: gp2
+
+serverFiles:
+  prometheus.yml:
+    scrape_configs:
+      - job_name: 'presto-coordinator-jmx'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: presto-coordinator
+          - source_labels: [__meta_kubernetes_pod_phase]
+            action: keep
+            regex: Running
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:8081
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+
+      - job_name: 'presto-worker-jmx'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: presto-worker
+          - source_labels: [__meta_kubernetes_pod_phase]
+            action: keep
+            regex: Running
+          - source_labels: [__meta_kubernetes_pod_ip]
+            target_label: __address__
+            replacement: $1:8081
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+
+      - job_name: 'kube-state-metrics'
+        static_configs:
+          - targets: ['prometheus-kube-state-metrics:8080']
+
+  alerting_rules.yml:
+    groups:
+      - name: embedded-mpp-alerts
+        rules:
+          - alert: Coordinator Down
+            expr: up{job="presto-coordinator-jmx"} == 0
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Presto coordinator is down"
+              description: "No coordinator targets have been up for the last minute.\n"
+
+          - alert: Too Few Worker Pods
+            expr: sum(kube_deployment_status_replicas{deployment="presto-worker"}) - count(up{job="presto-worker-jmx"} == 1) > 0
+            for: 3m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Worker pods less than desired"
+              description: "Missing  worker pods: {{ $value }}\n"
+
+          - alert: HPA at MaxCapacity 
+            expr: ((sum(kube_horizontalpodautoscaler_spec_max_replicas) by (horizontalpodautoscaler,namespace)) - (sum(kube_horizontalpodautoscaler_status_current_replicas) by (horizontalpodautoscaler,namespace)))
+            for: 0m
+            labels:
+              severity: warning
+            annotations: 
+              summary: HPA named {{$labels.horizontalpodautoscaler}} in {{$labels.namespace}} namespace is running at Max Capacity
+              description: "\nNamespace: {{$labels.namespace}}\nHPA name: {{$labels.horizontalpodautoscaler}}\n"
+
+          - alert: Too many Container restarts
+            expr: sum(increase(kube_pod_container_status_restarts_total{namespace!="kube-system"}[15m])) by (pod,namespace,container) > 5
+            for: 0m
+            labels:
+              severity: warning
+            annotations: 
+              summary: Container named {{$labels.container}} in {{$labels.pod}} in {{$labels.namespace}} was restarted more than 5 times in the last 15 minutes
+              description: "\nNamespace: {{$labels.namespace}}\nPod name: {{$labels.pod}}\nContainer name: {{$labels.container}}\n"
+
+          - alert: Queries Killed OOM
+            expr: rate(com_facebook_presto_memory_ClusterMemoryManager_QueriesKilledDueToOutOfMemory[5m]) > 0
+            for: 1m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Queries killed due to OOM"
+              description: "Presto is killing queries due to out-of-memory issues.\n"
+          
+          - alert: High CPU Usage
+            expr: java_lang_OperatingSystem_CpuLoad > 0.9
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High CPU usage on Presto pod {{ $labels.pod }}"
+              description: "CPU utilization is above 90% on pod {{ $labels.pod }} for 2 minutes. \nCurrent value: {{ $value }}\n"
+
+          - alert: High Memory Usage
+            expr: (java_lang_Memory_HeapMemoryUsage_used / java_lang_Memory_HeapMemoryUsage_max) > 0.9
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High Memory usage on Presto pod {{ $labels.pod }}"
+              description: "Memory utilization is above 90% on pod {{ $labels.pod }} for 2 minutes. \nCurrent value: {{ $value }}\n"
