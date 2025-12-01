@@ -1,6 +1,6 @@
 # Denodo Data Products Lifecycle Roles
 
-The **Denodo Data Products Lifecycle Roles** project includes sample  creation scripts for the roles defined in the [Denodo Data Products Lifecycle Roles](https://community.denodo.com/kb/en/view/document/Denodo%20Data%20Products%20Lifecycle%20Roles) Knowledge Base article.
+The **Denodo Data Products Lifecycle Roles** project includes sample creation scripts for the roles defined in the [Denodo Data Products Lifecycle Roles](https://community.denodo.com/kb/en/view/document/Denodo%20Data%20Products%20Lifecycle%20Roles) Knowledge Base article.
 
 List of scripts: 
 * [vdp-metadata-data-product-roles.vql](vdp-metadata-data-product-roles.vql): Import this VQL file into your **Virtual DataPort** server using `denodo` as the import password. It will create the following roles and tags:
