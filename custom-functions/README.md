@@ -14,11 +14,11 @@ collaborators:
 
 This project mantains some sample **custom functions** that any user can use in his/her own Denodo installation.
 
-### Custom Functions
+## Custom Functions
 
 This is the list of available Custom Functions:
 
-* [StringConcatenate](./com/denodo/vdp/custom/functions/StringConcatenate.java): this is a sample custom function used in the [Denodo Custom Components Tutorial](https://community.denodo.com/tutorials/browse/customcomponents/index) at the Denodo Community Site.
+* **[StringConcatenate](./com/denodo/vdp/custom/functions/StringConcatenate.java)**: this is a sample custom function used in the [Denodo Custom Components Tutorial](https://community.denodo.com/tutorials/browse/customcomponents/index) at the Denodo Community Site.
 
 ## Denodo Community Resources License
 

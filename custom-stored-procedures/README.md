@@ -14,11 +14,12 @@ collaborators:
 
 This project mantains some sample **custom stored procedures** that any user can use in his/her own Denodo installation.
 
-### Custom Functions
+## Custom Stored Procedures
 
-This is the list of available Custom Functions:
+This is the list of available Custom Stored Procedures created in Java code:
 
-* [GetClients](./com/denodo/vdp/custom/sp/GetClients.java): this is a sample stored procedure created in the [Denodo Custom Components Tutorial](https://community.denodo.com/tutorials/browse/customcomponents/index) at the Denodo Community Site.
+* **[DenodoCdcDebeziumStruct](./com/denodo/vdp/demo/storedprocedure/DenodoCdcDebeziumStruct.java)**: this is a sample stored procedure created for the [Real-Time Change Data Capture with Debezium and Denodo](https://community.denodo.com/kb/) Knowledge Base article at the Denodo Community Site.
+* **[GetClients](./com/denodo/vdp/custom/sp/GetClients.java)**: this is a sample stored procedure created in the [Denodo Custom Components Tutorial](https://community.denodo.com/tutorials/browse/customcomponents/index) at the Denodo Community Site.
 
 ## Denodo Community Resources License
 
