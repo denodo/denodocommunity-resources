@@ -30,14 +30,15 @@ This is the list of available Custom Data Sources created in Java code:
 
 ## How To Import the Denodo Community Custom Data Sources
 
-For importing, the custom data sources included in this subproject, please download the generated JAR file and read the official documentation for the instructions on how ti immport that JAR file into your Denodo Platform installation: https://community.denodo.com/docs/html/browse/latest/en/vdp/administration/creating_data_sources_and_base_views/custom_sources/custom_sources.
+For importing, the custom data sources included in this subproject, please generate a JAR file and read the official documentation for the instructions on how to immport that JAR file into your Denodo Platform installation: https://community.denodo.com/docs/html/browse/latest/en/vdp/administration/creating_data_sources_and_base_views/custom_sources/custom_sources.
 
 In summary you will have to:
 
 * First, you need to upload to Virtual DataPort the JAR file. To do this, follow these steps:
     * Click the menu `File > Extension management` in Design Studio.
     * In the tab `Extensions`, click Import, select the jar file, and click Ok. 
-    * After uploading the jar file, click the menu `File > New > Data source > Custom`.
+    * Ensure that all the dependencies are copied into the `%DENODO_HOME%/extensions/thirdparty/lib` directory (like the Apache Tika jar file).
+    * After uploading the jar files, click the menu `File > New > Data source > Custom` for creating the data source.
 
 ## Denodo Community Resources License
 
