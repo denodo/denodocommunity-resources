@@ -1,0 +1,207 @@
+﻿# Generated with Denodo Platform 9.2.7.
+
+
+# 0 ====================================================================
+
+# #######################################
+# DATABASE
+# #######################################
+CREATE OR REPLACE DATABASE automate_collibra_gov_bridge '';
+
+CONNECT DATABASE automate_collibra_gov_bridge;
+
+# #######################################
+# FOLDERS
+# #######################################
+CREATE OR REPLACE FOLDER '/1 datasources' ;
+
+CREATE OR REPLACE FOLDER '/2 base views' ;
+
+# #######################################
+# RESOURCES
+# #######################################
+# No vault resources
+# #######################################
+# LISTENERS JMS
+# #######################################
+# No listeners jms
+# #######################################
+# LISTENERS KAFKA
+# #######################################
+# No listeners kafka
+# #######################################
+# DATASOURCES
+# #######################################
+CREATE OR REPLACE DATASOURCE CUSTOM ds_ssh_connector
+    FOLDER = '/1 datasources'
+    CLASSNAME='com.denodo.connect.ssh.SSHWrapper'
+    JARS 'denodo-ssh-customwrapper'
+    PARAMETERS (
+      'Host' = '127.0.0.1',
+      'Port' = 22,
+      'User' = 'test',
+      'Password' = 'RhzPSvL81rsBvqzKtJmBOE54tIhTBvy2ht4GdzXoIvhRe+d+UJTBTGkeUQSwbj5ZvdYK9JVwSEzq/QHwdGkRs/Vj7vB+HKnIV8YrSu7Xu0on8+DS/0FQ2KvExrUe4RlAtBSmIpSzMAtPBTFhdoUfww==' ENCRYPTED
+    );
+
+# #######################################
+# DATABASE CONFIGURATION
+# #######################################
+ALTER DATABASE automate_collibra_gov_bridge
+  CHARSET DEFAULT;
+
+# #######################################
+# WRAPPERS
+# #######################################
+CREATE OR REPLACE WRAPPER CUSTOM bv_start_gov_gridge
+    FOLDER = '/2 base views'
+    DATASOURCENAME=ds_ssh_connector
+    PARAMETERS (
+      'Command' = 'cd /d "C:/Users/DineshrajaAnnadurai/Documents/denodo_inst/Denodo_Governance_Bridge/denodo-governance-bridge-8.0-20250804/denodo-collibra-governance-bridge-20250804/bin" && denodo-collibra-governance-bridge.bat'
+    )
+    OUTPUTSCHEMA (
+        exitcode_0 = 'Exit code' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE,
+        executionresult_0 = 'Execution result' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE
+    );
+
+CREATE OR REPLACE WRAPPER CUSTOM bv_stop_governance_bridge
+    FOLDER = '/2 base views'
+    DATASOURCENAME=ds_ssh_connector
+    PARAMETERS (
+      'Command' = 'C:/Users/DineshrajaAnnadurai/Desktop/kill_8442.bat'
+    )
+    OUTPUTSCHEMA (
+        exitcode_0 = 'Exit code' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE,
+        executionresult_0 = 'Execution result' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE
+    );
+
+CREATE OR REPLACE WRAPPER CUSTOM bv_sync_gov_bridge
+    FOLDER = '/2 base views'
+    DATASOURCENAME=ds_ssh_connector
+    PARAMETERS (
+      'Command' = 'cd /d "C:/Users/DineshrajaAnnadurai/Documents/denodo_inst/Denodo_Governance_Bridge/denodo-governance-bridge-8.0-20250804/denodo-collibra-governance-bridge-20250804/bin" && denodo-collibra-synchronize-governance-bridge.bat input-sync.json'
+    )
+    OUTPUTSCHEMA (
+        exitcode_0 = 'Exit code' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE,
+        executionresult_0 = 'Execution result' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE
+    );
+
+CREATE OR REPLACE WRAPPER CUSTOM bv_tech_lineage_gove_brid
+    FOLDER = '/2 base views'
+    DATASOURCENAME=ds_ssh_connector
+    PARAMETERS (
+      'Command' = 'cd /d "C:/Users/DineshrajaAnnadurai/Documents/denodo_inst/Denodo_Governance_Bridge/denodo-governance-bridge-8.0-20250804/denodo-collibra-governance-bridge-20250804/bin" && denodo-collibra-generate-technical-lineage-governance-bridge.bat input-tl.json'
+    )
+    OUTPUTSCHEMA (
+        exitcode_0 = 'Exit code' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE,
+        executionresult_0 = 'Execution result' : 'java.lang.String' (sourcetypeid='12')  NOT SORTABLE NOT UPDATEABLE
+    );
+
+# #######################################
+# STORED PROCEDURES
+# #######################################
+# No stored procedures
+# #######################################
+# TYPES
+# #######################################
+# No types
+# #######################################
+# MAPS
+# #######################################
+# No maps
+# #######################################
+# BASE VIEWS
+# #######################################
+CREATE OR REPLACE TABLE bv_shutdown_governance_bridge I18N au_cst (
+        exitcode_0:text (sourcetypeid = '12'),
+        executionresult_0:text (sourcetypeid = '12')
+    )
+    FOLDER = '/2 base views'
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD bv_stop_governance_bridge(
+        I18N au_cst
+        CONSTRAINTS (
+             ADD exitcode_0 NOS ZERO ()
+             ADD executionresult_0 NOS ZERO ()
+        )
+        OUTPUTLIST (executionresult_0, exitcode_0
+        )
+        WRAPPER (custom bv_stop_governance_bridge)
+    );
+
+CREATE OR REPLACE TABLE bv_start_governance_bridge I18N au_cst (
+        exitcode_0:text (sourcetypeid = '12'),
+        executionresult_0:text (sourcetypeid = '12')
+    )
+    FOLDER = '/2 base views'
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD bv_start_gov_gridge(
+        I18N au_cst
+        CONSTRAINTS (
+             ADD exitcode_0 NOS ZERO ()
+             ADD executionresult_0 NOS ZERO ()
+        )
+        OUTPUTLIST (executionresult_0, exitcode_0
+        )
+        WRAPPER (custom bv_start_gov_gridge)
+    );
+
+CREATE OR REPLACE TABLE bv_sync_governance_bridge I18N au_cst (
+        exitcode_0:text (sourcetypeid = '12'),
+        executionresult_0:text (sourcetypeid = '12')
+    )
+    FOLDER = '/2 base views'
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD bv_sync_gov_bridge(
+        I18N au_cst
+        CONSTRAINTS (
+             ADD exitcode_0 NOS ZERO ()
+             ADD executionresult_0 NOS ZERO ()
+        )
+        OUTPUTLIST (executionresult_0, exitcode_0
+        )
+        WRAPPER (custom bv_sync_gov_bridge)
+    );
+
+CREATE OR REPLACE TABLE bv_tech_lineage_governance_bridge I18N au_cst (
+        exitcode_0:text (sourcetypeid = '12'),
+        executionresult_0:text (sourcetypeid = '12')
+    )
+    FOLDER = '/2 base views'
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD bv_tech_lineage_gove_brid(
+        I18N au_cst
+        CONSTRAINTS (
+             ADD exitcode_0 NOS ZERO ()
+             ADD executionresult_0 NOS ZERO ()
+        )
+        OUTPUTLIST (executionresult_0, exitcode_0
+        )
+        WRAPPER (custom bv_tech_lineage_gove_brid)
+    );
+
+# #######################################
+# VIEWS
+# #######################################
+# No views
+# #######################################
+# ASSOCIATIONS
+# #######################################
+# No associations
+# #######################################
+# WEBSERVICES
+# #######################################
+# No web services
+# #######################################
+# WEBCONTAINER WEB SERVICE DEPLOYMENTS
+# #######################################
+# No deployed web services
+# #######################################
+# Closing connection with database automate_collibra_gov_bridge
+# #######################################
+CLOSE;
+
+
