@@ -68,7 +68,8 @@ In this subproject you can find useful applications that can be connected to Den
 In this subproject you can find useful scripts for working with Denodo:
 
 * [Denodo Support Utilities](./scripts/denodo-support-utilities/): this tool enables you to interact with the Denodo Support Site using commands in your command-line shell.
-* [Denodo Incremental Deployment](./scripts/denodo-incremental-deployment/): automation framework for code promotion within the Denodo Major versions and also moving code from one major version to another version
+* [Denodo Incremental Deployment](./scripts/denodo-incremental-deployment/): automation framework for code promotion within the Denodo Major versions and also moving code from one major version to another version.
+* [Denodo Governance Bridge for Collibra – Automation Framework](./scripts/denodo-governance-bridge-collibra/): seamless transfer of metadata from the Denodo Platform to Collibra. It retrieves, transforms, and upserts Denodo metadata into Collibra as assets and complex relations, ensuring alignment between the two platforms.
 
 ### Templates
 
