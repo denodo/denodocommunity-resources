@@ -1,0 +1,46 @@
+{
+  "name": "vql-vscode",
+  "displayName": "Denodo VQL",
+  "description": "Denodo VQL Syntax Highlighting for VS Code",
+  "version": "1.0.1",
+  "publisher": "denodo",
+  "icon": "images/denodo-icon.png",
+  "homepage": "https://github.com/denodo/denodocommunity-resources/tree/master/plugins/denodo-vscode-vql-syntax#readme",
+  "bugs": {
+    "url": "https://github.com/denodo/denodocommunity-resources/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/denodo/denodocommunity-resources.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "packageManager": "pnpm@9.1.0",
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "Denodo",
+    "VQL",
+    "SQL",
+    "Data Virtualization"
+  ],
+  "extensionDependencies": [
+    "vscode.sql"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "vql",
+      "aliases": ["VQL", "vql"],
+      "extensions": [".vql"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "vql",
+      "scopeName": "source.vql",
+      "path": "./syntaxes/vql.tmLanguage.json"
+    }]
+  }
+}

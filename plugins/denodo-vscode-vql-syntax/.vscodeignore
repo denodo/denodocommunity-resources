@@ -1,0 +1,27 @@
+# Editor and Git Configs
+.vscode/**
+.vscode-test/**
+.git/**
+.gitignore
+.editorconfig
+
+# CI/CD and Repo Configs
+.gitlab-ci.yml
+.gitlab/**
+.github/**
+
+# Dev Tools and Linting
+.eslintrc.*
+.prettierrc.*
+vsc-extension-quickstart.md
+
+# Package Managers
+node_modules/**
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Source code
+src/**
+tests/**
+**/*.map

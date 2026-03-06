@@ -1,0 +1,69 @@
+# -------------------------------------------------------------------
+# TEST FILE: Denodo VQL Syntax Highlighting
+# -------------------------------------------------------------------
+
+-- 1. Comments: Both standard SQL (--) and Hash (#) should be comments
+/* This is a 
+   block comment */
+
+-- 2. DDL & Folder Support
+-- 'FOLDER' should be highlighted as a keyword here
+CREATE OR REPLACE FOLDER '/01_connectivity/datasources';
+
+-- 3. Source Types & Interpolation Variables
+-- 'JDBC', 'ODBC' are constants. @{db_pass} is an interpolation var.
+CREATE OR REPLACE DATASOURCE JDBC ds_sales
+    FOLDER = '/01_connectivity/datasources'
+    DRIVERCLASSNAME = 'com.mysql.jdbc.Driver'
+    DATABASEURI = 'jdbc:mysql://localhost:3306/sales'
+    USERNAME = 'admin'
+    USERPASSWORD = @{db_pass};
+
+-- 4. Interface Views & Specific Data Types
+-- Types like INT2, FLOAT4, TEXT should be highlighted
+CREATE OR REPLACE INTERFACE VIEW i_products (
+    product_id   INT2,
+    product_name TEXT,
+    price        FLOAT4,
+    description  TEXT
+)
+SET IMPLEMENTATION sales_products;
+
+-- 5. Query with Context & Protected Words
+SELECT 
+    p.product_name,
+    c.classification
+FROM i_products AS p
+JOIN i_customers AS c ON p.id = c.id
+WHERE 
+    p.price > 100
+    -- 'WS' and 'DF' are protected words and should stand out
+    AND p.category <> 'WS' 
+    AND p.status <> 'DF'
+
+-- 6. Context Clause (Denodo Specific)
+CONTEXT (
+    'i18n' = 'us_est',
+    'cache_return_on_fault' = 'true'
+);
+
+-- 7. Functions & Deprecation Checks
+SELECT 
+    -- DEPRECATED: This should be struck-through or red (invalid.deprecated)
+    TO_DATE('yyyy-MM-dd', '2023-01-01') AS old_way,
+    
+    -- VALID: This should be highlighted as a support function
+    TO_TIMESTAMPTZ('yyyy-MM-dd', '2023-01-01') AS new_way,
+
+    -- Arithmetic Functions
+    MULT(p.price, 0.20) AS vat_calc,
+    DIV(p.total, 12) AS monthly_avg,
+
+    -- AI Functions
+    SENTIMENT_AI(p.review_text) AS sentiment,
+    CLASSIFY_AI(p.description, { row('High Value'), row('Low Value') }) AS class,
+
+    -- Spatial Functions
+    ST_DISTANCE_METERS(p.location_wkt, 'EPSG:4326', c.home_wkt, 'EPSG:4326') AS distance
+
+FROM sales_summary;

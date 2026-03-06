@@ -1,0 +1,206 @@
+{
+	"information_for_contributors": [
+		"This file has been converted from https://github.com/microsoft/vscode/blob/main/extensions/sql/syntaxes/sql.tmLanguage.json which was in turn developed from https://github.com/microsoft/vscode-mssql/blob/master/syntaxes/SQL.plist",
+		"Denodo VQL Syntax Highlighting for VS Code",
+		"Developed by Jason Sandidge at Denodo"
+	],
+	"version": "1.0.1",
+	"name": "VQL",
+	"scopeName": "source.vql",
+"patterns": [
+		{
+			"comment": "--- DENODO VQL & SQL COMMENTS ---",
+			"include": "#comments"
+		},
+		{
+			"comment": "--- START DENODO VQL SPECIFIC RULES ---",
+			"match": "(?i)\\b(CONTEXT)\\s*\\(",
+			"captures": {
+				"1": { "name": "keyword.other.denodo.context.vql" }
+			},
+			"name": "meta.context.clause.vql"
+		},
+		{
+			"comment": "Denodo Interpolation Variables (e.g. @variable or @{variable})",
+			"match": "(@\\{[a-zA-Z0-9_]+\\}|@[a-zA-Z0-9_]+)",
+			"name": "variable.other.interpolation.denodo.vql"
+		},
+		{
+			"comment": "Denodo Specific Data Types",
+			"match": "(?i)\\b(ARRAY|BLOB|BOOL|BOOLEAN|DECIMAL|DOUBLE|FLOAT|FLOAT4|FLOAT8|INT|INT2|INT4|INT8|INTERVALDAYSECOND|INTERVALYEARMONTH|LOCALDATE|LONG|REGISTER|TEXT|TIME|TIMESTAMP|TIMESTAMPTZ|VECTOR|XML)\\b",
+			"name": "storage.type.denodo.vql"
+		},
+		{
+			"comment": "Denodo VQL Specific Control Words (View Types, Constraints, Adapters)",
+			"match": "(?i)\\b(BASE|CUSTOM|DERIVED|DF|ESSBASE|INTERFACE|JDBC|JSON|LDAP|MATERIALIZED|MONGODB|NOS|OBL|ODATA|ODBC|OPT|SALESFORCE|SAPBWBAPI|SAPERP|WS|XML)\\b",
+			"name": "keyword.control.denodo.protected.vql"
+		},
+		{
+    		"comment": "Deprecated Functions, Types, Properties, and Filters",
+    		"match": "(?i)\\b(TO_DATE|IS_PROJECTED_FIELD|TEXTCONSTANT|DATE|DECRYPT|CATALOG_ELEMENTS|CATALOG_FKS|CATALOG_PKS|CATALOG_VIEWS|COMPACT_HADOOP_CACHE|GENERATE_SMART_STATS_FOR_FIELDS|GENERATE_STATS|GENERATE_STATS_FOR_FIELDS|LIST_JDBC_DATASOURCE_TABLES|SOURCE_CHANGES|WEBCONTAINER_ELEMENTS|includeEnvSpecificElements|includeNonEnvSpecificElements)\\b",
+    		"name": "invalid.deprecated.denodo.vql"
+		},
+		{
+			"comment": "Deprecated Back-Quoted Identifiers (Denodo 5.5 and earlier)",
+			"match": "`[^`]*`",
+			"name": "invalid.deprecated.identifier.denodo.vql"
+		},
+		{
+			"comment": "Denodo AI & Embedding Functions",
+			"match": "(?i)\\b(CLASSIFY_AI|EMBED_AI|ENRICH_AI(?:_BINARY)?|EXTRACT_AI|SENTIMENT_AI|SUMMARIZE_AI|TRANSLATE_AI|VECTOR_(?:DISTANCE|COSINE_DISTANCE|L1_DISTANCE|L2_DISTANCE|NEGATIVE_INNER_PRODUCT))\\b",
+			"name": "support.function.ai.denodo.vql"
+		},
+		{
+			"comment": "Denodo Spatial Functions",
+			"match": "(?i)\\b(ST_(?:AREA(?:_METERS)?|BOUNDARY|BUFFER(?:_METERS)?|CENTROID|CONTAINS|CONVEXHULL|CREATE_POINT|CROSSES|DIFFERENCE|DIMENSION|DISJOINT|DISTANCE(?:_METERS)?|ENDPOINT|ENVELOPE|EQUALS|EXTERIORRING|GEOMETRYN?|GEOMETRYTYPE|GEOM_TO_STRUCT|INTERIORRINGN|INTERSECTION|INTERSECTS|IS(?:CLOSED|EMPTY|RING|SIMPLE)|LENGTH(?:_METERS)?|NUM(?:GEOMETRIES|INTERIORRINGS|POINTS)|OVERLAPS|POINTN|RELATE|STARTPOINT|SYMDIFFERENCE|TOUCHES|TRANSFORM|UNION|WITHIN|WKB(?:TOWKT)?|WKT(?:TOWKB)?|X|Y))\\b",
+			"name": "support.function.spatial.denodo.vql"
+		},
+		{
+			"comment": "Denodo JSON & XML Functions",
+			"match": "(?i)\\b(AVRO_TO_JSON|JSON_TO_AVRO|COMPLEX_TYPE_TO_JSON|JSON_TO_COMPLEX_TYPE|JSONPATH|XMLEXISTS|XMLQUERY|XPATH|XSLT|CREATETYPEFROMXML)\\b",
+			"name": "support.function.json-xml.denodo.vql"
+		},
+		{
+			"comment": "Denodo Date & Arithmetic Functions",
+			"match": "(?i)\\b(ADD(?:DAY|HOUR|MILLIS|MINUTE|MONTH|SECOND|WEEK|YEAR)|CONVERT_TIMEZONE|DIV|FIRSTDAYOF(?:MONTH|WEEK)|FORMATDATE|GET(?:DAY(?:OF(?:WEEK|YEAR))?|DAYSBETWEEN|HOUR|MILLISECOND|MINUTE|MONTH(?:SBETWEEN)?|QUARTER|SECOND|TIME(?:FROM|IN)MILLIS|WEEK|WEEKSBETWEEN|YEAR)|LASTDAYOF(?:MONTH|WEEK)|MULT|NEXTWEEKDAY|NOW|PREVIOUSWEEKDAY|SUBTRACT|TO_(?:LOCALDATE|TIME(?:STAMP(?:TZ)?)?))\\b",
+			"name": "support.function.datetime.denodo.vql"
+		},
+		{
+			"comment": "Denodo Math & Numeric Functions",
+			"match": "(?i)\\b(ACOS|ASIN|ATAN2?|CEIL|COS|COT|DEGREES|EXP|FLOOR|LN|LOG|MOD|PI|POWER|RADIANS|RAND|ROUND|SIGN|SIN|SQRT|TAN|TRUNC)\\b",
+			"name": "support.function.math.denodo.vql"
+		},
+		{
+			"comment": "Denodo Aggregation & Window Functions",
+			"match": "(?i)\\b(APPROX_COUNT_DISTINCT|ARRAY_TO_STRING|FIRST|FLATTEN|GROUP_CONCAT|LAST|LIST|LISTAGG|MEDIAN|NEST|REGISTER|STDEVP?|STRING_AGG|VARP?)\\b",
+			"name": "support.function.aggregate.denodo.vql"
+		},
+		{
+			"comment": "Denodo Text Functions",
+			"match": "(?i)\\b(ASCII|BASE64_TO_BASE10|BASE64_TO_HEX|CHAR|CONCATLIST|DELETESPACES|ENDWITH|HEX_TO_BASE64|INITCAP|INSTR|LEFT|LEFTPAD|LEN|POSITION|PRINTF|PROPERCASE|REGEXP(?:_COUNT|_LIKE|_ILIKE)?|REMOVEACCENTS|REPEAT|REPLACEMAP|RIGHT|RIGHTPAD|SIMILARITY|SPLIT|STARTWITH)\\b",
+			"name": "support.function.string.denodo.vql"
+		},
+		{
+			"comment": "Denodo Administrative, Utility & Variable Functions",
+			"match": "(?i)\\b(CONTEXTUALSUMMARY|DECODE_BASE64|DECRYPT(?:_FIXED)?|ENCODE_BASE64|ENCRYPT(?:_FIXED)?|GETCONTEXTVAR|GETSESSION|GETVAR|HASH(?:_FUNCTION)?|MAP|PIVOTREGISTER|ROWNUM|SETVAR|UNPIVOTREGISTER)\\b",
+			"name": "support.function.other.denodo.vql"
+		},
+		{
+			"comment": "Denodo DDL: Captures Action, Type, Adapter (Optional), and Entity Name",
+			"match": "(?i)\\b(CREATE|ALTER|DROP)\\s+(OR\\s+REPLACE\\s+)?(DATASOURCE|WRAPPER|INTERFACE\\s+VIEW|(?:MATERIALIZED|TEMPORARY|REMOTE)?\\s*TABLE|SUMMARY\\s+VIEW|(?:REST\\s+|SOAP\\s+)?WEBSERVICE|LISTENER(?:\\s+JMS)?|ASSOCIATION|FOLDER|DATABASE|ROLE|USER|PROCEDURE|TYPE|WIDGET|(?:BASE\\s+)?VIEW|CUSTOMCOMPONENT|ENVIRONMENT|JAR|MAP(?:\\s+(?:I18N|SIMPLE))?|RESOURCE_MANAGER\\s+(?:RULE|PLAN)|SCANNER|VIEWSTATSUMMARY)\\s+(?:(JDBC|ODBC|WS|XML|JSON|DF|LDAP|SALESFORCE|CUSTOM|ESSBASE|SAPBWBAPI|SAPERP|MONGODB|ODATA|JMS|KAFKA|OLAP)\\s+)?(?:IF\\s+EXISTS\\s+)?([a-zA-Z0-9_.\"]+)\\b",
+			"captures": {
+				"1": { "name": "keyword.other.ddl.action.vql" },
+				"2": { "name": "keyword.other.ddl.modifier.vql" },
+				"3": { "name": "storage.type.denodo.vql" },
+				"4": { "name": "constant.language.source-type.vql" },
+				"5": { "name": "entity.name.type.denodo.vql" }
+			}
+		},
+		{
+			"comment": "Denodo Configuration, Modifiers & Property Keywords",
+    		"match": "(?i)\\b(FOLDER|DRIVERCLASSNAME|DATABASEURI|USERNAME|USERPASSWORD|ROUTE|FILTER|DESCRIPTION|HTML|MY|NESTED|ONE|ORDERED|REVERSEORDER|SWAP|TRACE|ZERO|UNZIP|GUNZIP|DECRYPTAES256|PASSWORD|CLASSNAME|JARS|includeCreateDatabase|includeJars|includeProperties|includeStatistics|dropElements|replaceExistingElements|exclude_database_elements|REMOVE_ASSIGNED_RESTRICTIONS|CONNECTION|CHUNKSIZE|CHUNKTIMEOUT|QUERYTIMEOUT|POOLENABLED|POOLINITSIZE|POOLMAXACTIVE|DATETYPEMAPPING|NOWRAPARRAYS|RAISEFAULTONIDU|DONOTAPPLYOUTPUTXSLTTOERRORS|VERBOSEERRORS|AUTHENTICATION|SPNEGO|OAUTH2|WSS|VDPACCEPTEDUSERS|VDP|DIGEST|STYLE|DOCUMENT|RPC|VENDOR|ACTIVEMQ|WEBSPHEREMQ|JNDI|DESTINATION|REPLYTO|QUEUE|TOPIC|PROPERTIES|OPERATION|INPUTS|SOAPACTION|INPUTXSLT|OUTPUTXSLT|ENABLED|DISABLED|SCHEMA|VQL|PRESERVE_OPERATIONS|DEFAULTREPRESENTATION|SUPPORTEDREPRESENTATIONS|DISPLAYRESTFULREFERENCES|SAML2|SPENTITYID|CUSTOMNAMESPACE|CUSTOMCSS|RESOURCES|ASSOCIATIONS|OPTIONS|APPLYOUTPUTXSLTTOERRORS|NULLVALUESASEMPTYXMLELEMENTS|ALLOW_CORS_ORIGINS|MAX_ROWS_PER_PAGE|PROCESS_FUNCTIONS_IN_SELECT_PARAMETER|RSS|FIELDS|INPUT_ONLY|OUTPUT_ONLY|UNESCAPED|CHANNEL|ITEM|START|STOP|RELOAD|STATUS|LOGIN|URI|SAMLBASEURL|WAR|WSDL|ENDPOINT|PRECONDITION|REFERENTIAL|EXPAND|EVALUATION|LEVEL|DIV|CONDITION|ACTION|RENAME)\\b",
+    		"name": "keyword.other.config.denodo.vql"
+		},
+		{
+			"comment": "Denodo Security & Tagging DDL",
+			"match": "(?i)\\b(CREATE\\s+TAGS?|ALTER\\s+TAG|DROP\\s+TAGS?|CREATE\\s+GLOBAL_SECURITY_POLICY|ALTER\\s+GLOBAL_SECURITY_POLICIES|DROP\\s+GLOBAL_SECURITY_POLICY)\\b",
+			"name": "keyword.other.ddl.security.vql"
+		},
+		{
+			"comment": "Denodo Security & Tagging Clauses",
+			"match": "(?i)\\b(ADD_TO|REMOVE_FROM|AUDIENCE|ELEMENTS|RESTRICTION|GRANTED_BY|TAGGED|ABAC|VIEW_DATABASES|MASKING|REJECT|CUSTOM|PARAMETERS|ENABLED|MAPPING|NOT_IN|ROLES|USERS)\\b",
+			"name": "keyword.other.security.vql"
+		},
+		{
+			"comment": "Denodo Data Masking Methods",
+			"match": "(?i)\\b(HIDE|REDACT|ONLY_YEAR|FIRST_4)\\b",
+			"name": "support.function.masking.denodo.vql"
+		},
+		{
+			"comment": "Denodo Version Control (VCS) Commands",
+			"match": "(?i)\\b(DVCSCOMMIT|DVCSPUSH|DVCSPULL|DVCSREVERT|VCSDISCARD|VCSCONTENTS)\\b",
+			"name": "keyword.control.vcs.denodo.vql"
+		},
+		{
+			"comment": "Denodo Catalog, Admin, Deployment & Resource Manager Commands",
+			"match": "(?i)\\b(DESC(?:RIBE)?|LIST|HELP|RESOURCE_MANAGER|WEBCONTAINER|DEPLOY|REDEPLOY|UNDEPLOY|EXPORT)\\b",
+			"name": "keyword.other.admin.denodo.vql"
+		},
+		{
+			"comment": "Denodo Catalog Entities (Targets for LIST/DESC)",
+			"match": "(?i)\\b(ASSOCIATIONS|DATABASES|DATASOURCES|ENVIRONMENTS|FUNCTIONS|I18NS|JARS|LISTENERS|MAPS|OPERATORS|PLANS|POLICIES|PROCEDURES|RESOURCES|ROLES|RULES|TAGS|TYPES|USERS|VIEWS|VIEWSTATSUMMARIES|WEBSERVICES|WRAPPERS)\\b",
+			"name": "storage.type.denodo.vql"
+		},
+		{
+			"comment": "Denodo Predefined Stored Procedures",
+			"match": "(?i)\\b(CACHE_CONTENT|CATALOG_METADATA_VIEWS|CATALOG_PERMISSIONS|CATALOG_VDP_METADATA_VIEWS|CHECK_METADATA|CLEAN_CACHE_DATABASE|COLUMN_DEPENDENCIES|COMPACT_CACHE|COMPACT_METADATA_TABLES|COMPUTE_SOURCE_TABLE_STATS|CREATE_REMOTE_TABLE|CREATE_SCHEMA_ON_SOURCE|CREATE_TAGS_FROM_(?:COLLIBRA|VIEW)|DENODO_ASSISTANT_GENERATE_(?:FIELDS_DESCRIPTION|FIELDS_NAME|VIEW_DESCRIPTION)|DISCOVER_OBJECT_STORAGE_MPP_PROCEDURE|DROP_REMOTE_TABLE|DROP_SCHEMA_ON_SOURCE|DUAL|GENERATE_SMART_STATS_FOR_FIELDS_BY_TABLENAME|GENERATE_VQL_TO_CREATE_JDBC_BASE_VIEW(?:_FROM_QUERY)?|GET_(?:ACTIVE_LOGGERS|ASSOCIATIONS|AVAILABLE_STATS_MODES|CACHE_(?:COLUMNS|CONFIGURATION|LOAD_VIEW_DEPENDENCIES|TABLE)|CATALOG_EFFECTIVE_PERMISSIONS|CATALOG_METADATA_WS|DATABASES|DELEGATED_SQLSENTENCE|ELEMENTS|EXPORTED_KEYS|FOREIGN_KEYS|GLOBAL_SECURITY_POLICIES_TAGS|ICEBERG_VIEW_SNAPSHOTS|JDBC_DATASOURCE_TABLES|PARAMETER|PRIMARY_KEYS|PROCEDURE_COLUMNS|PUBLIC_VIEW_DEPENDENCIES|QUERY_EXECUTION_PLAN|SERVER_CONNECTIVITY|SESSIONS|SOURCE_(?:CHANGES|COLUMNS|TABLE)|STATS_FOR_FIELDS|TYPE_ATTRIBUTES|USER_ACCOUNTS|USER_DEFINED_TYPES|VIEW_(?:COLUMNS|INDEXES|STATISTICS|TAGS)|VIEWS)|LOGCONTROLLER|MAINTAIN_METADATA_TABLES|MIGRATE_DATE_TYPES|PING_DATA_SOURCE|REFRESH_(?:BASE_VIEW|EMBEDDED_MPP_TABLES_METADATA|SOURCE_TABLE_METADATA)|REGISTER_EMBEDDED_MPP|REMOVE_ICEBERG_VIEW_(?:ORPHAN_FILES|SNAPSHOTS)|ROLLBACK_ICEBERG_VIEW_TO_SNAPSHOT|SET_ICEBERG_VIEW_CURRENT_SNAPSHOT|VALIDATE_MPP_LICENSE|VIEW_DEPENDENCIES|WAIT|WEBCONTAINER_(?:ELEMENT_STATUS|META_INF)|WRITELOG(?:ERROR|INFO))\\b",
+			"name": "support.function.procedure.denodo.vql"
+		},
+		{
+			"comment": "Denodo Specific Query Commands",
+			"match": "(?i)\\b(SELECT_NAVIGATIONAL)\\b",
+			"name": "keyword.other.dml.denodo.vql"
+		},
+		{
+			"comment": "--- FALLBACK: STANDARD SQL ---",
+			"include": "source.sql"
+		}
+	],
+"repository": {
+		"comments": {
+			"patterns": [
+				{
+					"comment": "Support for Denodo # line comments",
+					"begin": "#",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.vql"
+						}
+					},
+					"end": "\\n",
+					"name": "comment.line.number-sign.vql"
+				},
+				{
+					"comment": "Support for Standard SQL -- line comments",
+					"begin": "(^[ \\t]+)?(?=--)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.whitespace.comment.leading.sql"
+						}
+					},
+					"end": "(?!\\G)",
+					"patterns": [
+						{
+							"begin": "--",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.definition.comment.sql"
+								}
+							},
+							"end": "\\n",
+							"name": "comment.line.double-dash.sql"
+						}
+					]
+				},
+				{
+					"include": "#comment-block"
+				}
+			]
+		},
+		"comment-block": {
+			"begin": "/\\*",
+			"captures": {
+				"0": {
+					"name": "punctuation.definition.comment.sql"
+				}
+			},
+			"end": "\\*/",
+			"name": "comment.block.sql",
+			"patterns": [
+				{
+					"include": "#comment-block"
+				}
+			]
+		}
+	}
+}
