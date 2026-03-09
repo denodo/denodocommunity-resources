@@ -2,6 +2,11 @@
 
 All notable changes to the "Denodo VQL" extension will be documented in this file.
 
+## [1.0.2] - Public Release
+### Changed
+- Updated packaging to correct image paths in Visual Studio Marketplace.
+
+
 ## [1.0.1] - Public Release
 ### Changed
 - Updated README, screenshots, and documentation specifically for the public VS Code Marketplace release.

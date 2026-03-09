@@ -2,7 +2,7 @@
   "name": "vql-vscode",
   "displayName": "Denodo VQL",
   "description": "Denodo VQL Syntax Highlighting for VS Code",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "denodo",
   "icon": "images/denodo-icon.png",
   "homepage": "https://github.com/denodo/denodocommunity-resources/tree/master/plugins/denodo-vscode-vql-syntax#readme",
