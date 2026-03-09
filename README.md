@@ -56,6 +56,7 @@ In these subprojects you can find samples of custom components using the Denodo 
 In this subproject you can find plugins for third-party applications that are connected to the Denodo Platform:
 
 * [Denodo AI PowerBI Widget](./plugins/denodo-powerbi-ai-chart/): sample PowerBI widget that communicates with the Denodo AI SDK.
+* [Denodo VQL Syntax Highlighting for VS Code](./plugins/denodo-vscode-vql-syntax/): This extension provides highly optimized syntax highlighting for *.vql files in VS Code, specifically targeting Denodo 9 capabilities.
   
 ### Tools
 
