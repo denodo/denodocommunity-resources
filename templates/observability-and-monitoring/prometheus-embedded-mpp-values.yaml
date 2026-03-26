@@ -27,11 +27,13 @@ server:
       memory: 8196Mi
   nodeSelector:
     eks.amazonaws.com/nodegroup: <your-nodegroup>
+  retention: "5d"
   extraFlags:
     - web.enable-lifecycle
+    - web.enable-admin-api
 
 alertmanager:
-            
+
   persistence:
     enabled: true
     size: 20Gi
@@ -90,7 +92,7 @@ serverFiles:
               description: "No coordinator targets have been up for the last minute.\n"
 
           - alert: Too Few Worker Pods
-            expr: sum(kube_deployment_status_replicas{deployment="presto-worker"}) - count(up{job="presto-worker-jmx"} == 1) > 0
+            expr: sum(kube_deployment_status_replicas{deployment="presto-worker", job="kube-state-metrics"}) - count(up{job="presto-worker-jmx"} == 1) > 0
             for: 3m
             labels:
               severity: critical
@@ -98,12 +100,12 @@ serverFiles:
               summary: "Worker pods less than desired"
               description: "Missing  worker pods: {{ $value }}\n"
 
-          - alert: HPA at MaxCapacity 
+          - alert: HPA at MaxCapacity
             expr: ((sum(kube_horizontalpodautoscaler_spec_max_replicas) by (horizontalpodautoscaler,namespace)) - (sum(kube_horizontalpodautoscaler_status_current_replicas) by (horizontalpodautoscaler,namespace)))
             for: 0m
             labels:
               severity: warning
-            annotations: 
+            annotations:
               summary: HPA named {{$labels.horizontalpodautoscaler}} in {{$labels.namespace}} namespace is running at Max Capacity
               description: "\nNamespace: {{$labels.namespace}}\nHPA name: {{$labels.horizontalpodautoscaler}}\n"
 
@@ -112,7 +114,7 @@ serverFiles:
             for: 0m
             labels:
               severity: warning
-            annotations: 
+            annotations:
               summary: Container named {{$labels.container}} in {{$labels.pod}} in {{$labels.namespace}} was restarted more than 5 times in the last 15 minutes
               description: "\nNamespace: {{$labels.namespace}}\nPod name: {{$labels.pod}}\nContainer name: {{$labels.container}}\n"
 
@@ -124,7 +126,7 @@ serverFiles:
             annotations:
               summary: "Queries killed due to OOM"
               description: "Presto is killing queries due to out-of-memory issues.\n"
-          
+
           - alert: High CPU Usage
             expr: java_lang_OperatingSystem_CpuLoad > 0.9
             for: 2m
