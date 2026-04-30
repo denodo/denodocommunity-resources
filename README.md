@@ -78,8 +78,8 @@ In this subproject you can find useful scripts for working with Denodo:
 
 In this subproject you can find useful templates for working with Denodo:
 
-* [Denodo Embedded MPP Templates](./templates/denodo-embedded-mpp/): templates for deploying the Denodo Embedded MPP in Azure and AWS.
-* [Denodo Embedded MPP Observability and Monitoring Templates](./templates/observability-and-monitoring/): templates for monitoring the Denodo Embedded MPP with Prometheus and Grafana to track the health of the server.
+* [Denodo Lakehouse Accelerator Templates](./templates/denodo-embedded-mpp/): templates for deploying the Denodo Lakehouse Accelerator in Azure and AWS.
+* [Denodo Lakehouse Accelerator Observability and Monitoring Templates](./templates/observability-and-monitoring/): templates for monitoring the Denodo Lakehouse Accelerator with Prometheus and Grafana to track the health of the server.
 * [Denodo Data Products Lifecycle Roles](./templates/data-product-roles/): creation scripts of the roles defined in [this](https://community.denodo.com/kb/en/view/document/Denodo%20Data%20Products%20Lifecycle%20Roles) Knowledge Base article.
 * [Spring Batch Samples](./templates/spring-batch-samples/): template project using Spring Batch + Denodo Platform.
 

@@ -11,7 +11,7 @@ This subproject includes useful templates for deploying Observability and Monito
 
 ### Setup Instructions
 
-Please review the [Monitoring the Denodo MPP with Prometheus and Grafana](https://community.denodo.com/kb/en/view/document/Monitoring%20the%20Denodo%20MPP%20with%20Prometheus%20and%20Grafana) Knowledge Base article for configuring the agents and alerts, for building a Denodo Embedded MPP Dashboard in Grafana.
+Please review the [Monitoring the Denodo Lakehouse Accelerator with Prometheus and Grafana](https://community.denodo.com/kb/en/view/document/Monitoring%20the%20Denodo%20Lakehouse%20Accelerator%20with%20Prometheus%20and%20Grafana) Knowledge Base article for configuring the agents and alerts, for building a Denodo Embedded MPP Dashboard in Grafana.
 
 List of templates: 
 * [prometheus-embedded-mpp-values.yaml](prometheus-embedded-mpp-values.yaml): template file for a basic deployment of Prometheus in AWS.   
