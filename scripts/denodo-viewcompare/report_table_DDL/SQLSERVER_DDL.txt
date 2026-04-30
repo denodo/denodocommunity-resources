@@ -1,0 +1,58 @@
+CREATE TABLE [metadata_comparison](
+
+	[source_view_name] [varchar](250) NULL,
+
+
+	[target_view_name] [varchar](234) NULL,
+
+
+	[Column_Name] [varchar](234) NULL,
+
+
+	[source_datatype] [varchar](234) NULL,
+
+
+	[target_datatype] [varchar](255) NULL,
+
+
+	[observation] [varchar](234) NULL
+
+
+) 
+ 
+CREATE TABLE [row_count_comparison](
+
+	[source_view_name] [varchar](234) NULL,
+
+
+	[target_view_name] [varchar](234) NULL,
+
+
+	[source_row_count] [int] NULL,
+
+
+	[target_row_count] [int] NULL,
+
+
+	[observation] [varchar](234) NULL
+
+
+
+
+)
+ 
+CREATE TABLE [checksum_comparison](
+
+	[source_view_name] [varchar](234) NULL,
+
+	[target_view_name] [varchar](234) NULL,
+
+	[primary_key] [varchar](234) NULL,
+
+	[observation] [varchar](234) NULL
+
+
+
+
+)
+ 

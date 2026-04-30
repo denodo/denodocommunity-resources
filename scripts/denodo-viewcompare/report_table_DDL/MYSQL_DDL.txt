@@ -1,0 +1,23 @@
+CREATE TABLE metadata_comparison (
+    source_view_name VARCHAR(250),
+    target_view_name VARCHAR(234),
+    column_name VARCHAR(234),
+    source_datatype VARCHAR(234),
+    target_datatype VARCHAR(255),
+    observation VARCHAR(234)
+) ENGINE=InnoDB;
+
+CREATE TABLE row_count_comparison (
+    source_view_name VARCHAR(234),
+    target_view_name VARCHAR(234),
+    source_row_count INT,
+    target_row_count INT,
+    observation VARCHAR(234)
+) ENGINE=InnoDB;
+
+CREATE TABLE checksum_comparison (
+    source_view_name VARCHAR(234),
+    target_view_name VARCHAR(234),
+    primary_key VARCHAR(234),
+    observation VARCHAR(234)
+) ENGINE=InnoDB;

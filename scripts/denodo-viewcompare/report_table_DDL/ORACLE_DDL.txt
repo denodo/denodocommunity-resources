@@ -1,0 +1,23 @@
+CREATE TABLE metadata_comparison (
+    source_view_name   VARCHAR2(250),
+    target_view_name   VARCHAR2(234),
+    column_name        VARCHAR2(234),
+    source_datatype    VARCHAR2(234),
+    target_datatype    VARCHAR2(255),
+    observation        VARCHAR2(234)
+);
+
+CREATE TABLE row_count_comparison (
+    source_view_name   VARCHAR2(234),
+    target_view_name   VARCHAR2(234),
+    source_row_count   NUMBER,
+    target_row_count   NUMBER,
+    observation        VARCHAR2(234)
+);
+
+CREATE TABLE checksum_comparison (
+    source_view_name   VARCHAR2(234),
+    target_view_name   VARCHAR2(234),
+    primary_key        VARCHAR2(234),
+    observation        VARCHAR2(234)
+);
