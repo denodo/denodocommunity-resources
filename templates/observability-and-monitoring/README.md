@@ -2,7 +2,7 @@
 
 This subproject includes useful templates for deploying Observability and Monitoring frameworks to track the Denodo Platform components health.  
 
-## Denodo Embedded MPP
+## Denodo Lakehouse Accelerator
 
 **Prometheus** and **Grafana** are widely used open-source tools for monitoring and observability.
 
