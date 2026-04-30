@@ -15,5 +15,6 @@ Please review the [Monitoring the Denodo MPP with Prometheus and Grafana](https:
 
 List of templates: 
 * [prometheus-embedded-mpp-values.yaml](prometheus-embedded-mpp-values.yaml): template file for a basic deployment of Prometheus in AWS.   
-  
-* [grafana-embedded-mpp-dashboard.yaml](grafana-embedded-mpp-dashboard.yaml): this template includes a configmap with a JSON specification of the dashboards we want to add to Grafana on pod creation.
+* [prometheus-embedded-mpp-prestissimo-values.yaml](prometheus-embedded-mpp-prestissimo-values.yaml): template file for a Velox-based deployment of the Denodo Lakehouse Accelerator and a basic deployment of Prometheus in AWS.
+* [grafana-values.yaml](grafana-values.yaml): this template includes a configmap with a JSON specification of the dashboards we want to add to Grafana on pod creation.
+* [grafana-prestissimo-values.yaml](grafana-prestissimo-values.yaml): this template includes a configmap with a JSON specification of the dashboards we want to add to Grafana on pod creation (for a Velox-based deployment of the Denodo Lakehouse Accelerator).
