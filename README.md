@@ -63,6 +63,7 @@ In this subproject you can find plugins for third-party applications that are co
 In this subproject you can find useful applications that can be connected to Denodo Platform components:
 
 * [Denodo AI SDK Evaluator](./tools/denodo-aisdk-evaluator/): this is a specialized tool for assessing the performance and accuracy of queries generated using the Denodo AI SDK.
+* [Denodo Metadata Analyzer](./tools/denodo-metadata-analyzer/): this is a web tool that gives you more visibility for your Denodo environments. It parses VQL exports, Solution Manager configurations, and environment properties to generate visualizations about the elements included in those exported files.
   
 ### Scripts
 
