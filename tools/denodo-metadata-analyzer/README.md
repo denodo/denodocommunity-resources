@@ -16,8 +16,6 @@ Fast and comprehensive Denodo VQL metadata analysis tool with advanced view comp
    cd denodocommunity-resources
    git sparse-checkout init
    git sparse-checkout set tools/denodo-metadata-analyzer
-
-   git clone git@git.denodo.com:opensource/denodo-metadata-analyzer.git
    # OR download and extract the ZIP file
 
    cd denodo-metadata-analyzer
