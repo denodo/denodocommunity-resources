@@ -1,0 +1,6 @@
+flask
+flask-socketio
+kubernetes
+pyyaml
+urllib3
+eventlet
