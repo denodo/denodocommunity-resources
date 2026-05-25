@@ -1,0 +1,28 @@
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Old React app (archived)
+old_js/
+
+# Next.js app: ignore build artifacts and dependencies (but keep out/ for deployment)
+metadata-analyzer/.eslintcache
+metadata-analyzer/node_modules/
+metadata-analyzer/node_modules/.cache/
+metadata-analyzer/.next/
+metadata-analyzer/package-lock.json
+# Note: metadata-analyzer/out/ is NOT ignored - committed for Python-only deployment
+
+# Python virtual envs
+venv/
+.venv/
+*/venv/
+*/.venv/
+%~dp0venv/
+
+# Development/testing folders
+samples/
+
+# IDE and tooling
+.claude/
+.serena/

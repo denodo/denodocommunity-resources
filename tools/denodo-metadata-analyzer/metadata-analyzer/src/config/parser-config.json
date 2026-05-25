@@ -1,0 +1,324 @@
+{
+  "version": "1.0.0",
+  "description": "Extensible parser configuration for Denodo VQL statements",
+  "globalPatterns": {
+    "createOrReplace": "CREATE\\s+(OR\\s+REPLACE\\s+)?",
+    "statementEnd": ";",
+    "quotedIdentifier": "(?:\"([^\"]+)\"|([\\w.-]+))",
+    "description": "DESCRIPTION\\s*=\\s*'([^']*)'?"
+  },
+  "parsers": {
+    "database": {
+      "enabled": true,
+      "priority": 1,
+      "patterns": [
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?DATABASE\\s+{quotedIdentifier}"
+      ],
+      "extractors": {
+        "name": {
+          "group": 3,
+          "fallbackGroup": 4
+        },
+        "description": {
+          "pattern": "DESCRIPTION\\s*=\\s*'([^']*)'?",
+          "group": 1,
+          "required": false
+        }
+      },
+      "store": "databases",
+      "indexes": ["name", "denodoVersion"]
+    },
+    "datasource": {
+      "enabled": true,
+      "priority": 2,
+      "patterns": [
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?DATASOURCE\\s+(JDBC|JSON|XML|DF|MONGODB|LDAP|SALESFORCE|ODBC|CUSTOM|WS)\\s+{quotedIdentifier}"
+      ],
+      "extractors": {
+        "type": {
+          "group": 2
+        },
+        "name": {
+          "group": 3,
+          "fallbackGroup": 4
+        },
+        "className": {
+          "pattern": "CLASSNAME\\s*=\\s*'([^']+)'",
+          "group": 1,
+          "required": false
+        },
+        "driverClassName": {
+          "pattern": "DRIVERCLASSNAME\\s*=\\s*'([^']+)'",
+          "group": 1,
+          "required": false,
+          "condition": "type === 'JDBC'"
+        },
+        "databaseName": {
+          "pattern": "DATABASENAME\\s*=\\s*'([^']+)'",
+          "group": 1,
+          "required": false,
+          "condition": "type === 'JDBC'"
+        },
+        "databaseVersion": {
+          "pattern": "DATABASEVERSION\\s*=\\s*'([^']+)'",
+          "group": 1,
+          "required": false,
+          "condition": "type === 'JDBC'"
+        },
+        "databaseUri": {
+          "pattern": "DATABASEURI\\s*=\\s*'([^']+)'",
+          "group": 1,
+          "required": false,
+          "condition": "type === 'JDBC'"
+        },
+        "classpath": {
+          "pattern": "CLASSPATH\\s*=\\s*'([^']+)'",
+          "group": 1,
+          "required": false,
+          "condition": "type === 'JDBC'"
+        },
+        "username": {
+          "pattern": "USERNAME\\s*=\\s*'([^']+)'",
+          "group": 1,
+          "required": false,
+          "condition": "type === 'JDBC'"
+        },
+        "routeType": {
+          "pattern": "ROUTE\\s+(\\w+)\\s+'([^']+)'",
+          "group": 1,
+          "required": false,
+          "condition": "type === 'DF'"
+        },
+        "routeConnection": {
+          "pattern": "ROUTE\\s+(\\w+)\\s+'([^']+)'",
+          "group": 2,
+          "required": false,
+          "condition": "type === 'DF'"
+        },
+        "folder": {
+          "pattern": "FOLDER\\s*=\\s*'([^']*)'",
+          "group": 1,
+          "required": false
+        }
+      },
+      "store": "dataSources",
+      "indexes": ["type", "database", "name"]
+    },
+    "baseView": {
+      "enabled": true,
+      "priority": 3,
+      "patterns": [
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?TABLE\\s+{quotedIdentifier}"
+      ],
+      "extractors": {
+        "name": {
+          "group": 2,
+          "fallbackGroup": 3
+        },
+        "type": {
+          "value": "base"
+        },
+        "cacheStatus": {
+          "pattern": "CACHE\\s+(FULL|PARTIAL|OFF)",
+          "group": 1,
+          "default": "OFF"
+        }
+      },
+      "store": "views",
+      "indexes": ["type", "database", "cacheStatus"]
+    },
+    "derivedView": {
+      "enabled": true,
+      "priority": 4,
+      "patterns": [
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?VIEW\\s+{quotedIdentifier}(?!.*INTERFACE)"
+      ],
+      "extractors": {
+        "name": {
+          "group": 2,
+          "fallbackGroup": 3
+        },
+        "type": {
+          "value": "derived"
+        },
+        "cacheStatus": {
+          "pattern": "CACHE\\s+(FULL|PARTIAL|OFF)",
+          "group": 1,
+          "default": "OFF"
+        }
+      },
+      "store": "views",
+      "indexes": ["type", "database", "cacheStatus"]
+    },
+    "interfaceView": {
+      "enabled": true,
+      "priority": 5,
+      "patterns": [
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?INTERFACE\\s+VIEW\\s+{quotedIdentifier}"
+      ],
+      "extractors": {
+        "name": {
+          "group": 2,
+          "fallbackGroup": 3
+        },
+        "type": {
+          "value": "interface"
+        },
+        "cacheStatus": {
+          "pattern": "CACHE\\s+(FULL|PARTIAL|OFF)",
+          "group": 1,
+          "default": "OFF"
+        },
+        "implementation": {
+          "pattern": "SET\\s+IMPLEMENTATION\\s+([^\\s;]+)",
+          "group": 1,
+          "required": false
+        }
+      },
+      "store": "views",
+      "indexes": ["type", "database", "cacheStatus"]
+    },
+    "globalElements": {
+      "enabled": true,
+      "priority": 6,
+      "patterns": [
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?JAR\\s+{quotedIdentifier}",
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?GLOBAL_SECURITY_POLICY\\s+{quotedIdentifier}",
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?TAG\\s+{quotedIdentifier}(?:\\s+DESCRIPTION\\s*=\\s*'([^']*)')?",
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?TAGS\\s+\\(([^)]+)\\)"
+      ],
+      "extractors": {
+        "type": {
+          "group": 2
+        },
+        "name": {
+          "group": 3,
+          "fallbackGroup": 4
+        },
+        "description": {
+          "group": 5,
+          "required": false
+        },
+        "category": {
+          "value": "global"
+        }
+      },
+      "store": "globalElements",
+      "indexes": ["type", "category"]
+    },
+    "wrapper": {
+      "enabled": true,
+      "priority": 7,
+      "patterns": [
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?WRAPPER\\s+CUSTOM\\s+([\\w.-]+)"
+      ],
+      "extractors": {
+        "name": {
+          "group": 2
+        },
+        "dataSourceName": {
+          "pattern": "DATASOURCENAME\\s*=\\s*([\\w.-]+)",
+          "group": 1,
+          "required": false
+        },
+        "parameters": {
+          "pattern": "PARAMETERS\\s*\\(([\\s\\S]*?)\\)",
+          "group": 1,
+          "processor": "parseWrapperParameters"
+        }
+      },
+      "store": "wrappers",
+      "indexes": ["streamTuples", "type"]
+    },
+    "resourcePlan": {
+      "enabled": true,
+      "priority": 8,
+      "patterns": [
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?RESOURCE_MANAGER\\s+PLAN\\s+{quotedIdentifier}"
+      ],
+      "extractors": {
+        "name": {
+          "group": 2,
+          "fallbackGroup": 3
+        },
+        "description": {
+          "pattern": "DESCRIPTION\\s*=\\s*'([^']*)'",
+          "group": 1,
+          "required": false
+        },
+        "condition": {
+          "pattern": "CONDITION\\s+(.+?)\\s+RESOURCE_MANAGER",
+          "group": 1,
+          "required": false
+        }
+      },
+      "store": "resourcePlans",
+      "indexes": ["name"]
+    },
+    "resourceRule": {
+      "enabled": true,
+      "priority": 9,
+      "patterns": [
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?RESOURCE_MANAGER\\s+RULE\\s+{quotedIdentifier}"
+      ],
+      "extractors": {
+        "name": {
+          "group": 2,
+          "fallbackGroup": 3
+        },
+        "description": {
+          "pattern": "DESCRIPTION\\s*=\\s*'([^']*)'",
+          "group": 1,
+          "required": false
+        },
+        "condition": {
+          "pattern": "CONDITION\\s+(.+?)\\s+RESOURCE_MANAGER",
+          "group": 1,
+          "required": false
+        },
+        "plan": {
+          "pattern": "RESOURCE_MANAGER\\s+PLAN\\s+{quotedIdentifier}",
+          "group": 1,
+          "fallbackGroup": 2,
+          "required": false
+        }
+      },
+      "store": "resourceRules",
+      "indexes": ["name", "plan"]
+    },
+    "webService": {
+      "enabled": true,
+      "priority": 10,
+      "patterns": [
+        "CREATE\\s+(OR\\s+REPLACE\\s+)?(REST\\s+WEBSERVICE|SOAP\\s+WEBSERVICE|WEBSERVICE)\\s+{quotedIdentifier}"
+      ],
+      "extractors": {
+        "type": {
+          "group": 2,
+          "processor": "normalizeWebServiceType"
+        },
+        "name": {
+          "group": 3,
+          "fallbackGroup": 4
+        }
+      },
+      "store": "globalElements",
+      "indexes": ["type", "category"]
+    }
+  },
+  "processors": {
+    "parseWrapperParameters": {
+      "description": "Parse wrapper parameter string into key-value pairs",
+      "method": "parseWrapperParams"
+    },
+    "normalizeWebServiceType": {
+      "description": "Normalize web service type names",
+      "method": "normalizeWebServiceType"
+    }
+  },
+  "cachePatterns": {
+    "alterCache": [
+      "ALTER\\s+(VIEW|TABLE)\\s+{quotedIdentifier}\\s+.*CACHE\\s+(FULL|PARTIAL|OFF)"
+    ]
+  }
+}

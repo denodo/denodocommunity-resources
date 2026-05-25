@@ -1,0 +1,64 @@
+{
+  "name": "denodo-analyzer-nextjs",
+  "version": "2.1.0",
+  "description": "Advanced Denodo VQL metadata analyzer with modular grammar and DuckDB WASM",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@duckdb/duckdb-wasm": "^1.28.0",
+    "comlink": "^4.4.1",
+    "d3": "^7.8.5",
+    "file-saver": "^2.0.5",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^5.0.2",
+    "lucide-react": "^0.294.0",
+    "next": "^14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-window": "^1.8.8",
+    "react-window-infinite-loader": "^1.0.9",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "eslint": "^8.55.0",
+    "eslint-config-next": "^14.0.4",
+    "typescript": "^5.3.2",
+    "worker-loader": "^3.0.8"
+  },
+  "scripts": {
+    "dev": "set NODE_OPTIONS=--max-old-space-size=8192 && next dev",
+    "build": "set NODE_OPTIONS=--max-old-space-size=8192 && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "export": "set NODE_OPTIONS=--max-old-space-size=8192 && next build",
+    "type-check": "tsc --noEmit",
+    "compile": "tsc --project tsconfig.lib.json",
+    "validate:pipeline": "npm run compile && node validate-parsing-pipeline.js",
+    "grammar:validate": "node scripts/validate-grammar.js",
+    "grammar:stats": "node scripts/grammar-stats.js",
+    "start:python": "cd ../python && python view_complexity_server.py"
+  },
+  "eslintConfig": {
+    "extends": [
+      "next/core-web-vitals"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "homepage": "/"
+}

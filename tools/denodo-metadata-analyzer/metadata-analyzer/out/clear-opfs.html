@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clear OPFS Storage</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover {
+      background: #c0392b;
+    }
+    #status {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #666;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Clear DuckDB OPFS Storage</h1>
+    <p>Click the button below to clear all cached analysis data from Origin Private File System (OPFS). This will remove any corrupted data and allow you to start fresh.</p>
+    <button onclick="clearStorage()">🗑️ Clear Storage</button>
+    <div id="status"></div>
+  </div>
+  
+  <script>
+    async function clearStorage() {
+      const status = document.getElementById('status');
+      status.innerHTML = '<p style="color:#3498db">🔄 Clearing storage...</p>';
+      
+      try {
+        const opfsRoot = await navigator.storage.getDirectory();
+        const dirHandle = await opfsRoot.getDirectoryHandle('denodo-analyzer', { create: false });
+        await dirHandle.removeEntry('denodo_metadata.parquet');
+        
+        // Also get storage estimate
+        const estimate = await navigator.storage.estimate();
+        const usedMB = ((estimate.usage || 0) / 1024 / 1024).toFixed(2);
+        
+        status.innerHTML = `
+          <p style="color:#27ae60;font-weight:600">✅ Storage cleared successfully!</p>
+          <p style="color:#666">Storage freed. You can now close this page and upload a new VQL file.</p>
+          <p style="color:#666;font-size:12px">Current storage usage: ${usedMB} MB</p>
+        `;
+        console.log('OPFS storage cleared');
+      } catch (error) {
+        status.innerHTML = '<p style="color:#f39c12;font-weight:600">⚠️ No storage to clear or already cleared</p><p style="color:#666">You\'re good to go! Upload a new VQL file.</p>';
+        console.log('No storage to clear:', error);
+      }
+    }
+  </script>
+</body>
+</html>
