@@ -64,6 +64,7 @@ In this subproject you can find useful applications that can be connected to Den
 
 * [Denodo AI SDK Evaluator](./tools/denodo-aisdk-evaluator/): this is a specialized tool for assessing the performance and accuracy of queries generated using the Denodo AI SDK.
 * [Denodo Metadata Analyzer](./tools/denodo-metadata-analyzer/): this is a web tool that gives you more visibility for your Denodo environments. It parses VQL exports, Solution Manager configurations, and environment properties to generate visualizations about the elements included in those exported files.
+* [Denodo Lakehouse Accelerator Deployment Tool](./tools/denodo-lakehouse-accelerator-deployment-tool/): this is a web-based tool for deploying and managing Denodo Lakehouse Accelerator clusters on Kubernetes through an intuitive user interface, eliminating the need for command-line expertise.
   
 ### Scripts
 
@@ -89,7 +90,7 @@ In this subproject you can find useful templates for working with Denodo:
 
 - Star the repo
 - Join the [Denodo Community](https://community.denodo.com/) and ask questions on the [Q&A](https://community.denodo.com/answers)
-- Download [Denodo Express](https://community.denodo.com/express/download)
+- Download [Denodo Developer Tier](https://community.denodo.com/denodo-platform-developer-tier)
 - [Contributions](https://github.com/denodo/denodocommunity-resources/contribute) are, of course, most welcome! 
 - Track [issues](https://github.com/denodo/denodocommunity-resources/issues/new/choose) 
 
