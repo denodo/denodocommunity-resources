@@ -24,4 +24,5 @@ yarn.lock
 # Source code
 src/**
 tests/**
+vql_test.vql
 **/*.map

@@ -57,8 +57,8 @@ code --install-extension denodo.vql-vscode
 
 ## Release Notes
 
-1.0.2
-Initial release. Please refer to the CHANGELOG for details.
+1.0.3
+Public release. Please refer to the CHANGELOG for details.
 
 ## Author
 Created and maintained by **[Jason Sandidge](mailto:jsandidge@denodo.com)**.

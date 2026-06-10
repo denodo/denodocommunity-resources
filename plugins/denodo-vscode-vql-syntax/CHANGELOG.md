@@ -2,6 +2,15 @@
 
 All notable changes to the "Denodo VQL" extension will be documented in this file.
 
+## [1.0.3] - Public Release
+### Added
+- Added `//` as a supported single-line comment style alongside the existing `#` comment.
+
+### Fixed
+- Pinned `pnpm` version in CI pipeline to `9.1.0` to match `packageManager` field and prevent non-deterministic builds.
+- Excluded `vql_test.vql` from the packaged extension to avoid bundling test files in the marketplace release.
+
+
 ## [1.0.2] - Public Release
 ### Changed
 - Updated packaging to correct image paths in Visual Studio Marketplace.

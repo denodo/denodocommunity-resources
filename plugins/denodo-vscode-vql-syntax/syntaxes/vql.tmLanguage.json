@@ -4,7 +4,7 @@
 		"Denodo VQL Syntax Highlighting for VS Code",
 		"Developed by Jason Sandidge at Denodo"
 	],
-	"version": "1.0.1",
+	"version": "1.0.3",
 	"name": "VQL",
 	"scopeName": "source.vql",
 "patterns": [
@@ -159,6 +159,17 @@
 					},
 					"end": "\\n",
 					"name": "comment.line.number-sign.vql"
+				},
+				{
+					"comment": "Support for // line comments",
+					"begin": "//",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.vql"
+						}
+					},
+					"end": "\\n",
+					"name": "comment.line.double-slash.vql"
 				},
 				{
 					"comment": "Support for Standard SQL -- line comments",
