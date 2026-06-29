@@ -14,7 +14,14 @@ collaborators:
 
 This project mantains some sample **custom stored procedures** that any user can use in his/her own Denodo installation.
 
-## Custom Stored Procedures
+## Custom VQL Stored Procedures
+
+This is the list of available VQL Stored Procedures that you can import in your Denodo Platform isntallation:
+
+* **[Dynamic Pivot and Unpivot VQL Procedures](./vql/DynamicPivotandUnpivotVQLStoredProcedure/)**: It includes the Pivot (sp_dynamic_pivot_procedure) and Unpivot (sp_dynamic_unpivot_procedure) VQL procedures to dynamically generate and execute VQL to transform data between: Row-based format → Pivoted format / Pivoted format → Normalized row-based format.
+
+
+## Custom JAVA Stored Procedures
 
 This is the list of available Custom Stored Procedures created in Java code:
 

@@ -1,0 +1,66 @@
+CREATE OR REPLACE VQL PROCEDURE sp_dynamic_pivot_procedure(
+    in_view_name        IN VARCHAR, -- input view name
+    in_output_view_name IN VARCHAR, -- name of the pivoted view created
+    in_grouping_col     IN VARCHAR, -- name of the column to be grouped
+    in_pivot_col        IN VARCHAR, -- name of the column to be pivoted
+    in_value_col        IN VARCHAR, -- name of the column who's values placed inside the pivoted columns
+    in_prefix           IN VARCHAR, -- prefix given to the columns pivoted
+    in_agg_type         IN VARCHAR, -- Type of aggregation used (SUM, MAX, MIN, AVG, COUNT)
+    query               OUT VARCHAR -- output VQL query generated
+)
+AS (
+    CURSOR c_vals IS
+        'SELECT DISTINCT pivot_value
+           FROM tmp_pivot_values
+          ORDER BY pivot_value';
+
+    row_val   c_vals%ROWTYPE;
+    helper_sql VARCHAR;
+    final_sql  VARCHAR;
+    aggregation VARCHAR;
+)
+BEGIN
+
+
+    -- Build a helper view with the distinct pivot values
+    helper_sql := 'CREATE OR REPLACE VIEW "tmp_pivot_values" AS
+                   SELECT DISTINCT "' || in_pivot_col || '" AS pivot_value
+                   FROM "' || in_view_name || '"';
+
+    EXECUTE ':sql_param'
+    PARAMETERS (sql_param)
+    VALUES (helper_sql);
+
+    -- Build the final pivot view
+    final_sql := 'CREATE OR REPLACE VIEW "' || in_output_view_name ||
+                 '" AS SELECT "' || in_grouping_col || '"';
+
+    OPEN c_vals;
+
+    LOOP
+        FETCH c_vals INTO row_val;
+
+        final_sql := final_sql ||
+            ', '|| in_agg_type ||'(CASE WHEN "' || in_pivot_col ||
+            '" = ''' || row_val.pivot_value ||
+            ''' THEN "' || in_value_col ||
+            '" ELSE NULL END) AS "' || in_prefix ||
+            row_val.pivot_value || '"';
+
+        EXIT WHEN c_vals%NOTFOUND;
+    END LOOP;
+
+    CLOSE c_vals;
+
+    final_sql := final_sql ||
+        ' FROM "' || in_view_name ||
+        '" GROUP BY "' || in_grouping_col || '"';
+
+    EXECUTE ':sql_param'
+    PARAMETERS (sql_param)
+    VALUES (final_sql);
+
+    EXECUTE 'DROP VIEW "tmp_pivot_values"';
+
+    RETURN ROW (query) VALUES (final_sql);
+END;

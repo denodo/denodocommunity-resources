@@ -1,0 +1,62 @@
+CREATE OR REPLACE VQL PROCEDURE sp_dynamic_unpivot_procedure(
+    in_view_name      IN VARCHAR, -- name of the view
+    in_prefix      IN VARCHAR, -- prefix used for the pivot column (used as pattern for identifying)
+    in_grouping_col IN VARCHAR, -- column used for grouping
+    in_value_col IN VARCHAR, -- value column
+    in_name_unpivot_col IN VARCHAR, -- name of the column after unpivoting
+    in_output_view_name IN VARCHAR, -- name of the output view
+    query          OUT VARCHAR
+)
+AS (
+    CURSOR c_cols IS 
+      'SELECT column_name 
+         FROM GET_VIEW_COLUMNS() 
+        WHERE input_view_name       = '':param1'' 
+          AND column_name LIKE     '':param2''
+        ORDER BY column_name';
+      
+    row_col       c_cols%ROWTYPE;
+    part_final    VARCHAR;
+    first_col     INT;
+    in_prefix_par VARCHAR;
+)
+BEGIN
+    -- Prepare pattern for prefix search
+    in_prefix_par := in_prefix || '%';
+
+    -- Begin building the CREATE VIEW statement
+    part_final := 'CREATE OR REPLACE VIEW ' || in_output_view_name || ' AS SELECT "'||in_grouping_col||'"';
+    first_col := 1;
+
+    -- Open cursor with parameters: (database, view, prefixPattern)
+    OPEN c_cols PARAMETERS (param1, param2) 
+                   VALUES (in_view_name, in_prefix_par);
+
+    -- Loop through columns and build UNION ALL selects
+    LOOP
+        FETCH c_cols INTO row_col;
+
+IF first_col = 1 THEN
+    part_final := part_final ||
+        ', ''' || SUBSTR(row_col.column_name, LEN(in_prefix) + 1) || ''' AS "' || in_name_unpivot_col || '", ' ||
+        '"' || row_col.column_name || '" AS "' || in_value_col || '" FROM "' || in_view_name || '"' ||
+        ' WHERE "' || row_col.column_name || '" IS NOT NULL';
+    first_col := 0;
+ELSE
+    part_final := part_final ||
+        ' UNION SELECT "' || in_grouping_col || '", ''' ||
+        SUBSTR(row_col.column_name, LEN(in_prefix) + 1) || ''' AS "' || in_name_unpivot_col || '", "' ||
+        row_col.column_name || '" AS "' || in_value_col || '" FROM "' || in_view_name || '"' ||
+        ' WHERE "' || row_col.column_name || '" IS NOT NULL';
+END IF;
+    EXIT WHEN c_cols%NOTFOUND;
+    END LOOP;
+    EXECUTE ':sql_param' PARAMETERS(sql_param) VALUES(part_final);
+    CLOSE c_cols;
+
+    -- Execute the dynamic DDL to create the view
+    
+
+    -- Return the generated query string (optional, for debugging)
+    RETURN ROW (query) VALUES (part_final);
+END;
