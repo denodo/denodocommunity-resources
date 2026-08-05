@@ -1,0 +1,19 @@
+# Environment variables - never commit this
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+
+# JDBC Driver - users download their own
+drivers/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

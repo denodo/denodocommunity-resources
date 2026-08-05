@@ -80,10 +80,11 @@ In this subproject you can find useful scripts for working with Denodo:
 
 In this subproject you can find useful templates for working with Denodo:
 
-* [Denodo Lakehouse Accelerator Templates](./templates/denodo-embedded-mpp/): templates for deploying the Denodo Lakehouse Accelerator in Azure and AWS.
-* [Denodo Lakehouse Accelerator Observability and Monitoring Templates](./templates/observability-and-monitoring/): templates for monitoring the Denodo Lakehouse Accelerator with Prometheus and Grafana to track the health of the server.
-* [Denodo Data Products Lifecycle Roles](./templates/data-product-roles/): creation scripts of the roles defined in [this](https://community.denodo.com/kb/en/view/document/Denodo%20Data%20Products%20Lifecycle%20Roles) Knowledge Base article.
-* [Spring Batch Samples](./templates/spring-batch-samples/): template project using Spring Batch + Denodo Platform.
+* [Denodo Lakehouse Accelerator Templates](./templates/denodo-embedded-mpp/): Some templates for deploying the Denodo Lakehouse Accelerator in Azure and AWS.
+* [Denodo Lakehouse Accelerator Observability and Monitoring Templates](./templates/observability-and-monitoring/): Some templates for monitoring the Denodo Lakehouse Accelerator with Prometheus and Grafana to track the health of the server.
+* [Denodo Data Products Lifecycle Roles](./templates/data-product-roles/): Sample scripts for the creation of the roles defined in [this](https://community.denodo.com/kb/en/view/document/Denodo%20Data%20Products%20Lifecycle%20Roles) Knowledge Base article.
+* [Spring Batch Samples](./templates/spring-batch-samples/): A template project using Spring Batch + Denodo Platform.
+* [SageMaker Catalog / Denodo Metadata Sync Samples](./templates/sagemaker-catalog-denodo-integration/): A template project demonstrating a bidirectional sync of business metadata between Amazon SageMaker Catalog (via the Amazon DataZone APIs) and Denodo Virtual DataPort (VDP)..
 
 
 # Join the Denodo Community
