@@ -8,7 +8,7 @@ For help and questions about using this project, please look at the README doc i
 
 ## Support Policy  
  
-Support for the Denodo ViewCompare project: **Best effort**
+Support for the Denodo Linux Startup Scripts: **Best effort**
 
 Best effort means that major security vulnerabilities and major bugs will be fixed by the Denodo Community team. The team will try to keep the artifact updated with new enhancements, but it is not guaranteed. Any user can request new features and submit problems.
 
