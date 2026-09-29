@@ -1,0 +1,21 @@
+[Unit]
+Description=Denodo Data Catalog
+PartOf=vqlserver.service
+After=vqlserver.service
+
+[Service]
+Type=oneshot
+
+ExecStart=<DENODO_HOME>/bin/webcontainer.sh start denodo-data-catalog
+ExecStop=<DENODO_HOME>/bin/webcontainer.sh stop denodo-data-catalog
+
+Environment=JAVA_HOME=<DENODO_HOME>/jre
+Environment=DENODO_CONF=<DENODO_HOME>/resources/apache-tomcat/webapps/denodo-data-catalog/WEB-INF/classes
+RemainAfterExit=yes
+KillMode=none
+User=<DENODO_USER>
+Group=<DENODO_USERGROUP>
+
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#
+. <DENODO_HOME>/bin/systemd/denodo.properties
+
+PIDFILE=${PIDFILE:-${DENODO_HOME}/logs/vqlserver.pid}
+DENODO_PID_CHECK_PATTERN=${DENODO_PID_CHECK_PATTERN:-DENODO_APP=Denodo VDP Server}
+
+# Return Values
+E_SUCCESS=0
+E_BAD_PID=3
+E_BAD_PARAM=4
+E_UNMANAGED=5
+
+case "$1" in
+  pre)
+    if [ -f $PIDFILE ]; then
+      pid=$(< "$PIDFILE")
+      if  kill -0 $pid && [[ -r /proc/$pid/cmdline ]] && xargs -0 printf '%s\n' < /proc/$pid/cmdline | /bin/grep -q "$DENODO_PID_CHECK_PATTERN"; then
+        echo  "PID file $PIDFILE exists, Denodo service is already running: $pid" >&2
+       else
+        rm ${PIDFILE}
+      fi
+    fi
+
+    pid=$(/bin/ps -fwwu $DENODO_USER | /bin/grep "$DENODO_PID_CHECK_PATTERN" | /bin/grep "$DENODO_HOME" | /bin/grep -v grep | /bin/awk '{print $2}')
+    if [[ -n "$pid" ]] && [[ -r /proc/$pid/cmdline ]] && xargs -0 printf '%s\n' < /proc/$pid/cmdline | /bin/grep -q "$DENODO_PID_CHECK_PATTERN"; then
+      echo  "Denodo service is already running: $pid" >&2
+      RETURN_CODE=$E_UNMANAGED
+     else
+      RETURN_CODE=$E_SUCCESS
+    fi
+  ;;
+  *)
+    echo "Usage: $0 [pre]"
+    RETURN_CODE=$E_BAD_PARAM
+  ;;
+esac
+exit $RETURN_CODE 

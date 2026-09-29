@@ -1,0 +1,21 @@
+[Unit]
+Description=Denodo Diagnostic & Monitoring Tool
+PartOf=vqlserver.service
+After=vqlserver.service
+
+[Service]
+Type=oneshot
+
+ExecStart=<DENODO_HOME>/bin/webcontainer.sh start diagnostic-monitoring-tool
+ExecStop=<DENODO_HOME>/bin/webcontainer.sh stop diagnostic-monitoring-tool
+
+Environment=JAVA_HOME=<DENODO_HOME>/jre
+Environment=DENODO_CONF=<DENODO_HOME>/resources/apache-tomcat/webapps/diagnostic-monitoring-tool/WEB-INF/classes
+RemainAfterExit=yes
+KillMode=none
+User=<DENODO_USER>
+Group=<DENODO_USERGROUP>
+
+
+[Install]
+WantedBy=multi-user.target

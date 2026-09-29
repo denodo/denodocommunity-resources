@@ -1,0 +1,21 @@
+[Unit]
+Description=Denodo Scheduler Webadmin
+PartOf=vqlserver.service
+After=schedulerserver.service vqlserver.service
+
+[Service]
+Type=oneshot
+
+ExecStart=<DENODO_HOME>/bin/webcontainer.sh start webadmin/denodo-scheduler-admin
+ExecStop=<DENODO_HOME>/bin/webcontainer.sh stop webadmin/denodo-scheduler-admin
+
+Environment=JAVA_HOME=<DENODO_HOME>/jre
+Environment=DENODO_CONF=<DENODO_HOME>/resources/apache-tomcat/webapps/webadmin#denodo-scheduler-admin/WEB-INF/classes
+RemainAfterExit=yes
+KillMode=none
+
+User=<DENODO_USER>
+Group=<DENODO_USERGROUP>
+
+[Install]
+WantedBy=multi-user.target

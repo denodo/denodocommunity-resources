@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+#
+# Start/Stop Denodo VDP Server Daemon
+#
+
+# Time to wait to...
+T_WAIT_TO_STARTUP=30 # After startup
+T_WAIT_TO_SHUTDOWN=20 # After shutdown
+T_WAIT_TO_KILL=20 # After kill
+
+. <DENODO_HOME>/bin/systemd/denodo.properties
+
+# Denodo service name
+DENODO_SERVICE="Denodo VDP Server"
+# PIDFILE to block concurrent attempts to start the service
+PIDFILE=${PIDFILE:-${DENODO_HOME}/logs/vqlserver.pid}
+# File to check the process of the service
+DENODO_PID_CHECK_PATTERN="DENODO_APP=Denodo VDP Server"
+
+# Useful paths
+DENODO_SRV_START_SCRIPT="$DENODO_HOME/bin/vqlserver_startup.sh"
+DENODO_SRV_STOP_SCRIPT="$DENODO_HOME/bin/vqlserver_shutdown.sh"
+
+# Return Values
+E_SUCCESS=0
+E_BAD_PID=3
+E_BAD_PARAM=4
+E_RUNNING=5
+
+# Function to get the pid of this service
+
+get_pid() {
+  local P=$(/bin/ps -fwwu $DENODO_USER | /bin/grep "$DENODO_PID_CHECK_PATTERN" | /bin/grep "$DENODO_HOME" | /bin/grep -v grep | /bin/awk '{print $2}')
+  /bin/echo "$P"
+}
+
+start(){
+  if [ -f $PIDFILE ]; then
+    local pidf=$(< "$PIDFILE")
+    if kill -0 $pidf && [[ -r /proc/$pidf/cmdline ]] && xargs -0 printf '%s\n' < /proc/$pidf/cmdline | /bin/grep -q "$DENODO_PID_CHECK_PATTERN"; then
+      echo  "PID file $PIDFILE exists, Denodo service is already running: $pidf" >&2
+     else
+       rm ${PIDFILE}
+    fi
+  fi
+ 
+  local PID=$(get_pid)
+  if [ -n "$PID" ] && (( "$PID" > 0 )) 2> /dev/null; then
+      echo  "Denodo service is already running: $PID" >&2
+      RETURN_CODE=$E_RUNNING
+   else
+
+    # Block any other process attempt to launch the service
+    /bin/touch $PIDFILE
+    # Startup script
+    $DENODO_SRV_START_SCRIPT
+    # Wait to capture the PID.
+    sleep $T_WAIT_TO_STARTUP
+    # Get pid to write it to $PIDFILE
+    PID=$(get_pid)
+    if [ -n "$PID" ] && (( "$PID" > 0 )) 2> /dev/null; then
+      echo $PID >$PIDFILE
+      RETURN_CODE=$E_SUCCESS
+     else
+      /bin/rm $PIDFILE
+      RETURN_CODE=$E_BAD_PID
+    fi
+
+  fi
+
+}
+
+stop(){
+
+  if [ ! -f $PIDFILE ]; then
+    echo "$DENODO_SERVICE is not running."
+   else
+
+    # Shutdown script
+    $DENODO_SRV_STOP_SCRIPT
+    # Wait to capture the pid
+    sleep $T_WAIT_TO_SHUTDOWN
+    local PID=$(< "$PIDFILE")
+
+    if kill -0 "$PID" 2> /dev/null; then # Still running
+      echo "Termination $PID"        
+      # SIGTERM
+      /bin/kill $PID
+      sleep $T_WAIT_TO_KILL
+      if kill -0 "$PID" 2> /dev/null; then # Still running
+        # SIGKILL
+        /bin/kill -9 $PID
+                    echo "Abrupt termination"
+      fi
+
+    fi
+
+    # Remove blocking file $PIDFILE so that it can be started again
+    /bin/rm $PIDFILE
+    RETURN_CODE=$E_SUCCESS
+  fi
+
+}
+
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop}"
+        RETURN_CODE=$E_BAD_PARAM
+esac
+
+exit $RETURN_CODE

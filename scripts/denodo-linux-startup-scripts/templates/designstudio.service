@@ -1,0 +1,21 @@
+[Unit]
+Description=Denodo Design Studio
+PartOf=vqlserver.service
+After=vqlserver.service
+
+[Service]
+Type=oneshot
+
+ExecStart=<DENODO_HOME>/bin/webcontainer.sh start denodo-design-studio
+ExecStop=<DENODO_HOME>/bin/webcontainer.sh stop denodo-design-studio
+
+Environment=JAVA_HOME=<DENODO_HOME>/jre
+Environment=DENODO_CONF=<DENODO_HOME>/resources/apache-tomcat/webapps/denodo-design-studio/WEB-INF/classes
+RemainAfterExit=yes
+KillMode=none
+User=<DENODO_USER>
+Group=<DENODO_USERGROUP>
+
+
+[Install]
+WantedBy=multi-user.target

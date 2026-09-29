@@ -1,0 +1,22 @@
+[Unit]
+Description=Denodo VQL Server Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=forking
+PIDFile=<DENODO_HOME>/logs/vqlserver.pid
+
+ExecStartPre=+<DENODO_HOME>/lib/sh/denodo-init pre
+ExecStart=<DENODO_HOME>/bin/systemd/vqlserver start
+ExecStop=<DENODO_HOME>/bin/systemd/vqlserver stop
+Environment=JAVA_HOME=<DENODO_HOME>/jre
+Environment=PIDFILE=<DENODO_HOME>/logs/vqlserver.pid
+Environment=DENODO_PID_CHECK_PATTERN="DENODO_APP=Denodo VDP Server"
+TimeoutSec=320
+
+User=<DENODO_USER>
+Group=<DENODO_USERGROUP>
+
+[Install]
+WantedBy=multi-user.target

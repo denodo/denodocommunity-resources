@@ -1,0 +1,22 @@
+[Unit]
+Description=Denodo Scheduler Server Service
+Wants=network-online.target
+After=network-online.target vqlserver.service
+
+[Service]
+Type=forking
+PIDFile=<DENODO_HOME>/logs/schedulerserver.pid
+
+ExecStart=<DENODO_HOME>/bin/systemd/schedulerserver start
+ExecStop=<DENODO_HOME>/bin/systemd/schedulerserver stop
+
+Environment=JAVA_HOME=<DENODO_HOME>/jre
+Environment=PIDFILE=<DENODO_HOME>/logs/schedulerserver.pid
+Environment=DENODO_PID_CHECK_PATTERN="DENODO_APP=Denodo Scheduler Server"
+TimeoutSec=240
+
+User=<DENODO_USER>
+Group=<DENODO_USERGROUP>
+
+[Install]
+WantedBy=multi-user.target

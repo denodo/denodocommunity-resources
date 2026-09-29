@@ -1,0 +1,22 @@
+[Unit]
+Description=Denodo Scheduler Index Server Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=forking
+PIDFile=<DENODO_HOME>/logs/schedulerindexserver.pid
+
+ExecStart=<DENODO_HOME>/bin/systemd/schedulerindexserver start
+ExecStop=<DENODO_HOME>/bin/systemd/schedulerindexserver stop
+
+Environment=JAVA_HOME=<DENODO_HOME>/jre
+Environment=PIDFILE=<DENODO_HOME>/logs/schedulerindexserver.pid
+Environment=DENODO_PID_CHECK_PATTERN="DENODO_APP=Denodo Aracne Index"
+TimeoutSec=240
+
+User=<DENODO_USER>
+Group=<DENODO_USERGROUP>
+
+[Install]
+WantedBy=multi-user.target
