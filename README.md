@@ -47,33 +47,34 @@ git sparse-checkout set plugins/denodo-powerbi-ai-chart
 
 In these subprojects you can find samples of custom components using the Denodo Java API:
 
-* [Custom Data Sources](./custom-data-sources/): sample Virtual DataPort custom data sources (also called custom wrappers).
-* [Custom Functions](./custom-functions/): sample Virtual DataPort custom functions.
-* [Custom Stored Procedures](./custom-stored-procedures/): sample Virtual DataPort tored procedures.
+* [Custom Data Sources](./custom-data-sources/): Sample Virtual DataPort custom data sources (also called custom wrappers).
+* [Custom Functions](./custom-functions/): Sample Virtual DataPort custom functions.
+* [Custom Stored Procedures](./custom-stored-procedures/): Sample Virtual DataPort tored procedures.
 
 ### Plugins
 
 In this subproject you can find plugins for third-party applications that are connected to the Denodo Platform:
 
-* [Denodo AI PowerBI Widget](./plugins/denodo-powerbi-ai-chart/): sample PowerBI widget that communicates with the Denodo AI SDK.
+* [Denodo AI PowerBI Widget](./plugins/denodo-powerbi-ai-chart/): Sample PowerBI widget that communicates with the Denodo AI SDK.
 * [Denodo VQL Syntax Highlighting for VS Code](./plugins/denodo-vscode-vql-syntax/): This extension provides highly optimized syntax highlighting for *.vql files in VS Code, specifically targeting Denodo 9 capabilities.
   
 ### Tools
 
 In this subproject you can find useful applications that can be connected to Denodo Platform components:
 
-* [Denodo AI SDK Evaluator](./tools/denodo-aisdk-evaluator/): this is a specialized tool for assessing the performance and accuracy of queries generated using the Denodo AI SDK.
-* [Denodo Metadata Analyzer](./tools/denodo-metadata-analyzer/): this is a web tool that gives you more visibility for your Denodo environments. It parses VQL exports, Solution Manager configurations, and environment properties to generate visualizations about the elements included in those exported files.
-* [Denodo Lakehouse Accelerator Deployment Tool](./tools/denodo-lakehouse-accelerator-deployment-tool/): this is a web-based tool for deploying and managing Denodo Lakehouse Accelerator clusters on Kubernetes through an intuitive user interface, eliminating the need for command-line expertise.
+* [Denodo AI SDK Evaluator](./tools/denodo-aisdk-evaluator/): This is a specialized tool for assessing the performance and accuracy of queries generated using the Denodo AI SDK.
+* [Denodo Metadata Analyzer](./tools/denodo-metadata-analyzer/): This is a web tool that gives you more visibility for your Denodo environments. It parses VQL exports, Solution Manager configurations, and environment properties to generate visualizations about the elements included in those exported files.
+* [Denodo Lakehouse Accelerator Deployment Tool](./tools/denodo-lakehouse-accelerator-deployment-tool/): This is a web-based tool for deploying and managing Denodo Lakehouse Accelerator clusters on Kubernetes through an intuitive user interface, eliminating the need for command-line expertise.
   
 ### Scripts
 
 In this subproject you can find useful scripts for working with Denodo:
 
-* [Denodo Support Utilities](./scripts/denodo-support-utilities/): this tool enables you to interact with the Denodo Support Site using commands in your command-line shell.
-* [Denodo Incremental Deployment](./scripts/denodo-incremental-deployment/): automation framework for code promotion within the Denodo Major versions and also moving code from one major version to another version.
-* [Denodo View Compare](./scripts/denodo-viewcompare/): it enables efficient comparison of views across Denodo environments, whether within the same server or across different servers.
-* [Denodo Governance Bridge for Collibra – Automation Framework](./scripts/denodo-governance-bridge-collibra/): seamless transfer of metadata from the Denodo Platform to Collibra. It retrieves, transforms, and upserts Denodo metadata into Collibra as assets and complex relations, ensuring alignment between the two platforms.
+* [Denodo Support Utilities](./scripts/denodo-support-utilities/): This tool enables you to interact with the Denodo Support Site using commands in your command-line shell.
+* [Denodo Linux Startup Scripts](./scripts/denodo-linux-startup-scripts/): These scripts allow you to configure Denodo Platform services on Linux via systemd.
+* [Denodo Incremental Deployment](./scripts/denodo-incremental-deployment/): Automation framework for code promotion within the Denodo Major versions and also moving code from one major version to another version.
+* [Denodo View Compare](./scripts/denodo-viewcompare/): It enables efficient comparison of views across Denodo environments, whether within the same server or across different servers.
+* [Denodo Governance Bridge for Collibra – Automation Framework](./scripts/denodo-governance-bridge-collibra/): Seamless transfer of metadata from the Denodo Platform to Collibra. It retrieves, transforms, and upserts Denodo metadata into Collibra as assets and complex relations, ensuring alignment between the two platforms.
 
 
 ### Templates
