@@ -1,372 +1,374 @@
 # Denodo ViewCompare
 
-# Introduction
+## Introduction
 
-Denodo periodically releases both major and minor updates to its platform. During migrations—whether between major versions or incremental updates—customers are required to perform thorough testing to ensure consistency and reliability across environments. To facilitate and accelerate this process, the Denodo ViewCompare has been developed to identify differences in both metadata and data across Denodo environments.
+Denodo ViewCompare is a framework designed to validate metadata and data consistency between two Denodo environments. It helps accelerate testing during Denodo version upgrades, migrations, and platform updates.
 
-The framework enables comparison of view definitions (metadata) as well as the underlying data, helping users detect discrepancies that may arise during migration. It is designed to provide detailed insights, including record-level differences, for a specified set of views across different versions.
+The framework compares view definitions and underlying data across Source and Target Denodo environments, identifying discrepancies and providing detailed comparison results.
 
-In addition to detailed comparisons, the framework offers flexibility by allowing users to perform basic validation checks or opt for more granular, record-level analysis based on their requirements. This adaptability ensures that the framework can cater to varying levels of testing depth.
+ViewCompare can be deployed on a dedicated Denodo V9 Host VDP server, which orchestrates comparisons between the Source and Target environments.
 
-The Denodo ViewCompare can be deployed on any Denodo instance and configured to connect to both source and target environments. This allows users to perform comprehensive validation and View validation testing across different systems in a centralized and efficient manner.
+## Key Features
+
+ViewCompare supports three types of comparisons:
 
----
+### 1. Metadata Comparison
+- Compares view definitions between Source and Target environments.
+- Identifies differences in schema structure, field names, data types, precision, nullability, and other metadata properties.
+- Results are stored in `bv_metadata_comparison`.
 
-# Scope
+### 2. Row Count Comparison
+- Compares the total number of records returned by Source and Target views.
+- Supports comparison using view names or custom SELECT queries.
+- Supports conditional comparisons using WHERE clauses.
+- Results are stored in `bv_row_count_comparison`.
 
-The **Denodo ViewCompare** is designed to assist customers in accelerating the testing process (limited to comparing the views) during migrations to newer Denodo versions or when applying platform updates. It provides a foundational setup that enables efficient comparison of views across Denodo environments, whether within the same server or across different servers.
+### 3. Row-Level Data Comparison (Checksum)
 
-The framework supports the following types of comparisons between two Denodo environments:
+- Performs detailed record-level data validation.
+- Uses SHA-256 hashing to identify differences between Source and Target datasets.
+- Supports comparison using view names or custom SELECT queries.
+- Supports filtered comparisons using WHERE conditions.
+- Uses primary keys to match records across environments.
+- Identifies missing records and mismatched data.
+- Results are stored in `bv_checksum_comparison`.
 
-## 1. Metadata Comparison
+The checksum comparison supports the following observations:
 
-Evaluates differences in view definitions, including schema structure, field names, data types, and more.
+| Observation | Description |
+|---|---|
+| missing in source | Record exists in Target but not in Source |
+| missing in target | Record exists in Source but not in Target |
+| mismatch | Record exists in both environments but the data differs |
 
-## 2. Row Count Comparison
+Identical records are not written to the comparison results.
 
-Compares the total number of records returned by each view to identify any discrepancies in data volume.
+## Architecture
 
-## 3. Row-Level Data Comparison
+ViewCompare consists of four main components:
 
-Performs detailed comparison of the actual data returned by the views. Helps identify mismatches at the record level, enabling precise validation of data consistency.
+1. **Host VDP Server:** Denodo V9 instance where ViewCompare is deployed and executed.
+2. **Source VDP Server:** Existing Denodo environment used as the baseline.
+3. **Target VDP Server:** New or upgraded Denodo environment being validated.
+4. **Report Database:** Relational database used to persist comparison results.
 
-# Key Configuration Concepts
+The Host VDP server connects to both Source and Target environments and orchestrates the comparison process.
 
-The Denodo ViewCompare solution must be configured within a Denodo V9 instance. The overall setup is organized into four key components (or “tiles”), each representing a specific role in the framework:
+A non-production Host VDP server, such as a Sandbox, is recommended.
 
-## 1. Host VDP Server
+## Prerequisites
 
-- The Denodo server where the Denodo ViewCompare is deployed and executed.  
-- This instance orchestrates the comparison process between environments.  
-- The host must be a Denodo V9 server, and it is recommended that the host be a non-production server (such as a Sandbox) to minimize operational impact.  
-- A dedicated Host server connects to both the Source and Target VDP servers.  
+Before deploying ViewCompare, ensure the following requirements are met:
 
-## 2. Source VDP Server
+- Denodo V9 Host VDP server.
+- Java 17 or later on the Host VDP server JVM.
+- Network connectivity between Host, Source, and Target VDP servers.
+- Default VDP port 9999 accessible on Source and Target servers.
+- JDBC-supported relational database for storing comparison results.
+- Required database report tables created using the provided DDL scripts.
+- Appropriate permissions to access the views being compared and insert checksum comparison results.
+- Unique, non-null primary key values for row-level checksum comparison.
 
-- Represents the existing or current Denodo environment.  
-- Provides the baseline against which the target environment is validated.  
+### Custom Java JARs
 
-## 3. Target VDP Server
+The checksum comparison is implemented using Java stored procedures running directly inside the Denodo VDP engine.
 
-- Refers to the new or upgraded Denodo environment.  
-- This environment is compared against the Source to identify discrepancies.  
+The following custom JARs are provided:
 
-## 4. Report Tables
+| JAR | Registered Procedure | Purpose |
+|---|---|---|
+| ChecksumCompare.jar | checksum_compare | Checksum comparison using view names |
+| ChecksumCompareQuery.jar | checksum_compare_by_query | Checksum comparison using SELECT queries |
 
-- A relational database (RDBMS) used to store the results generated by the Denodo ViewCompare.  
-- The stored results remain available until the next execution cycle.  
-- During each execution, existing data is cleared using a truncate operation and reloaded with the latest results. This approach ensures that only the most recent execution data is retained.
+Both JARs must be imported and registered as Java stored procedures on the Host VDP server.
 
----
+## Repository Structure
 
-# Prerequisites
+```text
+denodo-viewcompare/
+│
+├── VQL/
+│   └── VQL export and configuration files
+│
+├── custom_jar/
+│   ├── ChecksumCompare.jar
+│   └── ChecksumCompareQuery.jar
+│
+├── report_table_DDL/
+│   ├── MYSQL_DDL
+│   ├── Oracle_DDL
+│   └── Sqlserver_DDL
+│
+├── runbook for ViewCompare/
+│   └── Run_Book_ViewCompare_Phase2.pdf
+│
+├── sample_output/
+│   └── Sample comparison results
+│
+├── README.md
+├── SUPPORT.md
+└── LICENSE.txt
+```
 
-The following prerequisites must be fulfilled before setting up the framework:
+## Setup and Configuration
 
-## 1. Relational Database
+### 1. Create Report Tables
 
-- A relational database must be available to store the output generated by the Denodo ViewCompare.  
-- Ensure that the database is accessible from the environment where the framework will be executed.  
+Choose a supported JDBC relational database to store comparison results.
 
-## 2. Python Environment
+Execute the corresponding DDL script available under `report_table_DDL/`.
 
-- Python version **3.10 or later** must be installed on the machine where the framework is being configured (Host VDP server).  
-- Additionally, the required Python library **JayDeBeApi** must be installed to enable JDBC connectivity from the Python script.  
+Currently provided database scripts:
+- MySQL
+- Oracle
+- SQL Server
 
-## 3. Denodo Connect Component
+The required report tables are:
 
-- The SSH Custom Wrapper (Denodo Connect component) must be properly configured in the Denodo instance where the framework will be deployed( Host VDP Server).
-- This component is required to facilitate remote execution of scripts via SSH.
+- metadata_comparison
+- row_count_comparison
+- checksum_comparison
 
+Ensure sufficient database storage is provisioned because results from every execution are retained.
 
-## 4. SSH Server Setup
+### 2. Import Custom JARs
 
-- An SSH server must be installed and running on the machine where the Python script is hosted (Host VDP server).
-- Ensure that the server is properly configured to accept incoming connections from the Denodo environment.
+Import the following JAR files into Design Studio using:
 
+`File → Extension Management`
 
-## 5. Port and Connectivity:
-- For the Denodo ViewCompare to successfully communicate with both the Source and Target VDP servers, it is essential that these servers are reachable from the Host VDP server over the network. Specifically, the Host VDP server must have proper connectivity to the Source VDP server and Target VDP server and port 9999 (the default VDP port) should be open and accessible on both ends. The SSH Server port number (default is 22) should also be open and accessible from the Host VDP server.
+Create the corresponding Java stored procedures using the following classes:
 
-## 6. Primary key for Row-Level Data Comparison:
-- For the Row-Level Data Comparison to function accurately, it is essential that the views being compared contain a column that uniquely identifies each record. This unique identifier ensures precise matching of rows between the Source and Target datasets during comparison. While this field does not need to be explicitly defined as a primary key within Denodo, it must consistently contain unique, non-null values across the dataset to avoid mismatches or incorrect comparison results.
+| JAR | Java Class |
+|---|---|
+| ChecksumCompare.jar | com.denodo.vdp.custom.functions.ChecksumCompare |
+| ChecksumCompareQuery.jar | com.denodo.vdp.custom.functions.ChecksumCompareQuery |
 
----
+Register the procedures with the following names:
 
-# Setup and Configuration of Denodo ViewCompare
+- `checksum_compare`
+- `checksum_compare_by_query`
 
-The Setup of Denodo ViewCompare is done in the Host VDP Server. Follow the steps outlined in each of the sections below. 
+### 3. Import VQL Files
 
-## Report Table
+The deliverable includes the VQL export package and database-specific report view packages.
 
-### 1. Select a Supported Database
+- Extract the VQL export package.
+- Update `elementExport.properties` with the report database connection details.
+- Configure the JDBC connection properties in the database-specific report view package.
+- Encrypt passwords using the Denodo encryption utility.
+- Import the VQL files and corresponding properties into the Host VDP server.
+- Perform a source refresh on the report views after importing.
 
-- Choose any JDBC-supported relational database where the testing results will be stored.
-- Ensure that the database is accessible from the Denodo environment (Host VDP server).
+The VQL configuration creates the `vdb_viewcompare` Virtual Database containing the comparison procedures and writable report views.
 
-### 2. Execute the Appropriate database DDL Script
+### 4. Configure Source and Target Connections
 
-- Navigate to the /report_table_DDL folder containing DDL scripts for multiple database systems.
-- Select the script corresponding to your chosen database (e.g., SQL Server, Oracle, or MySQL.).
-- Execute the selected DDL script to create the required report tables in the database of your choice.
+Configure the following data sources in `vdb_viewcompare`:
 
-Note: We have currently provided DDL scripts for SQL Server, MySQL, and Oracle. If you require creating the report tables in a different database, we kindly request you to use these DDLs as a reference and make the necessary modifications to suit your target system.# Importing VQL Files
+| Data Source | Purpose |
+|---|---|
+| ds_source_denodo_server | Connects to Source VDP |
+| ds_target_denodo_server | Connects to Target VDP |
 
-## Importing VQL Files:
+Configure the appropriate hostname, port, database name, and authentication credentials for each environment.
 
-Within the provided driver package, you will find two distinct VQL files required for the setup. Follow the steps below to complete the import process:
+### 5. Configure Report Database Connectivity
 
-### 1. Download and Extract Files
+Configure the JDBC data source to connect to the database containing the report tables.
 
-To begin, please download the ZIP file that corresponds to the database in which the report tables were created.
+The following writable base views must be available:
 
-`VQL/ViewCompare_vql_export_report_views_<target_rdbms_database>.zip`
+- bv_metadata_comparison
+- bv_row_count_comparison
+- bv_checksum_comparison
 
-Once downloaded, extract its contents to a folder on the Host server.
+For databases other than MySQL, Oracle, and SQL Server, create the corresponding data source and base views using the required naming conventions.
 
-### 2. Update the Properties File
+## Executing Comparisons
 
-Locate the file:
+All comparison procedures are executed from the Host VDP server.
 
-`ViewCompare_vql_export_report_views_<target_rdbms_database>.zip`
+### 1. Metadata Comparison
 
-Update it with the appropriate configuration values:
+Procedure: `metadata_check`
 
-- Modify the parameters `<JDBC_URI>`, `<USERNAME>`, `<CATALOGNAME>`, and `<SCHEMANAME>` so that they correctly point to the data source where the report tables have been created.
+```sql
+CALL metadata_check(
+    'source_dbname',
+    'source_view_name',
+    'target_dbname',
+    'target_view_name'
+);
+```
 
-- Encrypt the source connectivity password using the appropriate script:
+Results: `bv_metadata_comparison`
 
-  - **On Windows:**  
-    `DENODO_HOME/bin/encrypt.bat`
+### 2. Row Count Comparison
 
-  - **On Linux:**  
-    `DENODO_HOME/bin/encrypt.sh`
+**Using View Names**
 
-- After encryption, replace the `<PASSWORD>` parameter in the properties file with the encrypted value.
+Procedure: `count_check`
 
-### 3. Import the VQL:
+```sql
+CALL count_check(
+    'source_db_name',
+    'source_view_name',
+    'target_db_name',
+    'target_view_name'
+);
+```
 
-Import the **ViewCompare_vql_export_report_views_<target_rdbms_database>**.vql file along with the updated properties file to ensure the configuration is applied correctly.
+**Using SELECT Queries**
 
-Finally, download and import the [**ViewCompare_vql_export.zip**](VQL/ViewCompare_vql_export.zip) file. During the import process, use the password **admin** when prompted.
+Procedure: `count_check_by_query`
 
-### Setup for Other Databases
+```sql
+CALL count_check_by_query(
+    'SELECT * FROM admin.bv_test_products',
+    'SELECT * FROM admin.bv_test_products2'
+);
+```
 
-> **Note:** If the report tables were created in a database other than **MSSQL**, **Oracle**, or **MySQL**, please follow the steps below to ensure proper integration with the framework.
+**Using Conditional Queries**
 
-#### Steps to Follow
+```sql
+CALL count_check_by_query(
+    'SELECT * FROM admin.bv_test_products WHERE "Product"=''Z8Z04A''',
+    'SELECT * FROM admin.bv_test_products2 WHERE "Product"=''Z8Z04A'''
+);
+```
 
-1. **Create a Datasource Connection**
-   - Set up a new datasource connection in the `vdb_viewcompare` VDB.
-   - This connection should point to the database where the report tables were created.
+Results: `bv_row_count_comparison`
 
-2. **Create Base Views**
-   - Once the connection is established, create base views on top of the report tables created in the previous step.
-   - Ensure that the base views strictly follow the required naming standards:
+### 3. Checksum Comparison
 
-     | Table Name              | Base View Name              |
-     |------------------------|-----------------------------|
-     | metadata_comparison    | bv_metadata_comparison      |
-     | row_count_comparison   | bv_row_count_comparison     |
-     | checksum_comparison    | bv_checksum_comparison      |
+**Using View Names**
 
-#### Important
+Procedure: `checksum_compare`
 
-Following the above naming conventions is mandatory. This ensures that the framework can correctly identify and utilize the views without any issues. 
+```sql
+CALL checksum_compare(
+    'pk_field_src',
+    'view_name_src',
+    'db_name_src',
+    'pk_field_tgt',
+    'view_name_tgt',
+    'db_name_tgt'
+);
+```
 
-# Data Source Configuration
+**Using SELECT Queries**
 
-Please configure the following data sources to ensure proper connectivity with the respective environments:
+Procedure: `checksum_compare_by_query`
 
-## 1. Source Denodo Server Connection
+```sql
+CALL checksum_compare_by_query(
+    'pk_field_src',
+    'SELECT * FROM db.view_a',
+    'pk_field_tgt',
+    'SELECT * FROM db.view_b'
+);
+```
 
-- **ds_source_denodo_server**: Configure this data source to establish a connection with the **Source VDP server**.
+**Using Conditional Queries**
 
-- Ensure that all connection parameters (such as host, port, database name, and credentials) accurately reflect the Source VDP server.
+```sql
+CALL checksum_compare_by_query(
+    'CASE_ID',
+    'SELECT * FROM denodo.bv_cc_case_definition WHERE case_comments=''No comments''',
+    'Case_Id',
+    'SELECT * FROM denodo.bv_cc_case_definition WHERE case_comments=''No comments'''
+);
+```
 
-- Provide appropriate values for the parameters as outlined below:
+Results: `bv_checksum_comparison`
 
-  - **Host** – Specify the hostname of the Source VDP server.  
-  - **Port** – Specify the port number on which the Source VDP server is running.  
-  - **Database Name** – Specify the name of the Virtual Database used to establish the connection.  
+Note: Both queries must return compatible columns in the same order. Primary key columns are excluded from the checksum calculation.
 
-  > The above parameters must be configured within the JDBC URI.
+## Sample_output screenshots
+bv_checksum_comparison(view_inputs):
 
-- **Credentials** – Provide valid username and password details in the user configuration to authenticate and access the Source VDP server.
+![checksum_compare](https://git.denodo.com/opensource/denodo-viewcompare/-/raw/main/sample_output/bv_checksum_comparison\(view_input\).jpg?ref_type=heads&inline=false)
 
----
+bv_checksum_comparison(query_inputs):
 
-## 2. Target Denodo Server Connection
 
-- **ds_target_denodo_server**: Configure this data source to connect to the **Target VDP server**.
+![checksum_compare_by_query](https://git.denodo.com/opensource/denodo-viewcompare/-/raw/3a2919f30477cba44f5774aa068d68634f3c7d8c/sample_output/bv_cehcksum_comparison\(query_input\).jpg?inline=false)
 
-- Ensure that all connection parameters (such as host, port, database name, and credentials) accurately reflect the Target VDP server.
+bv_row_count_comparison(view_inputs):
 
-- Provide appropriate values for the parameters as outlined below:
+![row_count_comparison](https://git.denodo.com/opensource/denodo-viewcompare/-/raw/main/sample_output/bv_row_count_comparison\(view_inputs\).png?ref_type=heads&inline=false)
 
-  - **Host** – Specify the hostname of the Target VDP server.  
-  - **Port** – Specify the port number on which the Target VDP server is running.  
-  - **Database Name** – Specify the name of the Virtual Database used to establish the connection.  
+bv_row_count_comparison(query_inputs):
 
-  > The above parameters must be configured within the JDBC URI.
+![row_count_comparison_query_inputs](https://git.denodo.com/opensource/denodo-viewcompare/-/raw/main/sample_output/bv_row_count_comparison\(query_inputs\).png?ref_type=heads&inline=false)
 
-- **Credentials** – Provide valid username and password details in the user configuration to authenticate and access the Target VDP server.
+## History and Result Persistence
 
-## 3. SSH Script Execution Configuration
+ViewCompare maintains historical comparison results across executions.
 
-- The **ds_ssh_script_executor** should be configured with the required connection details to establish an SSH session with the **Host VDP Server** where the Python script will be executed.
+Every execution inserts its results into the corresponding report table. Existing results are not automatically deleted or truncated.
 
-- This configuration enables secure remote execution and should include the following parameters:
+The `date_compare` column identifies the execution timestamp.
 
-  - **Hostname or IP Address** – The address of the target machine  
-  - **SSH Port** – Default is 22 (unless customized)  
-  - **Username** – A user with sufficient privileges to execute the script  
-  - **Password** – Or relevant authentication method, if applicable  
+Example:
 
-- Ensure that the **Host VDP Server** is reachable over the network and that SSH access is properly enabled and permitted for the provided credentials.
+```sql
+SELECT *
+FROM vdb_viewcompare.bv_checksum_comparison
+WHERE date_compare >= '<run start timestamp>'
+ORDER BY date_compare DESC;
+```
 
----
+Always filter comparison results using `date_compare` to identify the relevant execution.
 
-# Python Script Setup and Configuration
+If a clean report table is required, explicitly truncate the underlying report table before execution, after backing up any results that need to be retained.
 
-A Python script is used to determine the checksum of each record in both the **Source VDP server** and **Target VDP server**, and to perform row-level data comparison.
+## Migration from Python-Based Implementation
 
-Follow the steps below to configure the Python script:
+The Phase 2 implementation replaces the previous Python-based checksum execution with Java stored procedures running inside the Denodo VDP engine.
 
-## 1. Copy the Python Script
+| Area | Previous Implementation | Phase 2 Implementation |
+|---|---|---|
+| Checksum execution | Python script over SSH | Java stored procedures |
+| Execution mechanism | SSH Custom Wrapper | Denodo VDP engine |
+| Runtime | Python 3.10+, JayDeBeApi | Java 17+ |
+| Input methods | View names | View names and SELECT queries |
+| Conditional comparison | Limited | Supports WHERE conditions |
+| Result retention | Previous results truncated | Historical results retained |
+| Execution identification | Latest execution | date_compare |
 
-- Copy the file:
+### Components No Longer Required
 
-  `python_script/checksum_py_script.py`
+After successfully validating the Java implementation, the following ViewCompare-specific Python dependencies can be removed if they are not used elsewhere:
 
-  to a desired directory on the **Host VDP Server** where it will be executed.
+- `bv_ssh_python_script_executor` base view.
+- `ds_ssh_script_executor` data source.
+- `checksum_py_script.py`.
+- SSH Custom Wrapper.
+- Python 3.10+ and JayDeBeApi dependencies.
+- ViewCompare-specific copied JDBC driver.
+- SSH server and port 22 configuration used exclusively for the old implementation.
+- Scheduled jobs or scripts invoking the old Python execution flow.
 
-- Ensure that the selected directory has the necessary permissions for script execution.
+Ensure that no other application or Denodo use case depends on these shared components before removing them.
 
-## 2. Update Connection Parameters
+### Upgrade Validation
 
-- Open the Python script and update the following parameters to establish JDBC connectivity with the Denodo Virtual DataPort server (Host VDP server):
+Before removing the previous implementation:
 
-  - `JDBC_DRIVER`  
-  - `JDBC_URL`  
-  - `USERNAME`  
-  - `PASSWORD`  
+1. Verify that the Host VDP server runs Java 17 or later.
+2. Update the report tables using the Phase 2 DDL scripts.
+3. Import both custom JARs.
+4. Register the Java stored procedures.
+5. Re-import the updated VQL packages.
+6. Refresh the report views.
+7. Validate metadata, row count, and checksum comparisons against previously tested views.
+8. Replace references to the old Python execution flow with the new stored procedure calls.
 
-- These parameters should be configured with appropriate values corresponding to the Denodo environment to ensure successful connectivity.
+Refer to the Phase 2 Run Book for detailed upgrade and cleanup instructions.
 
-## 3. Configure JDBC Driver Path
-
-- The `JAR_PATH` parameter specifies the location of the JDBC driver required for Denodo connectivity.
-- Copy the `denodo-vdp-jdbcdriver.jar` file from the following directory:  
-  `DENODO_HOME/lib/extensions/jdbc-drivers/vdp-9/denodo-vdp-jdbcdriver.jar`
-- Place this `denodo-vdp-jdbcdriver.jar` file in the same directory as the Python script (or in another accessible location).
-
----
-
-## 4. Update JAR Path in Script
-
-After placing the JDBC driver, update the `<JAR_PATH>` parameter in the Python script to point to the directory where the JAR file is located.
-
----
-
-## Configuring the Python Script Location in Design Studio
-
-To ensure that the Python script can be executed correctly, its location must be configured within the corresponding base view in Design Studio.
-
-### Steps:
-
-1. In Design Studio, navigate to the base view named `bv_ssh_python_script_executor`.
-2. Open the view and go to **Edit → Source Refresh**.
-3. Provide the full path to the directory where the `checksum_py_script.py` file has been placed.
-
-> **Note:** Ensure that the specified path is accessible from the Host VDP server.
-
-## Executing Your Tests
-
-The execution steps will outline details about each validation performed as part of the Denodo ViewCompare.  
-Follow the steps below, which include specific instructions on utilizing the relevant PL/SQL stored procedures for each check.
-
----
-
-### Test Summary
-
-The table below summarizes the syntax and expected results from the tests:
-
-| Test Name              | PL/SQL Procedure / Final Executable Syntax                                                                 | Parameters                                                                                                                                                                                                 | Result View              | Decoding the Results |
-|-----------------------|------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|----------------------|
-| Metadata Comparison   | `metadata_check(source_dbname, source_view_name, target_dbname, target_view_name)`                        | `source_dbname` (Name of the source database) <br> `source_view_name` (Name of the source view) <br> `target_dbname` (Name of the target database) <br> `target_view_name` (Name of the target view)     | `bv_metadata_comparison` | Refer to Appendix A  |
-| Count Check           | `count_check(source_dbname, source_view_name, target_dbname, target_view_name)`                           | `source_dbname` (Name of the source database) <br> `source_view_name` (Name of the source view) <br> `target_dbname` (Name of the target database) <br> `target_view_name` (Name of the target view)     | `bv_row_count_comparison`| Refer to Appendix B  |
-| Checksum Comparison   | `SELECT * FROM bv_ssh_python_script_executor WHERE source_dbname, source_view_name, target_dbname, target_view_name, source_primary_key_field, target_primary_key_field` | `source_dbname` (Name of the source database) <br> `source_view_name` (Name of the source view) <br> `target_dbname` (Name of the target database) <br> `target_view_name` (Name of the target view) <br> `source_primary_key_field` (Primary key field in the source view) <br> `target_primary_key_field` (Primary key field in the target view)    | `bv_checksum_comparison` | Refer to Appendix C  |
-
----
-
-> **Note:** Ensure all required parameters are passed correctly to avoid execution errors.
-
-## Appendix A
-
-### Summary of Observations with Explanations
-
-| Category | Details |
-|----------|---------|
-| datatype or precision | Mismatches in `column_vdp_type`, `column_jdbc_type`, `column_size`, etc. |
-| type, decimal, column radix, primary key definition, null value definition, field description, autoincrement definition | All these values are self-explanatory. For additional information, refer to the `GET_VIEW_COLUMNS` documentation. |
-
-
-![sample output for bv_metadata_comparison view](sample_output/bv_metadata_comparison.png)
-
----
-
-## Appendix B
-
-### Summary of Observations with Explanations
-
-| Result Type | Description |
-|-------------|-------------|
-| Matching    | Row counts are equal in both views |
-| Mismatch    | Row counts differ between source and target |
-
-
-![sample output for bv_row_count_comparison view](sample_output/bv_row_count_comparison.png)
-
----
-
-## Appendix C
-
-### Summary of Observations with Explanations
-
-| Observation Type | Description |
-|------------------|-------------|
-| Missing in Source | Records present in target but not in source |
-| Missing in Target | Records present in source but not in target |
-| Mismatch          | Records exist in both but data differs |
-
-
-![sample output for bv_checksum_comparison view](sample_output/bv_checksum_comparison.png)
-
----
-
-> **Note:** These observations help identify discrepancies in row counts and data consistency between source and target systems.
-
-# Sample Execution Timings for Checksum Comparison
-
-| Number of Rows | Number of Fields | Time Taken   |
-|----------------|------------------|--------------|
-| 100,000        | 100              | 40 seconds   |
-| 500,000        | 100              | 120 seconds  |
-| 1,000,000      | 100              | 800 seconds  |
-
-## Limitations and Important Considerations
-
-- Currently, the framework accepts input as a **single view** (source and target each) for comparison.  
-  To preserve server overhead, the framework executes checks for one view at a time.
-
-- For **Count Check** and **Metadata Comparison**, if the virtual database is provided incorrectly, the stored procedure will fail stating that the virtual database is missing.  
-  If the view names are incorrect, it is handled as an exception and the output will reflect the same in the respective output views.
-
-- For **Metadata Comparison**, if there are multiple mismatches for a single column, they will be shown as multiple messages enclosed in double quotes.  
-  Example: `"mismatch in 'datatype or precision'"`, `"null value definition"`.
-
----
 
 ## Denodo ViewCompare License
 
@@ -382,5 +384,5 @@ See [SUPPORT](SUPPORT.md)
 
 ## Authors
 
-- Developed by: Dineshraja Annadurai, Muthu Rajesh Subramaniam
-- Contact: dannadurai@denodo.com, msubramaniam@denodo.com
+- Developed by: Dineshraja Annadurai, Harini Karthik, Rupa Shiva Dharshini
+- Contact: msubramaniam@denodo.com, dannadurai@denodo.com, hkarthikeyan@denodo.com, rvanamamalai@denodo.com
