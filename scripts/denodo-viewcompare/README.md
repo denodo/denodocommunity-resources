@@ -289,20 +289,20 @@ Note: Both queries must return compatible columns in the same order. Primary key
 ## Sample_output screenshots
 bv_checksum_comparison(view_inputs):
 
-![checksum_compare](https://git.denodo.com/opensource/denodo-viewcompare/-/raw/main/sample_output/bv_checksum_comparison\(view_input\).jpg?ref_type=heads&inline=false)
+![checksum_compare](./sample_output/bv_checksum_comparison\(view_input\).jpg?raw=true)
 
 bv_checksum_comparison(query_inputs):
 
 
-![checksum_compare_by_query](https://git.denodo.com/opensource/denodo-viewcompare/-/raw/3a2919f30477cba44f5774aa068d68634f3c7d8c/sample_output/bv_cehcksum_comparison\(query_input\).jpg?inline=false)
+![checksum_compare_by_query](./sample_output/bv_cehcksum_comparison\(query_input\).jpg?raw=true)
 
 bv_row_count_comparison(view_inputs):
 
-![row_count_comparison](https://git.denodo.com/opensource/denodo-viewcompare/-/raw/main/sample_output/bv_row_count_comparison\(view_inputs\).png?ref_type=heads&inline=false)
+![row_count_comparison](./sample_output/bv_row_count_comparison\(view_inputs\).png?raw=true)
 
 bv_row_count_comparison(query_inputs):
 
-![row_count_comparison_query_inputs](https://git.denodo.com/opensource/denodo-viewcompare/-/raw/main/sample_output/bv_row_count_comparison\(query_inputs\).png?ref_type=heads&inline=false)
+![row_count_comparison_query_inputs](./sample_output/bv_row_count_comparison\(query_inputs\).png?raw=true)
 
 ## History and Result Persistence
 
